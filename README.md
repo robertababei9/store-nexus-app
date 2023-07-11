@@ -1,6 +1,6 @@
 ## To be updated
 
-Hello and welcome to the project that will make us millionaires. This is just the first step of 99999999 that are in total.
+Hello and welcome to the project that will make us millionaires. This is just the first step of 99999999 steps that are in total.
 Good luck !
 
 
