@@ -3,6 +3,16 @@
 Hello and welcome to the project that will make us millionaires. This is just the first step of 99999999 steps that are in total.
 Good luck !
 
+## Some of the ideas, templates that we can use as a mockup
+https://horizon-ui.com/horizon-tailwind-react/admin/default
+https://preview.themeforest.net/item/avant-ant-design-native-dashboard-template/full_screen_preview/24293713?_ga=2.158312959.456406038.1689768843-1316350384.1689598358
+http://medic-app-react.next-item.com/#/vertical/default-dashboard
+https://demos.creative-tim.com/material-dashboard-react/#/dashboard
+
+Don't forget to open the Login page to get some inspiration
+
+
+
 
 # Getting Started with Create React App
 
