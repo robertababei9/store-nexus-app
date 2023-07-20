@@ -1,11 +1,15 @@
+import { Suspense } from "react"
+
 import './App.css';
 
-import Login from './pages/Login';
+import Router from './router/Router';
 
 function App() {
   return (
     <div className="App bg-gray-100">
-        <Login />
+      <Suspense fallback={<>Loading ...</>}>
+        <Router />
+      </Suspense>
     </div>
   );
 }
