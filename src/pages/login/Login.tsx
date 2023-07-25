@@ -1,13 +1,26 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
 import Button from '../../components/_shared/Button/Button';
+
 import humansImage from '../../assets/images/humans.png';
+
 
 
 export default function Login() {
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+
+    const navigate = useNavigate();
+
+
+    const onSubmit = () => {
+        // validare 
+
+        // api call
+        
+    }
 
 
     return (
