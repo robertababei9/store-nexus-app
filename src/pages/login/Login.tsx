@@ -1,17 +1,12 @@
 import { useState } from 'react';
-<<<<<<<< HEAD:src/pages/Login.tsx
 import { Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import Button from '../components/_shared/Button/Button';
-import humansImage from '../assets/images/humans.png';
-========
-import { useNavigate } from 'react-router-dom';
-import { Input } from 'antd';
 import Button from '../../components/_shared/Button/Button';
-
 import humansImage from '../../assets/images/humans.png';
+import { useNavigate } from 'react-router-dom';
 
->>>>>>>> e051f300ee2d7c3833b1d38c4db4075c697a32b0:src/pages/login/Login.tsx
+import axios from 'axios';
+
 
 
 export default function Login() {
@@ -19,13 +14,26 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-<<<<<<<< HEAD:src/pages/Login.tsx
     const onFinish = (values: { email: string; password: string }) => {
         console.log('Received values of form:', values);
-//Useful for API call to authenticate the user
+        //Useful for API call to authenticate the user
     }
-========
     const navigate = useNavigate();
+
+
+    // noi functia asta o mutam pe alt Thread
+    const handleLogin = async () => {
+
+        const BASE_URL = "https://store-nexus-api.azurewebsites.net";   // URL-ul de la server 
+        const body = {
+            Email: "robert@gmail.com",
+            Password: "asd123"
+        };
+        const result = await axios.post(BASE_URL + "/users/login", body); 
+
+        console.log("result = ", result);
+        // aici e doar un exemplu hardcodat  ... tu ar trebui sa le iei din input-uri
+    }
 
 
     const onSubmit = () => {
@@ -35,7 +43,7 @@ export default function Login() {
         
     }
 
->>>>>>>> e051f300ee2d7c3833b1d38c4db4075c697a32b0:src/pages/login/Login.tsx
+
 
     return (
         <div className='flex flex-col justify-center items-center  h-full'>
@@ -78,7 +86,7 @@ export default function Login() {
                                 prefix={<UserOutlined />}
                                 placeholder='Email'
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => setEmail(e.target.value)} 
                             />
                         </Form.Item>
 
@@ -116,7 +124,7 @@ export default function Login() {
                         <Button
                             className='mt-10 w-full'
                             type='primary'
-                            onClick={() => console.log("I'm clicked")}>
+                            onClick={handleLogin}>
                             SIGN IN
                         </Button>
                     </Form>
