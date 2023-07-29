@@ -9,8 +9,23 @@ https://preview.themeforest.net/item/avant-ant-design-native-dashboard-template/
 http://medic-app-react.next-item.com/#/vertical/default-dashboard
 https://demos.creative-tim.com/material-dashboard-react/#/dashboard
 
-Don't forget to open the Login page to get some inspiration
 
+
+
+### Idei dashboard:  
+1. Profit
+    * Profit total magazine
+    * Profit magazin 1, 2, 3, 4
+    * Profit pe luna x
+    * Grafic 2D cu profit
+2. Users
+    * Exemplu: +2 members joined this month -- idee pt asta -> card
+
+
+
+### TODO:
+- De facut audit pentru fiecare operatiune care este facuta. Chiar si cea mai mica actiune care se face va exista o sectiune
+in care adminul va vedea ultimele operatiuni efectuate. Ca intr-un tabel
 
 
 

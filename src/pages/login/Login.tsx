@@ -1,17 +1,17 @@
 import { useState } from 'react';
-<<<<<<< HEAD:src/pages/Login.tsx
+<<<<<<<< HEAD:src/pages/Login.tsx
 import { Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Button from '../components/_shared/Button/Button';
 import humansImage from '../assets/images/humans.png';
-=======
+========
 import { useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
 import Button from '../../components/_shared/Button/Button';
 
 import humansImage from '../../assets/images/humans.png';
 
->>>>>>> e051f300ee2d7c3833b1d38c4db4075c697a32b0:src/pages/login/Login.tsx
+>>>>>>>> e051f300ee2d7c3833b1d38c4db4075c697a32b0:src/pages/login/Login.tsx
 
 
 export default function Login() {
@@ -19,12 +19,12 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-<<<<<<< HEAD:src/pages/Login.tsx
+<<<<<<<< HEAD:src/pages/Login.tsx
     const onFinish = (values: { email: string; password: string }) => {
         console.log('Received values of form:', values);
 //Useful for API call to authenticate the user
     }
-=======
+========
     const navigate = useNavigate();
 
 
@@ -35,7 +35,7 @@ export default function Login() {
         
     }
 
->>>>>>> e051f300ee2d7c3833b1d38c4db4075c697a32b0:src/pages/login/Login.tsx
+>>>>>>>> e051f300ee2d7c3833b1d38c4db4075c697a32b0:src/pages/login/Login.tsx
 
     return (
         <div className='flex flex-col justify-center items-center  h-full'>
