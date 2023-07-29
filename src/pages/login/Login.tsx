@@ -23,14 +23,14 @@ export default function Login() {
 
     const onFinish = (values: { email: string; password: string }) => {
         console.log('Received values of form:', values);
-        //Useful for API call to authenticate the user
+
     }
 
 
     // noi functia asta o mutam pe alt Thread
     const handleLogin = async () => {
 
-        const BASE_URL = "https://store-nexus-api.azurewebsites.net";   // URL-ul de la server 
+        const BASE_URL = "https://store-nexus-api.azurewebsites.net";
         const body = {
             Email: "robert@gmail.com",
             Password: "asd123"
@@ -38,8 +38,10 @@ export default function Login() {
         const result = await axios.post(BASE_URL + "/users/login", body); 
 
         console.log("result = ", result);
-       
+
+        // login = success
         navigate(ROUTES.Dashboard); 
+
     }
 
 
