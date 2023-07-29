@@ -6,19 +6,25 @@ import humansImage from '../../assets/images/humans.png';
 import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
+import { ROUTES } from '../../utils/Constants';
 
 
 
 export default function Login() {
 
+    // states
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+
+    // navigation
+    const navigate = useNavigate();
+
+
 
     const onFinish = (values: { email: string; password: string }) => {
         console.log('Received values of form:', values);
 
     }
-    const navigate = useNavigate();
 
 
     // noi functia asta o mutam pe alt Thread
@@ -32,7 +38,10 @@ export default function Login() {
         const result = await axios.post(BASE_URL + "/users/login", body); 
 
         console.log("result = ", result);
-        console.log("Noice !!!");
+
+        // login = success
+        navigate(ROUTES.Dashboard); 
+
     }
 
 
