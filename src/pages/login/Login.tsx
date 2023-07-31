@@ -15,6 +15,7 @@ export default function Login() {
     // states
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
 
     // navigation
     const navigate = useNavigate();
@@ -35,7 +36,9 @@ export default function Login() {
             Email: "robert@gmail.com",
             Password: "asd123"
         };
+        setLoading(true);
         const result = await axios.post(BASE_URL + "/users/login", body); 
+        setLoading(false);
 
         console.log("result = ", result);
 
@@ -133,6 +136,7 @@ export default function Login() {
                         <Button
                             className='mt-10 w-full'
                             type='primary'
+                            loading={loading}
                             onClick={handleLogin}>
                             SIGN IN
                         </Button>
