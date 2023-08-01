@@ -33,7 +33,7 @@ export default function SalesAreaChart() {
 
 
     return (
-        <Card className='flex flex-col justify-start items-start rounded-2xl shadow-md'>
+        <Card className='flex flex-col justify-start items-start shadow-md'>
                 
             <div className='w-full ml-4 mb-8 flex justify-between items-center'>
             <div className='flex flex-col justify-start items-start'>

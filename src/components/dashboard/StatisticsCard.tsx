@@ -6,7 +6,7 @@ import { Card } from '../../components/_shared';
 
 export default function StatisticsCard() {
   return (
-    <Card className='rounded-lg px-6 py-4 min-w-[250px] w-full flex flex-col shadow-xl'>
+    <Card className='px-6 py-4 min-w-[250px] w-full flex flex-col shadow-xl'>
         <div className='flex items-center'>
         <div className='flex flex-col items-start w-[70%]'>
             <p className='text-gray-400 font-semibold'>TOTAL SALES</p>
