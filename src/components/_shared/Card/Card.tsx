@@ -11,7 +11,7 @@ export default function Card({
 
 
     return (
-        <div className={`w-100 h-100 bg-white p-8 ${className}`} >
+        <div className={`bg-white p-8 ${className}`} >
             {children}
         </div>
     )
