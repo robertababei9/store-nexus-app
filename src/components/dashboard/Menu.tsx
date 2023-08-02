@@ -58,6 +58,7 @@ const MenuComponent: React.FC = () => {
   return (
  
         <Menu
+          className='w-[220px]'
           defaultSelectedKeys={['key']}
           defaultOpenKeys={['sub1']}
           mode="inline"
