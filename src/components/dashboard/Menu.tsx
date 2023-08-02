@@ -58,11 +58,11 @@ const MenuComponent: React.FC = () => {
   return (
  
         <Menu
-          className='w-[220px]'
-          defaultSelectedKeys={['key']}
+          className='w-[220px] shadow-2xl'
+          defaultSelectedKeys={["/dashboard"]}
           defaultOpenKeys={['sub1']}
           mode="inline"
-          theme="dark"
+          theme="light"
           items={items}
           onClick={handleMenuClick}
         />
