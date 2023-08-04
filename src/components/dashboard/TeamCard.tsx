@@ -40,9 +40,9 @@ const MEMBERS: Member[] = [
     },
 ];
 
-export default function Team() {
+export default function TeamCard() {
   return (
-    <Card className='bg-white p-0 min-w-[320px] w-full'>
+    <Card className='bg-white !p-0 min-w-[320px] w-full'>
         <div className='py-4 px-6 flex justify-start'>
             <p className='font-semibold text-lg'>Team members</p>
         </div>

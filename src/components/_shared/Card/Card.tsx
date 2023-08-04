@@ -11,7 +11,7 @@ export default function Card({
 
 
     return (
-        <div className={`bg-white rounded-lg p-8 ${className}`} >
+        <div className={`bg-white rounded-lg shadow-lg p-8 ${className}`} >
             {children}
         </div>
     )

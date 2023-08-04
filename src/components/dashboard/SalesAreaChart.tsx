@@ -33,11 +33,11 @@ export default function SalesAreaChart() {
 
 
     return (
-        <Card className='flex flex-col justify-start items-start shadow-md'>
+        <Card className='flex flex-col justify-start items-start'>
                 
             <div className='w-full ml-4 mb-8 flex justify-between items-center'>
             <div className='flex flex-col justify-start items-start'>
-                <h1 className='text-4xl font-semibold mb-1'>Sales</h1>
+                <h1 className='text-3xl font-semibold mb-1'>Sales</h1>
                 <p className='text-gray-500 text-lg'>Sales for {selectedYear}</p>
             </div>
 
@@ -51,19 +51,19 @@ export default function SalesAreaChart() {
             </div>
             </div>
 
-            <ResponsiveContainer width={700} height={400}>
-            <AreaChart
-                width={500}
-                height={300}
-                data={salesAreaChart[selectedYear]}
-                >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Area type="monotone" dataKey="Revenue" stroke="#343170" fill="#a5a3cf" fillOpacity={1} activeDot={{ r: 6 }} />
+            <ResponsiveContainer width="100%" height={400}>
+                <AreaChart
+                    width={500}
+                    height={300}
+                    data={salesAreaChart[selectedYear]}
+                    >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Area type="monotone" dataKey="Revenue" stroke="#343170" fill="#a5a3cf" fillOpacity={1} activeDot={{ r: 6 }} />
                 </AreaChart>
             </ResponsiveContainer>
         </Card>

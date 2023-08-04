@@ -7,7 +7,7 @@ type ButtonProps = {
     loading?: boolean;
     className?: string;
     style?: {};  // this means object .... {} == object
-    type: "primary" | "link" | "text" | "ghost" | "default" | "dashed" | undefined;
+    type?: "primary" | "link" | "text" | "ghost" | "default" | "dashed" | undefined;
     
 };
 
