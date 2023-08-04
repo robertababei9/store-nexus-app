@@ -58,7 +58,7 @@ export default function Login() {
 
 
     return (
-        <div className='flex flex-col justify-center items-center  h-full'>
+        <div className='flex flex-col justify-center items-center h-screen'>
 
             <div className='flex w-100 max-w-[1014px] bg-white rounded-3xl p-5'>
                 <div className='w-[60%]'>

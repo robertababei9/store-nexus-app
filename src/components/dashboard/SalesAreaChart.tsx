@@ -33,39 +33,39 @@ export default function SalesAreaChart() {
 
 
     return (
-        <Card className='flex flex-col justify-start items-start'>
-                
-            <div className='w-full ml-4 mb-8 flex justify-between items-center'>
-            <div className='flex flex-col justify-start items-start'>
-                <h1 className='text-3xl font-semibold mb-1'>Sales</h1>
-                <p className='text-gray-500 text-lg'>Sales for {selectedYear}</p>
+        <Card className='h-full !p-0'>
+
+            <div className='flex justify-between items-center py-4 px-6'>
+                <p className='font-semibold text-3xl'>Sales overview</p>
+                <div>
+                    <Select 
+                    defaultValue={selectedYear}
+                    // style={{ width: 120 }}
+                    onChange={(value) => setSelectedYear(value)}
+                    options={getLastYears(4)}
+                    />
+                </div>
             </div>
 
-            <div>
-                <Select 
-                defaultValue={selectedYear}
-                // style={{ width: 120 }}
-                onChange={(value) => setSelectedYear(value)}
-                options={getLastYears(4)}
-                />
-            </div>
-            </div>
+            <div className='w-full h-[2px] bg-gray-100'/>                
 
-            <ResponsiveContainer width="100%" height={400}>
-                <AreaChart
-                    width={500}
-                    height={300}
-                    data={salesAreaChart[selectedYear]}
-                    >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Area type="monotone" dataKey="Revenue" stroke="#343170" fill="#a5a3cf" fillOpacity={1} activeDot={{ r: 6 }} />
-                </AreaChart>
-            </ResponsiveContainer>
+            <div className='px-6 pt-6'>
+                <ResponsiveContainer width="100%" height={400}>
+                    <AreaChart
+                        width={500}
+                        height={300}
+                        data={salesAreaChart[selectedYear]}
+                        >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <Area type="monotone" dataKey="Revenue" stroke="#343170" fill="#a5a3cf" fillOpacity={1} activeDot={{ r: 6 }} />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
         </Card>
     )
 }
