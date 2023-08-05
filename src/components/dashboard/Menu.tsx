@@ -5,7 +5,7 @@ import {
   SettingOutlined,
   ShopOutlined,
   UserOutlined,
-  DashboardOutlined,
+  HomeOutlined,
   LoginOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined
@@ -40,7 +40,7 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem('Dashboard', '/dashboard', <DashboardOutlined />),
+  getItem('Dashboard', '/dashboard', <HomeOutlined />),
   getItem('Stores', '/stores', <ShopOutlined />),
   getItem('Users', '/users', <UserOutlined />),
   getItem('Settings', '/settings', <SettingOutlined />),
@@ -58,24 +58,21 @@ const MenuComponent: React.FC = () => {
   };
 
   return (
-    <Layout className='z-50 w-[230px]'>
+    <Layout className='z-50 '>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        {/* Modificarea: Adăugăm un antet pentru imagine și buton */}
         <Header className="bg-transparent p-0 flex justify-between items-center">
-          {/* Modificarea: Adăugăm imaginea */}
           <div className='w-[40%]'>
             <img
               src={humansImage}
               alt="Humans image"
             />
           </div>
-          {/* Modificarea: Stilizăm butonul cu culoarea textului și a fundalului */}
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
-            className={`text-xl w-166 h-16 text-white`} 
-            //AICI E PROBLEMA! mereu cand dau hover pe buton i se schimba in negru sau bckgrnd (am stat cv timp sa rezolv si nimic,bft)
+            className={`text-xl w-166 h-16 text-white`}
+            style={{color: "white"}}
           />
         </Header>
         <Menu
@@ -85,6 +82,7 @@ const MenuComponent: React.FC = () => {
           defaultOpenKeys={['/dashboard']}
           items={items}
           onClick={handleMenuClick}
+          className='bg-rgb-28-37-54'
         />
       </Sider>
     </Layout>

@@ -25,7 +25,7 @@ export default function Dashboard() {
   return (
 
     // inainte era <> ---> adica gol
-    <div className='w-full flex h-full :)'>
+    <div className='w-full flex h-full '>
       {/* This is the blue section. It makes use of z-index and position absolute */}
       <div className='absolute top-0 left-0 w-full h-[400px] bg-gradient-to-r from-cyan-200 to-cyan-500'/>
     
@@ -48,11 +48,11 @@ export default function Dashboard() {
           </Col>
         </Row>
 
-        {/* <Row gutter={16} className='w-full mt-12'>
+        <Row gutter={16} className='w-full mt-12'>
           <Col span={24}>
             <BestSellersCard />
           </Col>
-        </Row> */}
+        </Row>
 
         <Row gutter={[32, 16]} className='w-full mt-12'>
           <Col xs={24} xl={8}>
