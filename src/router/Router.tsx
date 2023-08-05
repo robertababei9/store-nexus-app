@@ -35,10 +35,7 @@ export default function Router() {
     
   return (
     <BrowserRouter>
-      <div className="flex w-full">
-        {/* <div className="w-[150px]  bg-red-300 z-50">
-
-        </div> */}
+      <div className="flex w-full h-full">
         <Menu />
         <Routes>
             <Route path={"/"} element={<Navigate to={ROUTES.SignIn} />} />

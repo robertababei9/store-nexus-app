@@ -59,32 +59,34 @@ const MenuComponent: React.FC = () => {
 
   return (
     <Layout className='z-50 '>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <Header className="bg-transparent p-0 flex justify-between items-center">
-          <div className='w-[40%]'>
-            <img
-              src={humansImage}
-              alt="Humans image"
-            />
+        <Sider trigger={null} collapsible collapsed={collapsed} className='h-full relative w-auto'>
+          <div className=' w-inherit'>
+              <Header className="bg-transparent p-0 flex justify-between items-center">
+                <div className='w-[40%]'>
+                  <img
+                    src={humansImage}
+                    alt="Humans image"
+                  />
+                </div>
+                <Button
+                  type="text"
+                  icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  onClick={() => setCollapsed(!collapsed)}
+                  className={`text-xl w-166 h-16 text-white`}
+                  style={{color: "white"}}
+                />
+              </Header>
+              <Menu
+                theme="dark"
+                mode="inline"
+                defaultSelectedKeys={['/dashboard']}
+                defaultOpenKeys={['/dashboard']}
+                items={items}
+                onClick={handleMenuClick}
+                className='bg-rgb-28-37-54'
+              />
           </div>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            className={`text-xl w-166 h-16 text-white`}
-            style={{color: "white"}}
-          />
-        </Header>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={['/dashboard']}
-          defaultOpenKeys={['/dashboard']}
-          items={items}
-          onClick={handleMenuClick}
-          className='bg-rgb-28-37-54'
-        />
-      </Sider>
+        </Sider>
     </Layout>
   );
 };
