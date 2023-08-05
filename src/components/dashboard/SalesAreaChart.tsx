@@ -4,32 +4,17 @@ import { Select } from 'antd';
 
 import { Card } from '../../components/_shared';
 import { salesAreaChart } from '../../utils/mocks/dashboard-area-charts';
+import { getLastYearsOptions } from '../../utils/Utils';
 
-type OptionsType = {
-    value: number;
-    label: string;
-}
-const CURRENT_YEAR: number = new Date().getFullYear();
 
 
 export default function SalesAreaChart() {
 
-    const [selectedYear, setSelectedYear] = useState<number>(CURRENT_YEAR);
+    const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear()); // get current year
 
 
     // utilities
-    const getLastYears = (nrOfYears: number): OptionsType[]  => {
-        const optionsForSelect: OptionsType[] = [];
 
-        // we take the last 'nrOfYears' from the current year
-        // e.g.     nrOfYears = 4 -->  2023, 2022, 2021, 2020
-        for (let i = 0; i < nrOfYears; i++) {
-            const value = CURRENT_YEAR - i;
-            optionsForSelect.push({value: value, label: value.toString()})
-        }
-
-        return optionsForSelect;
-    }
 
 
     return (
@@ -42,7 +27,7 @@ export default function SalesAreaChart() {
                     defaultValue={selectedYear}
                     // style={{ width: 120 }}
                     onChange={(value) => setSelectedYear(value)}
-                    options={getLastYears(4)}
+                    options={getLastYearsOptions(4)}
                     />
                 </div>
             </div>
@@ -52,8 +37,6 @@ export default function SalesAreaChart() {
             <div className='px-6 pt-6'>
                 <ResponsiveContainer width="100%" height={400}>
                     <AreaChart
-                        width={500}
-                        height={300}
                         data={salesAreaChart[selectedYear]}
                         >
                         <CartesianGrid strokeDasharray="3 3" />

@@ -1,11 +1,12 @@
 import { Col, Row, Typography } from 'antd';
 
 import SalesAreaChart from '../../components/dashboard/SalesAreaChart';
-import StatisticsCard from '../../components/dashboard/StatisticsCard';
+import StatisticsCards from '../../components/dashboard/StatisticsCards';
 import TeamCard from '../../components/dashboard/TeamCard';
 import MapStoreCard from '../../components/dashboard/MapStoreCard';
 import SalesByCountryCard from '../../components/dashboard/SalesByCountryCard';
 import BestSellersCard from '../../components/dashboard/BestSellersCard';
+import ProfitRadarChart from '../../components/dashboard/ProfitRadarChart';
 
 const Fade = require('react-reveal/Fade');
 
@@ -25,34 +26,9 @@ export default function Dashboard() {
         <Fade down delay={150}>
           <Title>Dashboard</Title>
         </Fade>
-        
-        <Row gutter={[16, 16]} className='w-full mb-12'>
-            <Col xs={24} md={12} xl={6} >
-              <Fade down duration={800}>
-                <StatisticsCard />
-              </Fade>
-              
-            </Col>
 
-            <Col xs={24} md={12} xl={6}>
-              <Fade down  delay={50}>
-                <StatisticsCard />
-              </Fade>
-            </Col>
-
-            <Col xs={24} md={12} xl={6}>
-              <Fade down  delay={150}>
-                <StatisticsCard />
-              </Fade>
-            </Col>
-
-            <Col xs={24} md={12} xl={6}>
-              <Fade down  delay={250}>
-                <StatisticsCard />
-              </Fade>
-            </Col>
-        </Row>
-
+        {/* 4 Cards with statisctics */}
+        <StatisticsCards />
 
         <Row gutter={[16, 16]} className='w-full'>
           <Col md={24} xl={14}>
@@ -80,7 +56,7 @@ export default function Dashboard() {
           </Col>
 
           <Col xs={24} xl={8}>
-            <TeamCard />
+            <ProfitRadarChart />
           </Col>
           
         </Row>

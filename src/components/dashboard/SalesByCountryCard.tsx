@@ -87,7 +87,7 @@ export default function SalesByCountryCard() {
         
         <div className='w-full h-[2px] bg-gray-100'/>
 
-        <div className='w-full h-[420px] overflow-auto bg-scroll mt-4'>
+        <div className='w-full h-[420px] overflow-auto bg-scroll pt-4'>
             {/* ROWs */}
             {
                 MEMBERS.map((country: SalesByCountry, index: number) => (
