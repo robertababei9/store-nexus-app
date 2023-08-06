@@ -1,11 +1,10 @@
 import { Suspense, lazy } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { ClipLoader } from "react-spinners"
-import { RouteType } from "./utils"
+import { RouteType, renderRoute } from "./utils"
 import { ROUTES } from "../utils/Constants";
 
 import NotFound404 from "../pages/not-found/NotFound";
-import Dashboard from "../pages/dashboard/Dashboard";
 
 import Menu from '../components/dashboard/Menu'
 
@@ -14,14 +13,9 @@ const publicRoutes: RouteType[] = [
     {
         path: ROUTES.SignIn,
         element: lazy(() => import("../pages/login/Login")),
-    },
-    {
-        path: ROUTES.Dashboard,
-        element: lazy(() => import("../pages/dashboard/Dashboard")),
     }
 ];
 
-// Coming soon
 const privateRoutes: RouteType[] = [
   {
     path: ROUTES.Dashboard,
@@ -32,11 +26,25 @@ const privateRoutes: RouteType[] = [
 
 
 export default function Router() {
+
+  const isLoggedIn = () => {
+    let flag = false;
+
+    localStorage.getItem("jwt") ? flag = true : flag = false;
+
+    return flag;
+  }
+
+  console.log("-------------- Router.tsx rendering ... --------------")
     
   return (
     <BrowserRouter>
       <div className="flex w-full h-full">
-        <Menu />
+        {
+          isLoggedIn() && (
+            <Menu />
+          )
+        }
         <Routes>
             <Route path={"/"} element={<Navigate to={ROUTES.SignIn} />} />
 
@@ -64,8 +72,8 @@ export default function Router() {
               ))
             }
 
-            <Route path={ROUTES.Dashboard} element={<Dashboard/>} />
-            
+            {privateRoutes.map((route, index) => renderRoute(route, index))}
+
             <Route path="*" element={<NotFound404 />} />
         </Routes>
       </div>

@@ -43,7 +43,7 @@ export default function Login() {
         console.log("result = ", result);
 
         // login = success
-        navigate(ROUTES.Dashboard); 
+        // navigate(ROUTES.Dashboard); 
 
     }
 

@@ -53,7 +53,7 @@ export default function TeamCard() {
             {/* ROWs */}
             {
                 MEMBERS.map((member: Member, index: number) => (
-                    <div className='flex justify-start items-center mt-6 px-6 cursor-pointer hover:text-cyan-400'>
+                    <div key={member.name + index} className='flex justify-start items-center mt-6 px-6 cursor-pointer hover:text-cyan-400'>
                         <Avatar size={50} src={member.image} />
                         <div className='flex flex-col justify-start items-start ml-4'>
                             <p className='font-semibold '>{member.name}</p>
