@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Button from 'src/components/_shared/Button/Button';
@@ -20,6 +20,12 @@ export default function Login() {
     // navigation
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // check if logged in
+        if (localStorage.getItem("accessToken")) {
+            navigate(ROUTES.Dashboard)
+        }
+    }, []);
 
 
     const onFinish = (values: { email: string; password: string }) => {
