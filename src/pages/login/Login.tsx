@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Checkbox, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import Button from '../../components/_shared/Button/Button';
-import humansImage from '../../assets/images/humans.png';
+import Button from 'src/components/_shared/Button/Button';
+import humansImage from 'src/assets/images/humans.png';
 import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
-import { ROUTES } from '../../utils/Constants';
+import { ROUTES } from 'src/utils/Constants';
 
 
 
@@ -37,10 +37,19 @@ export default function Login() {
             Password: "asd123"
         };
         setLoading(true);
-        const result = await axios.post(BASE_URL + "/users/login", body); 
-        setLoading(false);
 
-        console.log("result = ", result);
+        try {
+            const result = await axios.post(BASE_URL + "/users/login", body); 
+            console.log("result = ", result);
+            localStorage.setItem("accessToken", result.data);
+            navigate(ROUTES.Dashboard);
+        } catch(err: any) {
+            console.log("Error: ", err);
+        }
+        finally {
+            setLoading(false);
+        }
+
 
         // login = success
         // navigate(ROUTES.Dashboard); 

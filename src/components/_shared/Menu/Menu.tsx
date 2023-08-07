@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import humansImage from '../../assets/images/humans.png';
+import humansImage from 'src/assets/images/humans.png';
 
 import {
   SettingOutlined,
   ShopOutlined,
   UserOutlined,
   HomeOutlined,
-  LoginOutlined,
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined
 } from '@ant-design/icons';
@@ -44,14 +44,21 @@ const items: MenuItem[] = [
   getItem('Stores', '/stores', <ShopOutlined />),
   getItem('Users', '/users', <UserOutlined />),
   getItem('Settings', '/settings', <SettingOutlined />),
-  getItem('Log In', '/login', <LoginOutlined />),
+  getItem('Log Out', '/login', <LogoutOutlined />),
 ];
+
 
 const MenuComponent: React.FC = () => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const handleMenuClick = ({ key }: { key: React.Key }) => {
+
+    // logout
+    if (key == "/login") {
+      localStorage.removeItem("accessToken");
+    }
+
     if (key) {
       navigate(String(key));
     }

@@ -1,13 +1,12 @@
 import { Col, Row, Typography } from 'antd';
 
-import SalesAreaChart from '../../components/dashboard/SalesAreaChart';
-import Menu from '../../components/dashboard/Menu'; //dc nu vrea ca e bn doar ... stiu. Hai sa vedem
-import StatisticsCards from '../../components/dashboard/StatisticsCards';
-import TeamCard from '../../components/dashboard/TeamCard';
-import MapStoreCard from '../../components/dashboard/MapStoreCard';
-import SalesByCountryCard from '../../components/dashboard/SalesByCountryCard';
-import BestSellersCard from '../../components/dashboard/BestSellersCard';
-import ProfitRadarChart from '../../components/dashboard/ProfitRadarChart';
+import SalesAreaChart from 'src/components/dashboard/SalesAreaChart';
+import StatisticsCards from 'src/components/dashboard/StatisticsCards';
+import TeamCard from 'src/components/dashboard/TeamCard';
+import MapStoreCard from 'src/components/dashboard/MapStoreCard';
+import SalesByCountryCard from 'src/components/dashboard/SalesByCountryCard';
+import BestSellersCard from 'src/components/dashboard/BestSellersCard';
+import ProfitRadarChart from 'src/components/dashboard/ProfitRadarChart';
 
 const Fade = require('react-reveal/Fade');
 

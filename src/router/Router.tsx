@@ -6,7 +6,7 @@ import { ROUTES } from "../utils/Constants";
 
 import NotFound404 from "../pages/not-found/NotFound";
 
-import Menu from '../components/dashboard/Menu'
+import Menu from '../components/_shared/Menu/Menu'
 
 
 const publicRoutes: RouteType[] = [
@@ -30,7 +30,7 @@ export default function Router() {
   const isLoggedIn = () => {
     let flag = false;
 
-    localStorage.getItem("jwt") ? flag = true : flag = false;
+    localStorage.getItem("accessToken") ? flag = true : flag = false;
 
     return flag;
   }
@@ -46,7 +46,7 @@ export default function Router() {
           )
         }
         <Routes>
-            <Route path={"/"} element={<Navigate to={ROUTES.SignIn} />} />
+            <Route path={"/"} element={<Navigate to={ROUTES.Dashboard} />} />
 
             {
               publicRoutes.map((route, index) => (

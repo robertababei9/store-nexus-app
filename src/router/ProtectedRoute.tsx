@@ -20,7 +20,7 @@ import { ROUTES } from "../utils/Constants"
 // }
 
 const ProtectedRoute = (props: PropsWithChildren): any => {
-    const isLoggedIn = localStorage.getItem("jwt");
+    const isLoggedIn = localStorage.getItem("accessToken");
 
      return isLoggedIn ? (
         props.children
