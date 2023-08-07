@@ -7,6 +7,8 @@ import { ROUTES } from "../utils/Constants";
 import NotFound404 from "../pages/not-found/NotFound";
 
 import Menu from '../components/_shared/Menu/Menu'
+import { useSelector } from "react-redux";
+import { RootState } from "src/redux/store";
 
 
 const publicRoutes: RouteType[] = [
@@ -27,21 +29,18 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
-  const isLoggedIn = () => {
-    let flag = false;
-
-    localStorage.getItem("accessToken") ? flag = true : flag = false;
-
-    return flag;
-  }
+  const accessToken = useSelector(
+    (state: RootState) => state.authentication.accessToken
+)
 
   console.log("-------------- Router.tsx rendering ... --------------")
+  console.log("accessToken = ", accessToken);
     
   return (
     <BrowserRouter>
       <div className="flex w-full h-full">
         {
-          isLoggedIn() && (
+          accessToken && (
             <Menu />
           )
         }

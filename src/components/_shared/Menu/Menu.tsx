@@ -12,6 +12,8 @@ import {
 } from '@ant-design/icons';
 import { Menu, Layout, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loggedOut } from 'src/features/authentication/authenticationSlice';
 
 const { Header, Sider } = Layout;
 
@@ -52,11 +54,13 @@ const MenuComponent: React.FC = () => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
+  const dispatch = useDispatch();
+
   const handleMenuClick = ({ key }: { key: React.Key }) => {
 
     // logout
     if (key == "/login") {
-      localStorage.removeItem("accessToken");
+      dispatch(loggedOut(null));
     }
 
     if (key) {

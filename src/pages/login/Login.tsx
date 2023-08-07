@@ -7,6 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 import { ROUTES } from 'src/utils/Constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { tokenReceived } from 'src/features/authentication/authenticationSlice';
+import { RootState } from 'src/redux/store';
 
 
 
@@ -17,15 +20,21 @@ export default function Login() {
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
+    const { accessToken } = useSelector(
+        (state: RootState) => state.authentication
+    );
+    const dispatch = useDispatch();
+    
     // navigation
     const navigate = useNavigate();
+    
 
+    // prevent user going to /login if it's authenticated
     useEffect(() => {
-        // check if logged in
-        if (localStorage.getItem("accessToken")) {
+        if (accessToken) {
             navigate(ROUTES.Dashboard)
         }
-    }, []);
+    }, [accessToken]);
 
 
     const onFinish = (values: { email: string; password: string }) => {
@@ -46,9 +55,18 @@ export default function Login() {
 
         try {
             const result = await axios.post(BASE_URL + "/users/login", body); 
+
             console.log("result = ", result);
-            localStorage.setItem("accessToken", result.data);
+            const mockAuthResponse = {
+                access_token: result.data,
+                refresh_token: "not-implemented-yet",
+                token_type: "to-be-verified",
+                expires_in: -99999
+            };
+            
             navigate(ROUTES.Dashboard);
+            dispatch(tokenReceived(mockAuthResponse));
+            
         } catch(err: any) {
             console.log("Error: ", err);
         }

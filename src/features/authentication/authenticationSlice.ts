@@ -5,7 +5,14 @@ import { AuthenticationState, AuthResponse } from './types';
 import { setToken, revokeToken } from './services/authenticationServices';
 
 const initialState: AuthenticationState = {
-    currentUser: null,
+    currentUser: {
+        email: "robert@gmail.com",
+        role: "Admin",
+        exp: 123456,
+        iat: 123456,
+        iss: "asd123",
+        sub: "GUID-random-id"
+    },
     accessToken: null,
     refreshToken: null,
     loading: false,
