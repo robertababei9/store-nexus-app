@@ -20,7 +20,7 @@ export default function Login() {
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
-    const { accessToken } = useSelector(
+    const { currentUser } = useSelector(
         (state: RootState) => state.authentication
     );
     const dispatch = useDispatch();
@@ -31,10 +31,12 @@ export default function Login() {
 
     // prevent user going to /login if it's authenticated
     useEffect(() => {
-        if (accessToken) {
+        console.log("User prevented to access /login if authenticated");
+        console.log("currentUser: ", currentUser);
+        if (currentUser) {
             navigate(ROUTES.Dashboard)
         }
-    }, [accessToken]);
+    }, [currentUser]);
 
 
     const onFinish = (values: { email: string; password: string }) => {

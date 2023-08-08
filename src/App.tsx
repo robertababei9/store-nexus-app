@@ -1,8 +1,9 @@
 import { Suspense } from "react"
 import { ClipLoader } from "react-spinners"
 
-import { store } from "src/redux/store";
+import { persistor, store } from "src/redux/store";
 import { Provider } from 'react-redux'; 
+import { PersistGate } from "redux-persist/integration/react"
 
 import './App.css';
 
@@ -12,6 +13,8 @@ function App() {
   return (
     <div className="App bg-gray-100 h-screen">
         <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+
             <Suspense
               fallback={
                 <div className="flex w-full h-full items-center justify-center">
@@ -25,6 +28,8 @@ function App() {
             >
                   <Router />
               </Suspense>
+              
+          </PersistGate>
         </Provider>
     </div>
   );

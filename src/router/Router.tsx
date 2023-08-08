@@ -29,18 +29,18 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
-  const accessToken = useSelector(
-    (state: RootState) => state.authentication.accessToken
+  const currentUser = useSelector(
+    (state: RootState) => state.authentication.currentUser
 )
 
   console.log("-------------- Router.tsx rendering ... --------------")
-  console.log("accessToken = ", accessToken);
+  console.log("accessToken = ", currentUser);
     
   return (
     <BrowserRouter>
       <div className="flex w-full h-full">
         {
-          accessToken && (
+          currentUser && (
             <Menu />
           )
         }
