@@ -47,7 +47,7 @@ export default function StoresByCountry() {
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyCsGwE8eK_E5ON3eYPw31ZxTVGJC05tY3o"
+        googleMapsApiKey: "GOOGLE-MAPS-API-KEY"
     })
     const [map, setMap] = React.useState(null);
 
