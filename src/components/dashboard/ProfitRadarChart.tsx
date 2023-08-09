@@ -3,7 +3,7 @@ import { Card } from '../_shared';
 import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { Select } from 'antd';
 import { getLastYearsOptions } from '../../utils/Utils';
-import { profitRadarChart } from '../../utils/mocks/dashboard-profit-radar-chart';
+import { profitRadarChart } from '../../utils/mocks/dashboard/dashboard-profit-radar-chart';
 
 
 export default function ProfitRadarChart() {

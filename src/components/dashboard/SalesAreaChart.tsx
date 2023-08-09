@@ -3,7 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Select } from 'antd';
 
 import { Card } from '../../components/_shared';
-import { salesAreaChart } from '../../utils/mocks/dashboard-area-charts';
+import { salesAreaChart } from '../../utils/mocks/dashboard/dashboard-area-charts';
 import { getLastYearsOptions } from '../../utils/Utils';
 
 

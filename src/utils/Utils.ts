@@ -24,3 +24,4 @@ export  const getLastYearsOptions = (nrOfYears: number): OptionsType[]  => {
 
     return optionsForSelect;
 }
+

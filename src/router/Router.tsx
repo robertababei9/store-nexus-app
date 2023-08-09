@@ -22,6 +22,15 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.Dashboard,
     element: lazy(() => import("../pages/dashboard/Dashboard"))
+  },
+  // ### STORES ###
+  {
+    path: ROUTES.Stores,
+    element: lazy(() => import("../pages/stores/Stores")),
+  },
+  {
+    path: ROUTES.StoresEdit,
+    element: lazy(() => import("../pages/stores/EditStore"))
   }
 ]
 
@@ -33,8 +42,8 @@ export default function Router() {
     (state: RootState) => state.authentication.currentUser
 )
 
-  console.log("-------------- Router.tsx rendering ... --------------")
-  console.log("accessToken = ", currentUser);
+  // console.log("-------------- Router.tsx rendering ... --------------")
+  // console.log("accessToken = ", currentUser);
     
   return (
     <BrowserRouter>
