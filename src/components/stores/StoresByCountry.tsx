@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Col, Row } from 'antd'
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Card } from '../_shared'
 import CountryFlag from '../_shared/CountryFlag/CountryFlag';
 import { COUNTRY_CODE } from 'src/utils/Constants';
+import { groupedStoresByCountry } from 'src/utils/mocks/stores/stores-by-country';
 
 type CountryRowProps = {
     countryCode?: string;
@@ -14,7 +15,7 @@ type CountryRowProps = {
 const CountryRow = ({countryCode, name, noStores, dotColor = "#FF0000"}: CountryRowProps) => {
 
     return (
-        <Row className='w-full mb-4'>
+        <Row className='w-full mb-4 '>
             <Col span={9}>
                 <div className='flex justify-start items-center'>
                     <CountryFlag countryCode={countryCode}/>
@@ -35,26 +36,32 @@ const CountryRow = ({countryCode, name, noStores, dotColor = "#FF0000"}: Country
 
 const containerStyle = {
     width: '100%',
-    height: '400px'
+    height: '400px',
+    display: "flex"
+    
 };
   
 const center = {
-    lat: 30,
-    lng: 2.523
+    lat: 52.5200,
+    lng: 13.4050
 };
+const COLORS = [
+    "#FF0000", "#008000", "#0000FF", "#800080", "#FFFF00"
+];
 
 export default function StoresByCountry() {
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: "GOOGLE-MAPS-API-KEY"
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY ?? "GOOGLE-API-KEY-NOT-SET"
     })
+
+    // states
     const [map, setMap] = React.useState(null);
 
+
     const onLoad = React.useCallback(function callback(map: any) {
-        // This is just an example of getting and using the map instance!!! don't just blindly copy!
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
+        map.setZoom(3);
     
         setMap(map)
     }, [])
@@ -73,27 +80,58 @@ export default function StoresByCountry() {
                     <Col xs={24} lg={12}>
                         <div className='w-full h-full flex flex-col items-start justift-start '>
                             <p className='text-gray-400 font-semibold mb-4'>Countries</p>
-                            <CountryRow countryCode={COUNTRY_CODE.Germany} name='Germany' noStores={4} dotColor='#FF0000'/>
-                            <CountryRow countryCode={COUNTRY_CODE.Italy} name='Italy' noStores={2} dotColor='#008000'/>
-                            <CountryRow countryCode={COUNTRY_CODE.Romania} name='Romania' noStores={2} dotColor='#0000FF'/>
-                            <CountryRow countryCode={COUNTRY_CODE.UnitedStates} name='United States' noStores={13} dotColor='#800080'/>
+
+                            {
+                                groupedStoresByCountry.map((country, index) => (
+                                    <CountryRow 
+                                        countryCode={country.countryCode} 
+                                        name={country.name} 
+                                        noStores={country.noStores} 
+                                        dotColor={COLORS[index]}
+                                    />        
+                                ))
+                            }
                         </div>
                     </Col>
 
-                    <Col xs={24} lg={12}>
+                    <Col xs={24} lg={12} >
                         {
                             isLoaded ? (
                                 <GoogleMap
-                                  mapContainerStyle={containerStyle}
-                                  center={center}
-                                //   zoom={200}
-                                  onLoad={onLoad}
-                                  onUnmount={onUnmount}
-                                >
-                                  { /* Child components, such as markers, info windows, etc. */ }
-                                  <></>
+                                    mapContainerStyle={containerStyle}
+                                    center={center}
+                                    zoom={3}
+                                    onLoad={onLoad}
+                                    onUnmount={onUnmount}
+                                    options={{
+                                        mapTypeControl: false,
+                                        zoom: 3,
+                                        minZoom: 2,
+                                        maxZoom: 18,
+
+                                    }}
+                                    >
+                                        {
+                                            groupedStoresByCountry.map((country, countryIndex) => {
+                                                return country.coordinates.map((coordinates, coordinatesIndex) => (
+                                                    <Marker
+                                                        position={coordinates}
+                                                        title={country.name} 
+                                                        icon={{
+                                                            path: google.maps.SymbolPath.CIRCLE,
+                                                            scale: 6,
+                                                            fillColor: COLORS[countryIndex],
+                                                            fillOpacity: 1,
+                                                            strokeColor: "#FFF",
+                                                            strokeWeight: 0
+                                                        }}
+                                                        
+                                                    />
+                                                ))
+                                            })
+                                        }
                                 </GoogleMap>
-                            ) : <></>
+                            ) : <></>   
                         }
                     </Col>
                 </Row>

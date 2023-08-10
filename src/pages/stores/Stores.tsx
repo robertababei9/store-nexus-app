@@ -1,5 +1,6 @@
-import { Avatar, Col, Input, Row, Table, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Breadcrumb, Col, Input, Row, Table, Tag, Tooltip, Typography } from 'antd';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { AiOutlineHome } from "react-icons/ai";
 import { ColumnsType } from 'antd/es/table';
 import { ROUTES, StoreStatus, StoresStatusToStringMap } from 'src/utils/Constants';
 import { formatPrice } from 'src/utils/Utils';
@@ -8,6 +9,7 @@ import {  useNavigate } from 'react-router';
 
 import SalesStatistics from 'src/components/stores/SalesStatistics';
 import StoresByCountry from 'src/components/stores/StoresByCountry';
+import { Link } from 'react-router-dom';
 
 const Title = Typography.Title;
 
@@ -203,7 +205,27 @@ export default function Stores() {
   return (
     <div className='w-full h-full flex flex-col justify-start items-start overflow-y-scroll sm:px-16 px-4 sm:py-8 py-6'>
 
-        <Title>Stores</Title>
+        <div className="flex items-center">
+            <Title>Edit Store</Title>
+            <Breadcrumb
+                className="ml-8"
+                items={[
+                    {
+                        title: (
+                            <div className='b-6 '>
+                                <Link className='text-blue-500' to={ROUTES.Dashboard}>
+                                    <AiOutlineHome size={22} className='text-blue-400'/>
+                                </Link>
+                                
+                            </div>
+                        ),
+                    },
+                    {
+                        title: "Stores",
+                    },
+                ]}
+            />
+        </div>
 
         <Card className='w-full flex flex-col justify-between items-center mb-4'>
             <div className='w-full flex justify-between items-center mb-4'>

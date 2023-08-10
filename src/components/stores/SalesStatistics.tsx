@@ -19,7 +19,7 @@ import { formatPrice } from 'src/utils/Utils';
 
 type HeaderStatisticType = {
     title: string;
-    value: number;
+    value: string;
 }
 const HeaderStatistic = ({title, value }: HeaderStatisticType) => {
 
@@ -71,16 +71,16 @@ export default function SalesStatistics() {
                 <p className='text-base '>Sales Statistics</p>
                 <Row wrap={true} className='w-full mt-8'>
                     <Col span={4}>
-                        <HeaderStatistic title="Sales Weekly" value={48548}/>
+                        <HeaderStatistic title="Sales Weekly" value={formatPrice(2648)}/>
                     </Col>
                     <Col span={4}>
-                        <HeaderStatistic title="Sales Monthly" value={48548}/>
+                        <HeaderStatistic title="Sales Monthly" value={formatPrice(13950)}/>
                     </Col>
                     <Col span={4}>
-                        <HeaderStatistic title="Average Revenue" value={48548}/>
+                        <HeaderStatistic title="Average Revenue" value={formatPrice(48548)}/>
                     </Col>
                     <Col span={4}>
-                        <HeaderStatistic title="Total Revenue" value={48548}/>
+                        <HeaderStatistic title="Total Revenue" value={formatPrice(230000)}/>
                     </Col>
 
                 </Row>
