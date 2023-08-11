@@ -10,16 +10,20 @@ import Menu from '../components/_shared/Menu/Menu'
 
 
 const publicRoutes: RouteType[] = [
-    {
-        path: ROUTES.SignIn,
-        element: lazy(() => import("../pages/login/Login")),
-    }
+  {
+    path: ROUTES.SignIn,
+    element: lazy(() => import("../pages/login/Login")),
+  }
 ];
 
 const privateRoutes: RouteType[] = [
   {
     path: ROUTES.Dashboard,
     element: lazy(() => import("../pages/dashboard/Dashboard"))
+  }, 
+  {
+    path: ROUTES.Users,
+    element: lazy(() => import("../pages/users/Users"))
   }
 ]
 
@@ -36,7 +40,7 @@ export default function Router() {
   }
 
   console.log("-------------- Router.tsx rendering ... --------------")
-    
+
   return (
     <BrowserRouter>
       <div className="flex w-full h-full">
@@ -46,35 +50,35 @@ export default function Router() {
           )
         }
         <Routes>
-            <Route path={"/"} element={<Navigate to={ROUTES.Dashboard} />} />
+          <Route path={"/"} element={<Navigate to={ROUTES.Dashboard} />} />
 
-            {
-              publicRoutes.map((route, index) => (
-                <Route 
-                  key={index}
-                  path={route.path}
-                  element={
-                    <Suspense
-                      fallback={
-                        <div className="flex w-full h-full items-center justify-center">
-                            <ClipLoader
-                                color="#3657F8"
-                                loading
-                                size={45}
-                            />
-                        </div>
-                      }
-                    >
-                      <route.element />
-                    </Suspense>
-                  }
-                />
-              ))
-            }
+          {
+            publicRoutes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="flex w-full h-full items-center justify-center">
+                        <ClipLoader
+                          color="#3657F8"
+                          loading
+                          size={45}
+                        />
+                      </div>
+                    }
+                  >
+                    <route.element />
+                  </Suspense>
+                }
+              />
+            ))
+          }
 
-            {privateRoutes.map((route, index) => renderRoute(route, index))}
+          {privateRoutes.map((route, index) => renderRoute(route, index))}
 
-            <Route path="*" element={<NotFound404 />} />
+          <Route path="*" element={<NotFound404 />} />
         </Routes>
       </div>
     </BrowserRouter>
