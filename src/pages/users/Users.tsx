@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Breadcrumb, Table, Input, Space, Tooltip, Button, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { AiOutlineHome } from "react-icons/ai";
 import { useNavigate } from 'react-router';
 import { ROUTES } from 'src/utils/Constants';
+import { Link } from 'react-router-dom';
 
 const Title = Typography.Title;
 
@@ -179,87 +181,108 @@ const data: DataType[] = [
 ];
 
 export default function Users() {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [searchText, setSearchText] = useState('');
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [searchText, setSearchText] = useState('');
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
 
-  const filteredData = data.filter((item) =>
-  Object.values(item).some((value) => {
-    if (typeof value === 'number') {
-      return value.toString().includes(searchText);
+    const filteredData = data.filter((item) =>
+        Object.values(item).some((value) => {
+            if (typeof value === 'number') {
+                return value.toString().includes(searchText);
+            }
+            if (value && typeof value === 'string') {
+                return value.toLowerCase().includes(searchText.toLowerCase());
+            }
+            return false;
+        })
+    );
+
+
+    const navigate = useNavigate();
+
+    // adding the actions column so we can use navigate
+    if (!columns.find(x => x.key == 'actions')) {
+        // we add it only ONCE
+        columns.push({
+            title: '',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (_, record) => (<div>
+                <Tooltip title="Edit">
+                    <Button
+                        className='bg-white flex justify-center items-center'
+                        type='default'
+                        shape="circle"
+                        icon={<EditOutlined />}
+                    // onClick={() => navigate(ROUTES.StoresEdit.replace(":id", record.key))}
+                    />
+                </Tooltip>
+            </div>),
+        },)
     }
-    if (value && typeof value === 'string') {
-      return value.toLowerCase().includes(searchText.toLowerCase());
-    }
-    return false;
-  })
-);
 
 
-const navigate = useNavigate();
+    return (
+        <div className='w-full h-full overflow-y-auto'>
+            <div className='relative w-full h-full flex flex-col items-start sm:px-16 px-4 sm:py-8 py-6 z-30'>
+                <div className='flex items-center justify-between w-full'>
 
-// adding the actions column so we can use navigate
-if (!columns.find(x => x.key == 'actions')) {
-    // we add it only ONCE
-    columns.push({
-        title: '',
-        dataIndex: 'actions',
-        key: 'actions',
-        render: (_, record) => (<div>
-            <Tooltip title="Edit">
-                <Button
-                    className='bg-white flex justify-center items-center' 
-                    type='default' 
-                    shape="circle" 
-                    icon={<EditOutlined />} 
-                   // onClick={() => navigate(ROUTES.StoresEdit.replace(":id", record.key))}
+                    <div className="flex items-center">
+                        <Title>Users</Title>
+                        <Breadcrumb
+                            className="ml-8"
+                            items={[
+                                {
+                                    title: (
+                                        <div className='b-6 '>
+                                            <Link className='text-blue-500' to={ROUTES.Dashboard}>
+                                                <AiOutlineHome size={22} className='text-blue-400' />
+                                            </Link>
+
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    title: "Users",
+                                },
+                            ]}
+                        />
+                    </div>
+
+                    <Button
+                        type='primary'
+                        icon={<PlusOutlined />}
+                        style={{ height: '40px', backgroundColor: '#4361ee', borderColor: '#4361ee', marginRight: '24px' }}
+                        onClick={() => navigate(ROUTES.AddUsers)}
+
+                    >
+                        <strong style={{ fontWeight: 'bold' }}>Add user</strong>
+                    </Button>
+                </div>
+                <Space direction='vertical' style={{ marginLeft: '24px' }}>
+                    <Input
+                        placeholder='Search user'
+                        prefix={<SearchOutlined />}
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        style={{ width: '200px' }}
+                    />
+                </Space>
+                <Table
+                    rowSelection={rowSelection}
+                    columns={columns}
+                    dataSource={filteredData}
+                    style={{ width: '100%', padding: '24px' }}
                 />
-            </Tooltip>
-        </div>),
-    },)
-}
-
-
-return (
-    <div className='w-full h-full overflow-y-auto'>
-      <div className='relative w-full h-full flex flex-col items-start sm:px-16 px-4 sm:py-8 py-6 z-30'>
-        <div className='flex items-center justify-between w-full'>
-          <Title style={{ marginLeft: '24px' }}>Users</Title>
-          <Button
-            type='primary'
-            icon={<PlusOutlined />}
-            style={{ height: '40px', backgroundColor: '#4361ee', borderColor: '#4361ee', marginRight: '24px' }}
-            onClick={() => {
-              // Handle adding users logic here
-            }}
-          >
-            <strong style={{ fontWeight: 'bold' }}>Add user</strong>
-          </Button>
+            </div>
         </div>
-        <Space direction='vertical' style={{ marginBottom: 16, marginLeft: '24px' }}>
-          <Input
-            placeholder='Search user'
-            prefix={<SearchOutlined />}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: '200px' }}
-          />
-        </Space>
-        <Table
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={filteredData}
-          style={{ width: '100%', padding: '24px' }}
-        />
-      </div>
-    </div>
-  );
+    );
 }
