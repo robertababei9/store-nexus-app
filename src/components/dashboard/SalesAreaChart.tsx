@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Select } from 'antd';
 
-import { Card } from '../../components/_shared';
-import { salesAreaChart } from '../../utils/mocks/dashboard/dashboard-area-charts';
-import { getLastYearsOptions } from '../../utils/Utils';
+import { Card } from 'src/components/_shared';
+import { salesAreaChart } from 'src/utils/mocks/dashboard/dashboard-area-charts';
+import { getLastYearsOptions } from 'src/utils/Utils';
 
 
 

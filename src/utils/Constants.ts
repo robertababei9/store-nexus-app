@@ -21,12 +21,12 @@ export const COUNTRY_CODE = {
 }
 
 export enum StoreStatus {
-    Open,
-    Closed,
-    TemporarilyClosed,
-    UnderRenovation,
-    ComingSoon,
-    PermanentlyClosed,
+    Open = 0,
+    Closed = 1,
+    TemporarilyClosed = 2,
+    UnderRenovation = 3,
+    ComingSoon = 4,
+    PermanentlyClosed = 5,
 
 };
 

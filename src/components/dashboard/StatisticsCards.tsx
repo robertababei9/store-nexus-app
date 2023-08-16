@@ -3,7 +3,7 @@ import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 import { FcMoneyTransfer, FcSalesPerformance } from 'react-icons/fc';
 
 import { Card } from '../_shared';
-import { formatPrice } from '../../utils/Utils';
+import { formatPrice } from 'src/utils/Utils';
 import { Invoice, DollarUp } from '../_shared/Icons/Icons';
 
 const Fade = require('react-reveal/Fade');

@@ -1,15 +1,14 @@
-import { Avatar, Breadcrumb, Col, Input, Row, Table, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Col, Input, Row, Table, Tag, Tooltip, Typography } from 'antd';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { AiOutlineHome } from "react-icons/ai";
 import { ColumnsType } from 'antd/es/table';
 import { ROUTES, StoreStatus, StoresStatusToStringMap } from 'src/utils/Constants';
 import { formatPrice } from 'src/utils/Utils';
-import { Button, Card, Search } from 'src/components/_shared';
+import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
 import {  useNavigate } from 'react-router';
 
 import SalesStatistics from 'src/components/stores/SalesStatistics';
 import StoresByCountry from 'src/components/stores/StoresByCountry';
-import { Link } from 'react-router-dom';
+import { renderStoreStatusTag } from 'src/components/stores/Utils';
 
 const Title = Typography.Title;
 
@@ -84,20 +83,7 @@ const columns: ColumnsType<DataType> = [
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
-        render: (text) => {
-            if (text == StoresStatusToStringMap[StoreStatus.Open])
-                return <Tag color='#008000'>{text}</Tag>
-            if (text == StoresStatusToStringMap[StoreStatus.Closed])
-                return <Tag color="#FF0000">{text}</Tag>
-            if (text == StoresStatusToStringMap[StoreStatus.TemporarilyClosed])
-                return <Tag color="#FFA500">{text}</Tag>
-            if (text == StoresStatusToStringMap[StoreStatus.PermanentlyClosed])
-                return <Tag color="#8B0000">{text}</Tag>
-            if (text == StoresStatusToStringMap[StoreStatus.UnderRenovation])
-                return <Tag color="#d4b106">{text}</Tag>
-            if (text == StoresStatusToStringMap[StoreStatus.ComingSoon])
-                return <Tag color="#13c2c2">{text}</Tag>
-        },
+        render: (text) => renderStoreStatusTag(text),
     },
     {
         title: 'Last Updated',
@@ -203,28 +189,16 @@ export default function Stores() {
     }
 
   return (
-    <div className='w-full h-full flex flex-col justify-start items-start overflow-y-scroll sm:px-16 px-4 sm:py-8 py-6'>
-
+    <Layout>
         <div className="flex items-center">
-            <Title>Edit Store</Title>
+            <Title level={2}>Stores</Title>
             <Breadcrumb
-                className="ml-8"
                 items={[
-                    {
-                        title: (
-                            <div className='b-6 '>
-                                <Link className='text-blue-500' to={ROUTES.Dashboard}>
-                                    <AiOutlineHome size={22} className='text-blue-400'/>
-                                </Link>
-                                
-                            </div>
-                        ),
-                    },
-                    {
-                        title: "Stores",
-                    },
+                  {
+                    title: "Stores"
+                  }
                 ]}
-            />
+              />
         </div>
 
         <Card className='w-full flex flex-col justify-between items-center mb-4'>
@@ -252,6 +226,6 @@ export default function Stores() {
 
         <StoresByCountry />
 
-    </div>
+    </Layout>
   )
 }

@@ -7,6 +7,7 @@ import MapStoreCard from 'src/components/dashboard/MapStoreCard';
 import SalesByCountryCard from 'src/components/dashboard/SalesByCountryCard';
 import BestSellersCard from 'src/components/dashboard/BestSellersCard';
 import ProfitRadarChart from 'src/components/dashboard/ProfitRadarChart';
+import { Layout } from 'src/components/_shared';
 
 const Fade = require('react-reveal/Fade');
 
@@ -18,15 +19,15 @@ export default function Dashboard() {
 
   return (
 
-    <div className='w-full h-full overflow-y-auto'>
+    <div className='w-full h-full '>
         <div className="relative">
             <div className='absolute top-0 left-0 w-full h-[400px] bg-gradient-to-r from-cyan-200 to-cyan-500 z-10'/>
         </div>
     
-      <div className='relative w-full h-full flex flex-col items-start sm:px-16 px-4 sm:py-8 py-6 z-30'>
+      <Layout className='relative z-30'>
 
         <Fade down delay={150}>
-          <Title>Dashboard</Title>
+          <Title level={2}>Welcome to Dashboard</Title>
         </Fade>
 
         {/* 4 Cards with statisctics */}
@@ -42,13 +43,13 @@ export default function Dashboard() {
           </Col>
         </Row>
 
-        <Row gutter={16} className='w-full mt-12'>
+        <Row gutter={16} className='w-full mt-8'>
           <Col span={24}>
             <BestSellersCard />
           </Col>
         </Row>
 
-        <Row gutter={[32, 16]} className='w-full mt-12'>
+        <Row gutter={[32, 16]} className='w-full mt-8'>
           <Col xs={24} xl={8}>
             <TeamCard />
           </Col>
@@ -62,7 +63,7 @@ export default function Dashboard() {
           </Col>
           
         </Row>
-      </div>
+      </Layout>
     </div>
   )
 }

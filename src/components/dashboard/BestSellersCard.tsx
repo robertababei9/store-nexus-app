@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { Card } from '../_shared';
 
 import tempImg from '../../assets/images/humans.png';
-import { formatPrice } from '../../utils/Utils';
+import { formatPrice } from 'src/utils/Utils';
 import { Link } from 'react-router-dom';
 
 interface DataType {
