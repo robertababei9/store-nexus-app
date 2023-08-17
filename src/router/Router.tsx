@@ -24,7 +24,12 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.Users,
     element: lazy(() => import("../pages/users/Users"))
+  },
+  {
+    path: ROUTES.AddUser,
+    element: lazy(() => import("../pages/users/AddUser"))
   }
+
 ]
 
 

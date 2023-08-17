@@ -2,7 +2,7 @@ export const ROUTES = {
     SignIn: "/login",
     Dashboard: "/dashboard",
     Users: "/users",
-    AddUsers: "/users"
+    AddUser: "/users/adduser"
 }
 
 
