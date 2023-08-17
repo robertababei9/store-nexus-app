@@ -8,12 +8,22 @@ import type { TabsProps } from 'antd';
 import BasicInfo from 'src/components/edit-store/BasicInfo';
 import { StoreDataType } from 'src/types/store';
 
+import ComingSoonSvg from 'src/assets/images/git.svg'
+
+const ComingSoon = () => {
+  return (
+    <div className='w-full h-full flex flex-col justify-center items-center'>
+      <img src={ComingSoonSvg} width={450} height={250}/>
+      <p className='font-semibold text-3xl mt-3'>Coming Soon</p>
+      <p className='text-xl font-semibold mt-2'>This product it's currently in development, but be sure to check back for updates !</p>
+    </div>
+  )
+}
 
 const INITIAL_STORE_DATA: StoreDataType = {
   name: "My store name",
   description: "Some small details about the store. Could be anything",
 }
-
 
 const Title = Typography.Title;
 
@@ -34,12 +44,12 @@ export default function EditStore() {
       {
         key: '2',
         label: `Files and Documents`,
-        children: `Content of Tab Pane 2`,
+        children: <ComingSoon />,
       },
       {
         key: '3',
         label: `Inventory`,
-        children: `Content of Tab Pane 3`,
+        children: <ComingSoon />,
       },
     ];
 
