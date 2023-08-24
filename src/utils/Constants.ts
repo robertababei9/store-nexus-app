@@ -5,7 +5,10 @@ export const ROUTES = {
     // private routes
     Dashboard: "/dashboard",
     Stores: "/stores",
-    StoresEdit: "/stores/edit/:id"
+    StoresEdit: "/stores/edit/:id",
+    Invoices: "/invoices",
+    InvoicesCreate: "/invoices/create",
+
     // Users: "/users"
 }
 
@@ -39,4 +42,16 @@ export const StoresStatusToStringMap = {
     
     [StoreStatus.UnderRenovation]: 'Under Renovation',
     [StoreStatus.ComingSoon]: 'Coming Soon',
+}
+
+export enum InvoiceStatus {
+    Sent = 0,
+    Overdue = 1,
+    Paid = 2,
+}
+
+export const InvoiceStatusToStringMap = {
+    [InvoiceStatus.Sent]: "Sent",
+    [InvoiceStatus.Overdue]: "Overdue",
+    [InvoiceStatus.Paid]: "Paid"
 }

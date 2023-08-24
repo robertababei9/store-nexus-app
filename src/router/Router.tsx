@@ -31,6 +31,14 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.StoresEdit,
     element: lazy(() => import("../pages/stores/EditStore"))
+  },
+  {
+    path: ROUTES.Invoices,
+    element: lazy(() => import("../pages/invoices/Invoices"))
+  },
+  {
+    path: ROUTES.InvoicesCreate,
+    element: lazy(() => import("../pages/invoices/InvoicesCreate"))
   }
 ]
 

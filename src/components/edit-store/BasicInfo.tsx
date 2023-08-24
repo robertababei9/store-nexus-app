@@ -34,6 +34,9 @@ export default function BasicInfo({
         setMap(null)
     }, [])
 
+
+    console.log("process.env.REACT_APP_GOOGLE_API_KEY = ", process.env.REACT_APP_GOOGLE_API_KEY);
+
     return (
         <Row gutter={16} className='px-4'>
             <Col xs={24} lg={12} className='w-full flex flex-col'>

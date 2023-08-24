@@ -7,10 +7,13 @@ type ButtonProps = {
     loading?: boolean;
     className?: string;
     style?: {};  // this means object .... {} == object
-    type?: "primary" | "link" | "text" | "ghost" | "default" | "dashed" | undefined;
+    // type?: "primary" | "link" | "text" | "ghost" | "default" | "dashed" | undefined;
+    type?: "primary" | "secondary" | undefined;
     icon?: any;
     shape?: "circle" | "default" | "round" | undefined
 };
+
+const secondaryTypeClassName = "font-semibold text-white !bg-[#4F46E5] hover:!bg-[#3730A3]"
 
 export default function Button({
     children,
@@ -23,14 +26,17 @@ export default function Button({
     icon,
     shape,
 }: PropsWithChildren<ButtonProps>) {
+
+
+
   return (
     <AntdButton
         style={style}
-        className={`bg-blue-500 ${className}`}
+        className={`bg-blue-500 ${type == "secondary" ? secondaryTypeClassName : ""} ${className} `}
         disabled={disabled}
         loading={loading}
         onClick={onClick}
-        type={type}
+        type="primary"
         icon={icon}
         shape={shape}
     >

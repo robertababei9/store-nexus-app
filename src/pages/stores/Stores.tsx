@@ -178,7 +178,7 @@ export default function Stores() {
                 <Tooltip title="Edit">
                     <Button
                         className='bg-white flex justify-center items-center' 
-                        type='default' 
+                        type='primary' 
                         shape="circle" 
                         icon={<EditOutlined />} 
                         onClick={() => navigate(ROUTES.StoresEdit.replace(":id", record.key))}

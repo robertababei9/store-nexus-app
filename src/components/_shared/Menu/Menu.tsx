@@ -8,12 +8,14 @@ import {
   HomeOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
+  FileDoneOutlined
 } from '@ant-design/icons';
 import { Menu, Layout, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loggedOut } from 'src/features/authentication/authenticationSlice';
+import { ROUTES } from 'src/utils/Constants';
 
 const { Header, Sider } = Layout;
 
@@ -44,6 +46,7 @@ function getItem(
 const items: MenuItem[] = [
   getItem('Dashboard', '/dashboard', <HomeOutlined />),
   getItem('Stores', '/stores', <ShopOutlined />),
+  getItem('Invoices', ROUTES.Invoices, <FileDoneOutlined />),
   getItem('Users', '/users', <UserOutlined />),
   getItem('Settings', '/settings', <SettingOutlined />),
   getItem('Log Out', '/login', <LogoutOutlined />),
