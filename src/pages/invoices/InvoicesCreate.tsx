@@ -4,6 +4,8 @@ import { Steps } from 'antd';
 
 import { Breadcrumb, Layout, Button } from 'src/components/_shared';
 import CreateInvoiceStepOne from 'src/components/invoices/CreateInvoiceStepOne';
+import { useForm } from 'react-hook-form';
+import { InvoiceFormType } from 'src/types/invoices';
 
 const Title = Typography.Title;
 
@@ -25,7 +27,41 @@ const steps = [
 
 export default function Invoices() {
 
+    // states
     const [current, setCurrent] = useState(0);
+
+      // form
+    const methods = useForm<InvoiceFormType>({
+        defaultValues: {
+        items: [
+            {
+            name: "",
+            description: "",
+            qty: 1,
+            price: 1
+            }
+        ],
+        tax: 0,                   // percentage
+        discount: 0,              // percentage
+        subtotal: 1,              // sum of all items
+        taxSubtotal: 0,           // tax from subtotal
+        discountSubtotal: 0,      // discount from subtotal
+        total: 1                  // subtotal & tax & discount
+        }
+    });
+
+    // handlers
+    const handleNext = async () => {
+        if (current == 0) {
+            const isValid = await methods.trigger();
+
+            if (!isValid) {
+                return;
+            }
+        }
+
+        setCurrent(prev => prev + 1);
+    }
 
 
     const items = steps.map((item) => ({ key: item.title, title: item.title }));
@@ -55,7 +91,7 @@ export default function Invoices() {
 
                     {
                         current == 0 && (
-                            <CreateInvoiceStepOne />
+                            <CreateInvoiceStepOne methods={methods}/>
                         )
                     }
 
@@ -84,7 +120,7 @@ export default function Invoices() {
                 }
                 {
                     (current < steps.length - 1) ? (
-                        <Button onClick={() => setCurrent(prev => prev + 1)}>Next</Button>
+                        <Button onClick={handleNext}>Next</Button>
                     ) : (
                         <div></div>
                     )

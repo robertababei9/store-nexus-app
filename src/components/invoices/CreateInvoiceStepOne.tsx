@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Col, Row, DatePicker} from 'antd'
-import { Controller, useFieldArray, useForm } from "react-hook-form"
+import { Controller, UseFormReturn, useFieldArray, useForm } from "react-hook-form"
 import { TextField } from '@mui/material';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -9,30 +9,16 @@ import { Button, Card } from 'src/components/_shared';
 import { formatPrice, getDefaultDateFormat } from 'src/utils/Utils'
 import { InvoiceFormType, ItemType } from 'src/types/invoices';
 
+type CreateInvoiceStepOneProps = {
+  methods: UseFormReturn<InvoiceFormType, any, undefined>
+}
 
-export default function CreateInvoiceStepOne() {
 
-  // states
+export default function CreateInvoiceStepOne({
+  methods
+}: CreateInvoiceStepOneProps) {
 
-  // form
-  const methods = useForm<InvoiceFormType>({
-    defaultValues: {
-      items: [
-        {
-          name: "",
-          description: "",
-          qty: 1,
-          price: 1
-        }
-      ],
-      tax: 0,                   // percentage
-      discount: 0,              // percentage
-      subtotal: 1,              // sum of all items
-      taxSubtotal: 0,           // tax from subtotal
-      discountSubtotal: 0,      // discount from subtotal
-      total: 1                  // subtotal & tax & discount
-    }
-  });
+  // form items
   const itemsMethods = useFieldArray({
     control: methods.control,
     name: "items"
@@ -42,12 +28,9 @@ export default function CreateInvoiceStepOne() {
   methods.watch("tax");
   methods.watch("discount");
 
-  // effects
-  useEffect(() => {
-    console.log("subtotal = ", methods.getValues("subtotal"));
-    console.log("tax = ", methods.getValues("tax"));
-    console.log("discount = ", methods.getValues("discount"));
 
+  // effects  --> calculate and set amounts
+  useEffect(() => {
     let subTotal: number = 0;
 
     const items = methods.getValues("items");
@@ -71,8 +54,8 @@ export default function CreateInvoiceStepOne() {
 
   }, [methods.getValues()])
 
-  // handlers
 
+  // handlers
   const handleAddItem = () => {
     const newItem: ItemType = {
       name: "",
@@ -84,10 +67,13 @@ export default function CreateInvoiceStepOne() {
   }
 
   const handleDeleteItem = (index: number) => {
-    itemsMethods.remove(index);
+    if (methods.getValues("items").length > 1) {
+      itemsMethods.remove(index);
+    }
   }
 
   // console.log("rendering data = ", methods.getValues());
+
 
   return (
     <div className='w-full'>
@@ -107,11 +93,14 @@ export default function CreateInvoiceStepOne() {
                       <Controller
                           name={`dueDate`}
                           control={methods.control}
+                          rules={{
+                            required: true
+                          }}
                           render={({
                               field: { onChange, value },
                               fieldState: { error },
                           }) => (
-                            <DatePicker onChange={onChange} />
+                            <DatePicker onChange={onChange} placeholder='Select Date *' status={error ? "error" : ""}/>
                           )}
                         />
                   </div>
@@ -132,6 +121,9 @@ export default function CreateInvoiceStepOne() {
                     <Controller
                         name={`billTo.to`}
                         control={methods.control}
+                        rules={{
+                          required: true
+                        }}
                         render={({
                             field: { onChange, value },
                             fieldState: { error },
@@ -145,13 +137,18 @@ export default function CreateInvoiceStepOne() {
                               onChange={(value) => {
                                 onChange(value);
                               }}
+                              error={error !== undefined}
                               size='small'
+                              required
                           />
                         )}
                       />
                       <Controller
                         name={`billTo.email`}
                         control={methods.control}
+                        rules={{
+                          required: true
+                        }}
                         render={({
                             field: { onChange, value },
                             fieldState: { error },
@@ -166,12 +163,17 @@ export default function CreateInvoiceStepOne() {
                                 onChange(value);
                               }}
                               size='small'
+                              error={error !== undefined}
+                              required
                           />
                         )}
                       />
                       <Controller
                         name={`billTo.address`}
                         control={methods.control}
+                        rules={{
+                          required: true
+                        }}
                         render={({
                             field: { onChange, value },
                             fieldState: { error },
@@ -186,6 +188,8 @@ export default function CreateInvoiceStepOne() {
                                 onChange(value);
                               }}
                               size='small'
+                              error={error !== undefined}
+                              required
                           />
                         )}
                       />
@@ -196,6 +200,9 @@ export default function CreateInvoiceStepOne() {
                     <Controller
                         name={`billFrom.from`}
                         control={methods.control}
+                        rules={{
+                          required: true
+                        }}
                         render={({
                             field: { onChange, value },
                             fieldState: { error },
@@ -210,12 +217,17 @@ export default function CreateInvoiceStepOne() {
                                 onChange(value);
                               }}
                               size='small'
+                              error={error !== undefined}
+                              required
                           />
                         )}
                       />
                       <Controller
                         name={`billFrom.email`}
                         control={methods.control}
+                        rules={{
+                          required: true
+                        }}
                         render={({
                             field: { onChange, value },
                             fieldState: { error },
@@ -230,12 +242,17 @@ export default function CreateInvoiceStepOne() {
                                 onChange(value);
                               }}
                               size='small'
+                              error={error !== undefined}
+                              required
                           />
                         )}
                       />
                       <Controller
                         name={`billFrom.address`}
                         control={methods.control}
+                        rules={{
+                          required: true
+                        }}
                         render={({
                             field: { onChange, value },
                             fieldState: { error },
@@ -250,6 +267,8 @@ export default function CreateInvoiceStepOne() {
                                 onChange(value);
                               }}
                               size='small'
+                              error={error !== undefined}
+                              required
                           />
                         )}
                       />
@@ -293,6 +312,9 @@ export default function CreateInvoiceStepOne() {
                             <Controller
                               name={`items.${index}.name`}
                               control={methods.control}
+                              rules={{
+                                required: true
+                              }}
                               render={({
                                 field: { onChange, value },
                                 fieldState: { error },
@@ -307,6 +329,7 @@ export default function CreateInvoiceStepOne() {
                                     onChange(value);
                                   }}
                                   required
+                                  error={error !== undefined}
                                   size='small'
                               />
                             )}
@@ -328,7 +351,6 @@ export default function CreateInvoiceStepOne() {
                                   onChange={(value) => {
                                     onChange(value);
                                   }}
-                                  required
                                   size='small'
                               />
                             )}
@@ -340,6 +362,9 @@ export default function CreateInvoiceStepOne() {
                           <Controller
                                 name={`items.${index}.qty`}
                                 control={methods.control}
+                                rules={{
+                                  required: true
+                                }}
                                 render={({
                                   field: { onChange, value },
                                   fieldState: { error },
@@ -354,6 +379,7 @@ export default function CreateInvoiceStepOne() {
                                     onChange={(value) => {
                                       onChange(value);
                                     }}
+                                    error={error !== undefined}
                                     required
                                     size='small'
                                 />
@@ -364,6 +390,9 @@ export default function CreateInvoiceStepOne() {
                             <Controller
                                 name={`items.${index}.price`}
                                 control={methods.control}
+                                rules={{
+                                  required: true
+                                }}
                                 render={({
                                   field: { onChange, value },
                                   fieldState: { error },
@@ -378,6 +407,7 @@ export default function CreateInvoiceStepOne() {
                                       onChange={(value) => {
                                         onChange(value);
                                       }}
+                                      error={error !== undefined}
                                       required
                                       size='small'
                                 />
