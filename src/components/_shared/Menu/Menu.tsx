@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import humansImage from 'src/assets/images/humans.png';
+// import AppLogo from 'src/assets/images/appLogo.svg';
 
 import {
   SettingOutlined,
@@ -16,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loggedOut } from 'src/features/authentication/authenticationSlice';
 import { ROUTES } from 'src/utils/Constants';
+import { AppLogo } from '../Icons/Icons';
 
 const { Header, Sider } = Layout;
 
@@ -75,18 +77,20 @@ const MenuComponent: React.FC = () => {
     <Layout className='z-50 '>
         <Sider trigger={null} collapsible collapsed={collapsed} className='h-full relative w-auto'>
           <div className=' w-inherit'>
-              <Header className="bg-transparent p-0 flex justify-between items-center">
-                <div className='w-[40%]'>
-                  <img
-                    src={humansImage}
-                    alt="Humans image"
-                  />
+              <Header className={`bg-transparent p-0 flex ${collapsed && "flex-col"}  justify-between items-center sm:mb-32`}>
+                <div className='pt-4 pl-4'>
+                  {/* <img 
+                    src={AppLogo}
+                  /> */}
+                  <div className={`${collapsed ? '-scale-[50%] -translate-x-2' : ''}`}>
+                    <AppLogo width={50} height={50}/>
+                  </div>
                 </div>
                 <Button
                   type="text"
                   icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                   onClick={() => setCollapsed(!collapsed)}
-                  className={`text-xl w-166 h-16 text-white`}
+                  className={`text-xl w-166 h-16 text-white ${collapsed ? '-order-1': ''}`}
                   style={{color: "white"}}
                 />
               </Header>

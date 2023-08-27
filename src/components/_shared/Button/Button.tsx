@@ -13,7 +13,7 @@ type ButtonProps = {
     shape?: "circle" | "default" | "round" | undefined
 };
 
-const secondaryTypeClassName = "font-semibold text-white !bg-[#4F46E5] hover:!bg-[#3730A3]"
+const secondaryTypeClassName = "font-semibold text-white bg-secondary hover:!bg-secondaryHover"
 
 export default function Button({
     children,
