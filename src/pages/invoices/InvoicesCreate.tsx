@@ -37,7 +37,7 @@ export default function Invoices() {
     const layoutRef = useRef<null | HTMLDivElement>(null);
 
     // states
-    const [current, setCurrent] = useState(2);
+    const [current, setCurrent] = useState(0);
     const [nextLoading, setNextLoading] = useState<boolean>(false);
 
       // form
