@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Checkbox, Form, Input } from 'antd';
+import { Checkbox, Form, FormInstance, Input } from 'antd';
+
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Button from 'src/components/_shared/Button/Button';
 import humansImage from 'src/assets/images/humans.png';
@@ -19,6 +20,9 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+
+    const [form, setForm] = useState<FormInstance | null>(null);
+
 
     const { currentUser } = useSelector(
         (state: RootState) => state.authentication
@@ -48,15 +52,16 @@ export default function Login() {
     // noi functia asta o mutam pe alt Thread
     const handleLogin = async () => {
 
-        const BASE_URL = "https://store-nexus-api.azurewebsites.net";
+        const BASE_URL = "https://store-nexus-app.azurewebsites.net/api";
         const body = {
-            Email: "robert@gmail.com",
-            Password: "asd123"
+            Email: email,
+            Password: password
         };
         setLoading(true);
 
         try {
-            const result = await axios.post(BASE_URL + "/users/login", body); 
+            const result = await axios.post(BASE_URL + "/users/login", body);
+
 
             console.log("result = ", result);
             const mockAuthResponse = {
@@ -65,11 +70,13 @@ export default function Login() {
                 token_type: "to-be-verified",
                 expires_in: -99999
             };
-            
+
             navigate(ROUTES.Dashboard);
             dispatch(tokenReceived(mockAuthResponse));
-            
-        } catch(err: any) {
+            // arata-mi ca merge
+
+        } catch (err: any) {
+
             console.log("Error: ", err);
         }
         finally {
@@ -84,10 +91,15 @@ export default function Login() {
 
 
     const onSubmit = () => {
-        // validare 
-
-        // api call
-        
+        if (form) {
+            form.validateFields()
+                .then(() => {
+                    handleLogin();
+                })
+                .catch(errorInfo => {
+                    console.log('Form validation failed:', errorInfo);
+                });
+        }
     }
 
 
@@ -115,6 +127,8 @@ export default function Login() {
                             email: '',
                             password: '',
                         }}
+                        onFinish={onSubmit}
+                        form={form as FormInstance}
                     >
                         <Form.Item
                             name='email'
@@ -133,7 +147,7 @@ export default function Login() {
                                 prefix={<UserOutlined />}
                                 placeholder='Email'
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)} 
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </Form.Item>
 
