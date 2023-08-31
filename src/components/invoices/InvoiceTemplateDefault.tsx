@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSendEmail } from 'src/features/invoices/invoicesSlice';
 import { RootState } from 'src/redux/store';
 import { AppLogo } from '../_shared/Icons/Icons';
-import { formatPrice } from 'src/utils/Utils';
+import { formatPrice, getDefaultDateFormat } from 'src/utils/Utils';
 
 type InvoiceTemplateDefaultType = {
     showSendEmail?: boolean;
@@ -18,6 +18,7 @@ export default function InvoiceTemplateDefault({
     const {data: invoiceData, sendEmail} = useSelector(
         (state: RootState) => state.invoices
     )
+
 
   return (
     <>
@@ -41,9 +42,9 @@ export default function InvoiceTemplateDefault({
                                 </Col>
                                 <Col span={1}></Col>
                                 <Col span={15} className="w-full flex flex-col justify-center pl-8 items-start border-l-2">
-                                    <p className="text-base font-semibold">Robert Ababei</p>
-                                    <p className="text-base max-w-[170px] text-left">Aleea Azurului 2, bl. Z, sc.X, ap. 99</p>
-                                    <p className="text-base">robert.ababei9@gmail.com</p>
+                                    <p className="text-base font-semibold">{invoiceData?.billFrom.from}</p>
+                                    <p className="text-base max-w-[170px] text-left">{invoiceData?.billFrom.address}</p>
+                                    <p className="text-base">{invoiceData?.billFrom.email}</p>
                                 </Col>
                             </Row>
                         </Col>
@@ -54,9 +55,9 @@ export default function InvoiceTemplateDefault({
                                 </Col>
                                 <Col span={1}></Col>
                                 <Col span={15} className="w-full flex flex-col justify-center pl-8 items-start border-l-2">
-                                    <p className="text-base font-semibold">Robert Ababei</p>
-                                    <p className="text-base max-w-[170px] text-left">Aleea Azurului 2, bl. Z, sc.X, ap. 99</p>
-                                    <p className="text-base">robert.ababei9@gmail.com</p>
+                                    <p className="text-base font-semibold">{invoiceData?.billTo.to}</p>
+                                    <p className="text-base max-w-[170px] text-left">{invoiceData?.billTo.address}</p>
+                                    <p className="text-base">{invoiceData?.billTo.email}</p>
                                 </Col>
                             </Row>
                         </Col>
@@ -76,7 +77,7 @@ export default function InvoiceTemplateDefault({
                                     <p className="text-base text-gray-600 font-semibold">INVOICE DATE</p>
                                 </div>
                                 <div className="w-[50%] text-left">
-                                    <p className="text-base pl-4">26 Aug 2023</p>
+                                    <p className="text-base pl-4">{getDefaultDateFormat(new Date())}</p>
                                 </div>
                             </div>
 
@@ -85,7 +86,7 @@ export default function InvoiceTemplateDefault({
                                     <p className="text-base text-gray-600 font-semibold">DUE DATE</p>
                                 </div>
                                 <div className="w-[50%] text-left">
-                                    <p className="text-base pl-4">31 Dec 2023</p>
+                                    <p className="text-base pl-4">{invoiceData?.dueDate}</p>
                                 </div>
                             </div>
 
@@ -94,7 +95,7 @@ export default function InvoiceTemplateDefault({
                                     <p className="text-base text-gray-600 font-semibold">TOTAL</p>
                                 </div>
                                 <div className="w-[50%] text-left">
-                                    <p className="text-base pl-4">{formatPrice(10000)}</p>
+                                    <p className="text-base pl-4">{formatPrice(invoiceData?.total ?? -999)}</p>
                                 </div>
                             </div>
                         </div>
@@ -103,37 +104,37 @@ export default function InvoiceTemplateDefault({
                 <div className='flex flex-col items-start w-full mt-8'>
                 <div className='w-full'>
                     <Row gutter={16}>
-                    <Col xs={24} md={16} className='flex justify-start'>
+                    <Col xs={24} md={12} lg={16} className='flex justify-start'>
                         <p className='text-base font-semibold text-gray-500 mb-4'>ITEM</p>
                     </Col>
-                    <Col xs={24} md={3} className='flex justify-start'>
+                    <Col xs={24} md={3} lg={3} className='flex justify-start'>
                         <p className='text-base font-semibold text-gray-500 mb-4'>QTY</p>
                     </Col>
-                    <Col xs={24} md={3} className='flex justify-start'>
+                    <Col md={4} lg={3} className='flex justify-start'>
                         <p className='text-base font-semibold text-gray-500 mb-4'>PRICE/RATE</p>
                     </Col>
-                    <Col xs={24} md={2} className='flex justify-end'>
+                    <Col md={3} lg={2} className='flex justify-end'>
                         <p className='text-base font-semibold text-gray-500 mb-4'>TOTAL</p>
                     </Col>
                     </Row>
                 </div>
                 <div className="w-full h-1 bg-gray-100"/>
                 {
-                    [1000].map((item, index: number) => (
-                        <div className="w-full border-b-2 border-gray-100 py-2 ">
+                    invoiceData?.items.map((item, index: number) => (
+                        <div key={item.name + index} className="w-full border-b-2 border-gray-100 py-2 ">
                             <Row gutter={16}>
-                                <Col xs={24} md={16} className='flex flex-col justify-start items-start'>
-                                    <p className='text-base font-semibold mb-2'>Back-end & Database</p>
-                                    <p className='text-sm text-gray-600 text-left  mb-2'>Back-end & Database description description description description description description description description description description</p>
+                                <Col xs={24} md={12} lg={16} className='flex flex-col justify-start items-start'>
+                                    <p className='text-base font-semibold mb-2'>{item.name}</p>
+                                    <p className='text-sm text-gray-600 text-left  mb-2'>{item.description}</p>
                                 </Col>
-                                <Col xs={24} md={3} className='flex justify-start items-center'>
-                                    <p className='text-base  mb-4'>1</p>
+                                <Col xs={24} md={3} lg={3} className='flex justify-start items-center'>
+                                    <p className='text-base  mb-4'>{item.qty}</p>
                                 </Col>
-                                <Col xs={24} md={3} className='flex justify-start items-center'>
-                                    <p className='text-base  mb-4'>{formatPrice(item)}</p>
+                                <Col xs={24} md={4} lg={3} className='flex justify-start items-center'>
+                                    <p className='text-base  mb-4'>{formatPrice(item.price * item.qty)}</p>
                                 </Col>
-                                <Col xs={24} md={2} className='flex justify-end items-center'>
-                                    <p className='text-base  mb-4'>{formatPrice(item)}</p>
+                                <Col xs={24} md={3} lg={2} className='flex justify-end items-center'>
+                                    <p className='text-base  mb-4'>{formatPrice(item.price * item.qty)}</p>
                                 </Col>
                             </Row>
                         </div>
@@ -147,7 +148,7 @@ export default function InvoiceTemplateDefault({
                         <p className="font-semibold text-left text-gray-500">SUBTOTAL</p>
                     </Col>
                     <Col xs={24} lg={8}>
-                        <p className="text-base text-base text-right">{formatPrice(47315)}</p>
+                        <p className="text-base text-base text-right">{formatPrice(invoiceData?.subtotal ?? -999)}</p>
                     </Col>
                 </Row>
                 <Row className="border-b-2 border-gray-100 pb-2 mb-3">
@@ -155,7 +156,7 @@ export default function InvoiceTemplateDefault({
                         <p className="font-semibold text-left  text-gray-500">TAX</p>
                     </Col>
                     <Col xs={24} lg={8}>
-                        <p className="text-base text-base text-right">{formatPrice(1259)}</p>
+                        <p className="text-base text-base text-right">{formatPrice(invoiceData?.taxSubtotal ?? -999)}</p>
                     </Col>
                 </Row>
                 <Row className="border-b-2 border-gray-100 pb-2 mb-3">
@@ -163,7 +164,7 @@ export default function InvoiceTemplateDefault({
                         <p className="font-semibold text-left  text-gray-500">DISCOUNT</p>
                     </Col>
                     <Col xs={24} lg={8}>
-                        <p className="text-base text-base text-right">{formatPrice(350)}</p>
+                        <p className="text-base text-base text-right">{formatPrice(invoiceData?.discountSubtotal ?? -999)}</p>
                     </Col>
                 </Row>
                 <Row className="">
@@ -171,7 +172,7 @@ export default function InvoiceTemplateDefault({
                         <p className="font-semibold text-left text-2xl text-gray-500">TOTAL</p>
                     </Col>
                     <Col xs={24} lg={8}>
-                        <p className="text-2xl text-right font-semibold">{formatPrice(49074)}</p>
+                        <p className="text-2xl text-right font-semibold">{formatPrice(invoiceData?.total ?? -999)}</p>
                     </Col>
                 </Row>
 
@@ -179,9 +180,9 @@ export default function InvoiceTemplateDefault({
                     <Col span={2} className="flex items-center">
                         <AppLogo width={45} height={45}/>
                     </Col>
-                    <Col span={22} className="">
+                    <Col span={22} className="flex items-center">
                         <p className="pl-4 text-left text-sm text-gray-500">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                            {invoiceData?.notes}
                         </p>
                     </Col>
                 </Row>

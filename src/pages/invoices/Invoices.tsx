@@ -1,4 +1,5 @@
-import { Avatar, Col, Input, Row, Table, Tag, Tooltip, Typography } from 'antd';
+import { useEffect, useState } from 'react';
+import { Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -7,30 +8,28 @@ import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared
 import { formatPrice } from 'src/utils/Utils';
 import { InvoiceStatus, ROUTES } from 'src/utils/Constants';
 import { renderInvoiceStatusTag } from 'src/components/invoices/Utils';
+import axios from 'axios';
+import { openNotification } from 'src/utils/Notification';
 
 const Title = Typography.Title;
 
 interface DataType {
-
     InvoiceId: string;
-    Reference: string; // unique natural string key with invoice number
+    InvoiceNo: string; // unique natural string key with invoice number
     BillTo: string; // email where the invoice was sent
     CreatedDate: string;
     DueDate: string;
     Status: string;
     Total: number;
-
-    // inventoryLevel: string; // low, medium, high
-    // noEmployees: number  
 }
 
 const columns: ColumnsType<DataType> = [
     {
         title: 'Invoice #',
-        dataIndex: 'Reference',
-        key: 'Reference',
+        dataIndex: 'InvoiceNo',
+        key: 'InvoiceNo',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.Reference.localeCompare(b.Reference),
+        sorter: (a, b) => a.InvoiceNo.localeCompare(b.InvoiceNo),
         filterSearch: true,
     },
     {
@@ -78,7 +77,7 @@ const columns: ColumnsType<DataType> = [
 const mockData: DataType[] = [
     {
         InvoiceId: "random-id-1",
-        Reference: 'Invoice#001',
+        InvoiceNo: 'Invoice#001',
         BillTo: 'robert.srl@gmail.com',
         CreatedDate: '22 Aug 2023',
         DueDate: '28 Sep 2023',
@@ -87,7 +86,7 @@ const mockData: DataType[] = [
     },
     {
         InvoiceId: "random-id-2",
-        Reference: 'Invoice#002',
+        InvoiceNo: 'Invoice#002',
         BillTo: 'razvan.moto@motoemotion.com',
         CreatedDate: '10 Aug 2023',
         DueDate: '10 Sep 2023',
@@ -96,7 +95,7 @@ const mockData: DataType[] = [
     },
     {
         InvoiceId: "random-id-3",
-        Reference: 'Invoice#003',
+        InvoiceNo: 'Invoice#003',
         BillTo: 'contact@kaufland.de',
         CreatedDate: '05 Aug 2023',
         DueDate: '05 Sep 2023',
@@ -105,7 +104,7 @@ const mockData: DataType[] = [
     },
     {
         InvoiceId: "random-id-4",
-        Reference: 'Invoice#004',
+        InvoiceNo: 'Invoice#004',
         BillTo: 'marfuri.romania@marfuriro.ro',
         CreatedDate: '22 Aug 2023',
         DueDate: '22 Nov 2023',
@@ -114,9 +113,48 @@ const mockData: DataType[] = [
     },
 ];
 
+
 export default function Invoices() {
 
     const navigate = useNavigate();
+
+    // states
+    const [tableData, setTableData] = useState<DataType[]>([]);
+    const [loading, setloading] = useState<boolean>(false);
+
+    // effects
+    useEffect(() => {
+        // API: get invoices
+        getInvoices();
+    }, []);
+
+
+    // helpers
+    const getInvoices = async () => {
+        try {
+            setloading(true);
+
+            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+            // const BASE_URL = "https://localhost:7268";
+            const result = await axios.get(`${BASE_URL}/api/invoices/GetAll`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }  
+            });
+
+            if (result.data) {
+                setTableData(result.data);
+            }
+        }
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
+        }
+        finally {
+            setloading(false);
+        }
+
+    }
 
 
     return (
@@ -147,8 +185,9 @@ export default function Invoices() {
                 <Table 
                     size='middle' 
                     className='w-full' 
-                    dataSource={mockData} 
+                    dataSource={tableData} 
                     columns={columns}
+                    loading={loading}
 
                 />
             </Card>

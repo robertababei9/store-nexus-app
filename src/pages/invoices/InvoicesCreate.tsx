@@ -9,6 +9,8 @@ import CreateInvoiceStepOne from 'src/components/invoices/CreateInvoiceStepOne';
 import { setData } from 'src/features/invoices/invoicesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
+import axios from 'axios';
+import { openNotification } from 'src/utils/Notification';
 
 const CreateInvoiceStepTwo = lazy(() => import("src/components/invoices/CreateInvoiceStepTwo"));
 const CreateInvoiceStepThree = lazy(() => import("src/components/invoices/CreateInvoiceStepThree"));
@@ -43,20 +45,21 @@ export default function Invoices() {
       // form
     const methods = useForm<InvoiceFormType>({
         defaultValues: {
-        items: [
-            {
-            name: "",
-            description: "",
-            qty: 1,
-            price: 1
-            }
-        ],
-        tax: 0,                   // percentage
-        discount: 0,              // percentage
-        subtotal: 1,              // sum of all items
-        taxSubtotal: 0,           // tax from subtotal
-        discountSubtotal: 0,      // discount from subtotal
-        total: 1                  // subtotal & tax & discount
+            invoiceNo: "to-do-something-with-this-id",
+            items: [
+                {
+                name: "",
+                description: "",
+                qty: 1,
+                price: 1
+                }
+            ],
+            tax: 0,                   // percentage
+            discount: 0,              // percentage
+            subtotal: 1,              // sum of all items
+            taxSubtotal: 0,           // tax from subtotal
+            discountSubtotal: 0,      // discount from subtotal
+            total: 1                  // subtotal & tax & discount
         }
     });
 
@@ -83,17 +86,37 @@ export default function Invoices() {
             if (!isValid) {
                 return;
             }
+            
+            dispatch(setData(methods.getValues()));
         }
 
         if (current == 1) {
-            // wait 3-4 sec --> mock API call
             setNextLoading(true);
-            await delay(3000);
-            setNextLoading(false);
+
+
+            try {
+                const body =  methods.getValues();
+                const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+                // const BASE_URL = "https://localhost:7268";
+
+                const result = await axios.post(`${BASE_URL}/api/invoices/add`, body, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                      }  
+                });
+            } 
+            catch(err: any) {
+                console.log("err = ", err);
+                openNotification("error");
+                return;
+            }
+            finally {
+                setNextLoading(false);
+            }
+
         }
 
 
-        dispatch(setData(methods.getValues()));
 
         setCurrent(prev => prev + 1);
     }
@@ -156,7 +179,7 @@ export default function Invoices() {
                 ) : (
                     <div className='w-full flex justify-between items-center bg-primary px-6 py-4'>
                         {
-                            ([0,1,2].includes(current)) ? (
+                            ([1,2].includes(current)) ? (
                                 <Button onClick={() => setCurrent(prev => prev - 1)}>Previous</Button>
                             ) : (
                                 <div></div>

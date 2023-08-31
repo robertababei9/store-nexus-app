@@ -4,6 +4,7 @@ import { Controller, UseFormReturn, useFieldArray, useForm } from "react-hook-fo
 import { TextField } from '@mui/material';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { AiOutlinePlus } from 'react-icons/ai';
+import dayjs from 'dayjs';
 
 import { Button, Card } from 'src/components/_shared';
 import { formatPrice, getDefaultDateFormat } from 'src/utils/Utils'
@@ -78,7 +79,7 @@ export default function CreateInvoiceStepOne({
   return (
     <div className='w-full'>
       <Row gutter={16}>
-        <Col xs={24} md={18}>
+        <Col xs={24} lg={18}>
           <Card className='w-full mb-4'>
             <Row>
                 <Col xs={24} md={12} className='flex flex-col'>
@@ -100,7 +101,13 @@ export default function CreateInvoiceStepOne({
                               field: { onChange, value },
                               fieldState: { error },
                           }) => (
-                            <DatePicker onChange={onChange} placeholder='Select Date *' status={error ? "error" : ""}/>
+                            <DatePicker
+                              format="DD-MMM-YYYY" 
+                              value={value ? dayjs(value) : null}
+                              onChange={((date: any, dateString: string) => onChange(dateString))} 
+                              placeholder='Select Date *' 
+                              status={error ? "error" : ""}
+                            />
                           )}
                         />
                   </div>
@@ -147,7 +154,14 @@ export default function CreateInvoiceStepOne({
                         name={`billTo.email`}
                         control={methods.control}
                         rules={{
-                          required: true
+                          required: true, 
+                          validate: {
+                            maxLength: (v) =>
+                              v.length <= 50 || "The email should have at most 50 characters",
+                            matchPattern: (v) =>
+                              /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                              "Must be a valid email",
+                          },
                         }}
                         render={({
                             field: { onChange, value },
@@ -164,6 +178,7 @@ export default function CreateInvoiceStepOne({
                               }}
                               size='small'
                               error={error !== undefined}
+                              helperText={error?.message}
                               required
                           />
                         )}
@@ -226,7 +241,14 @@ export default function CreateInvoiceStepOne({
                         name={`billFrom.email`}
                         control={methods.control}
                         rules={{
-                          required: true
+                          required: true, 
+                          validate: {
+                            maxLength: (v) =>
+                              v.length <= 50 || "The email should have at most 50 characters",
+                            matchPattern: (v) =>
+                              /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                              "Email address must be a valid address",
+                          },
                         }}
                         render={({
                             field: { onChange, value },
@@ -243,6 +265,7 @@ export default function CreateInvoiceStepOne({
                               }}
                               size='small'
                               error={error !== undefined}
+                              helperText={error?.message}
                               required
                           />
                         )}
@@ -404,8 +427,10 @@ export default function CreateInvoiceStepOne({
                                       label='Price' 
                                       variant="outlined"
                                       value={value}
-                                      onChange={(value) => {
-                                        onChange(value);
+                                      onChange={(event) => {
+                                        const value = event.target.value;
+                                        const priceNumber: number = +value;
+                                        onChange(priceNumber);
                                       }}
                                       error={error !== undefined}
                                       required
@@ -458,7 +483,7 @@ export default function CreateInvoiceStepOne({
             </div>
           </Card>
         </Col>
-        <Col xs={24} md={6} className='w-full flex flex-col'>
+        <Col xs={24} lg={6} className='w-full flex flex-col'>
             <Card className='flex flex-col items-start w-full mb-4'>
               <p className='text-base font-semibold mb-2'>Tax rate:</p>
               <Controller
@@ -475,8 +500,10 @@ export default function CreateInvoiceStepOne({
                         label='Enter Tax Amount (%)' 
                         variant="outlined"
                         value={value}
-                        onChange={(value) => {
-                          onChange(value);
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          const taxNumber: number = +value; 
+                          onChange(taxNumber);
                         }}
                         inputProps={{
                           min: 0
@@ -500,8 +527,10 @@ export default function CreateInvoiceStepOne({
                           label='Enter Discount Amount (%)' 
                           variant="outlined"
                           value={value}
-                          onChange={(value) => {
-                            onChange(value);
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            const discountNumber: number = +value;
+                            onChange(discountNumber);
                           }}
                           inputProps={{
                             min: 0
