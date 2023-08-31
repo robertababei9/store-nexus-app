@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Checkbox, Form, FormInstance, Input } from 'antd';
+
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Button from 'src/components/_shared/Button/Button';
 import humansImage from 'src/assets/images/humans.png';
@@ -19,6 +20,7 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+
     const [form, setForm] = useState<FormInstance | null>(null);
 
 
@@ -26,10 +28,10 @@ export default function Login() {
         (state: RootState) => state.authentication
     );
     const dispatch = useDispatch();
-
+    
     // navigation
     const navigate = useNavigate();
-
+    
 
     // prevent user going to /login if it's authenticated
     useEffect(() => {
@@ -60,6 +62,7 @@ export default function Login() {
         try {
             const result = await axios.post(BASE_URL + "/users/login", body);
 
+
             console.log("result = ", result);
             const mockAuthResponse = {
                 access_token: result.data,
@@ -70,8 +73,10 @@ export default function Login() {
 
             navigate(ROUTES.Dashboard);
             dispatch(tokenReceived(mockAuthResponse));
+            // arata-mi ca merge
 
         } catch (err: any) {
+
             console.log("Error: ", err);
         }
         finally {
