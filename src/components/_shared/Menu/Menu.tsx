@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import humansImage from 'src/assets/images/humans.png';
-// import AppLogo from 'src/assets/images/appLogo.svg';
 
 import {
   SettingOutlined,
@@ -64,7 +62,7 @@ const MenuComponent: React.FC = () => {
   const handleMenuClick = ({ key }: { key: React.Key }) => {
 
     // logout
-    if (key == "/login") {
+    if (key === "/login") {
       dispatch(loggedOut(null));
     }
 

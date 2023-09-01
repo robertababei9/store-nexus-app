@@ -32,7 +32,7 @@ export default function Button({
   return (
     <AntdButton
         style={style}
-        className={`bg-blue-500 ${type == "secondary" ? secondaryTypeClassName : ""} ${className} `}
+        className={`bg-blue-500 ${type === "secondary" ? secondaryTypeClassName : ""} ${className} `}
         disabled={disabled}
         loading={loading}
         onClick={onClick}

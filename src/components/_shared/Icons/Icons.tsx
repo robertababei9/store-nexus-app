@@ -181,4 +181,6 @@ export const AppLogo = (props: IconSvgProps) => {
 }
 
 
-export default [AppLogo, GermanyFlag, UnitedKingdomFlag, RomaniaFlag, UnitedStatesFlag, ItalyFlag, FranceFlag, Invoice, DollarUp];
+const iconsArray = [AppLogo, GermanyFlag, UnitedKingdomFlag, RomaniaFlag, UnitedStatesFlag, ItalyFlag, FranceFlag, Invoice, DollarUp];
+
+export default iconsArray;

@@ -1,5 +1,4 @@
 import { TimePicker as TimePickerAntd} from 'antd';
-import classes from './TimePicker.module.css';
 
 type TimePickerProps = {
     placeholder?: [string, string];
