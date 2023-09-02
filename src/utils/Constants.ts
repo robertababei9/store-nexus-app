@@ -1,6 +1,14 @@
 export const ROUTES = {
+    // public routes
     SignIn: "/login",
+
+    // private routes
     Dashboard: "/dashboard",
+
+    Stores: "/stores",
+    StoresEdit: "/stores/edit/:id",
+    Invoices: "/invoices",
+    InvoicesCreate: "/invoices/create",
     Users: "/users",
     AddUser: "/users/adduser/:id"
 }
@@ -14,4 +22,37 @@ export const COUNTRY_CODE = {
     Romania: "RO",
     Greece: "GR",
     Italy: "IT"
+}
+
+export enum StoreStatus {
+    Open = 0,
+    Closed = 1,
+    TemporarilyClosed = 2,
+    UnderRenovation = 3,
+    ComingSoon = 4,
+    PermanentlyClosed = 5,
+
+};
+
+export const StoresStatusToStringMap = {
+    [StoreStatus.Open]: 'Open',
+
+    [StoreStatus.Closed]: 'Closed',
+    [StoreStatus.TemporarilyClosed]: 'Temporarily Closed',
+    [StoreStatus.PermanentlyClosed]: 'Permanently Closed',
+    
+    [StoreStatus.UnderRenovation]: 'Under Renovation',
+    [StoreStatus.ComingSoon]: 'Coming Soon',
+}
+
+export enum InvoiceStatus {
+    Sent = 0,
+    Overdue = 1,
+    Paid = 2,
+}
+
+export const InvoiceStatusToStringMap = {
+    [InvoiceStatus.Sent]: "Sent",
+    [InvoiceStatus.Overdue]: "Overdue",
+    [InvoiceStatus.Paid]: "Paid"
 }

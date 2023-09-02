@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Checkbox, Form, Input } from 'antd';
+import { useState, useEffect } from 'react';
+import { Checkbox, Form, FormInstance, Input } from 'antd';
+
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Button from 'src/components/_shared/Button/Button';
 import humansImage from 'src/assets/images/humans.png';
@@ -7,6 +8,9 @@ import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 import { ROUTES } from 'src/utils/Constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { tokenReceived } from 'src/features/authentication/authenticationSlice';
+import { RootState } from 'src/redux/store';
 
 
 
@@ -17,9 +21,26 @@ export default function Login() {
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
+    const [form, setForm] = useState<FormInstance | null>(null);
+
+
+    const { currentUser } = useSelector(
+        (state: RootState) => state.authentication
+    );
+    const dispatch = useDispatch();
+    
     // navigation
     const navigate = useNavigate();
+    
 
+    // prevent user going to /login if it's authenticated
+    useEffect(() => {
+        console.log("User prevented to access /login if authenticated");
+        console.log("currentUser: ", currentUser);
+        if (currentUser) {
+            navigate(ROUTES.Dashboard)
+        }
+    }, [currentUser]);
 
 
     const onFinish = (values: { email: string; password: string }) => {
@@ -31,19 +52,31 @@ export default function Login() {
     // noi functia asta o mutam pe alt Thread
     const handleLogin = async () => {
 
-        const BASE_URL = "https://store-nexus-api.azurewebsites.net";
+        const BASE_URL = "https://store-nexus-app.azurewebsites.net/api";
         const body = {
-            Email: "robert@gmail.com",
-            Password: "asd123"
+            Email: email,
+            Password: password
         };
         setLoading(true);
 
         try {
-            const result = await axios.post(BASE_URL + "/users/login", body); 
+            const result = await axios.post(BASE_URL + "/users/login", body);
+
+
             console.log("result = ", result);
-            localStorage.setItem("accessToken", result.data);
+            const mockAuthResponse = {
+                access_token: result.data,
+                refresh_token: "not-implemented-yet",
+                token_type: "to-be-verified",
+                expires_in: -99999
+            };
+
             navigate(ROUTES.Dashboard);
-        } catch(err: any) {
+            dispatch(tokenReceived(mockAuthResponse));
+            // arata-mi ca merge
+
+        } catch (err: any) {
+
             console.log("Error: ", err);
         }
         finally {
@@ -58,10 +91,15 @@ export default function Login() {
 
 
     const onSubmit = () => {
-        // validare 
-
-        // api call
-        
+        if (form) {
+            form.validateFields()
+                .then(() => {
+                    handleLogin();
+                })
+                .catch(errorInfo => {
+                    console.log('Form validation failed:', errorInfo);
+                });
+        }
     }
 
 
@@ -89,6 +127,8 @@ export default function Login() {
                             email: '',
                             password: '',
                         }}
+                        onFinish={onSubmit}
+                        form={form as FormInstance}
                     >
                         <Form.Item
                             name='email'
@@ -107,7 +147,7 @@ export default function Login() {
                                 prefix={<UserOutlined />}
                                 placeholder='Email'
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)} 
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </Form.Item>
 

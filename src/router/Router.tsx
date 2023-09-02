@@ -7,6 +7,8 @@ import { ROUTES } from "../utils/Constants";
 import NotFound404 from "../pages/not-found/NotFound";
 
 import Menu from '../components/_shared/Menu/Menu'
+import { useSelector } from "react-redux";
+import { RootState } from "src/redux/store";
 
 
 const publicRoutes: RouteType[] = [
@@ -20,7 +22,9 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.Dashboard,
     element: lazy(() => import("../pages/dashboard/Dashboard"))
-  }, 
+  },
+
+  // ## USERS ###
   {
     path: ROUTES.Users,
     element: lazy(() => import("../pages/users/Users"))
@@ -28,6 +32,26 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.AddUser,
     element: lazy(() => import("../pages/users/AddUser"))
+  },
+
+  // ### STORES ###
+  {
+    path: ROUTES.Stores,
+    element: lazy(() => import("../pages/stores/Stores")),
+  },
+  {
+    path: ROUTES.StoresEdit,
+    element: lazy(() => import("../pages/stores/EditStore"))
+  },
+
+  // ### INVOICES ###
+  {
+    path: ROUTES.Invoices,
+    element: lazy(() => import("../pages/invoices/Invoices"))
+  },
+  {
+    path: ROUTES.InvoicesCreate,
+    element: lazy(() => import("../pages/invoices/InvoicesCreate"))
   }
 
 ]
@@ -36,21 +60,15 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
-  const isLoggedIn = () => {
-    let flag = false;
-
-    localStorage.getItem("accessToken") ? flag = true : flag = false;
-
-    return flag;
-  }
-
-  console.log("-------------- Router.tsx rendering ... --------------")
+  const currentUser = useSelector(
+    (state: RootState) => state.authentication.currentUser
+  )
 
   return (
     <BrowserRouter>
       <div className="flex w-full h-full">
         {
-          isLoggedIn() && (
+          currentUser && (
             <Menu />
           )
         }

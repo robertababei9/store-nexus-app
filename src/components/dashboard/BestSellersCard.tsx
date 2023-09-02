@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { Card } from '../_shared';
 
 import tempImg from '../../assets/images/humans.png';
-import { formatPrice } from '../../utils/Utils';
+import { formatPrice } from 'src/utils/Utils';
 import { Link } from 'react-router-dom';
 
 interface DataType {
@@ -25,7 +25,7 @@ const columns: ColumnsType<DataType> = [
         key: 'name',
         render: (text) => (
             <div className='flex justify-start items-center'>
-                <img  width={65} height={65} src={tempImg} alt="product image"/>
+                <img  width={65} height={65} src={tempImg} alt="product"/>
                 <p className='ml-2 text-base font-semibold text-blue-400'>{text}</p>
             </div>
         ),
