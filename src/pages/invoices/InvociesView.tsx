@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import { ClipLoader } from 'react-spinners';
 import { Breadcrumb, Layout } from 'src/components/_shared';
 import InvoiceTemplateDefault from 'src/components/invoices/InvoiceTemplateDefault'
+import { getDefaultApiUrl } from 'src/config';
 import { InvoiceFormType } from 'src/types/invoices';
 import { ROUTES } from 'src/utils/Constants';
 
@@ -25,8 +26,7 @@ export default function InvociesView() {
 
     const getInvoiceData = async () => {
         try {
-            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            // const BASE_URL = "https://localhost:7268";
+            const BASE_URL = getDefaultApiUrl();
             const result = await axios.get<InvoiceFormType>(`${BASE_URL}/api/invoices/${params.id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`

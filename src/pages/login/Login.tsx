@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { tokenReceived } from 'src/features/authentication/authenticationSlice';
 import { RootState } from 'src/redux/store';
 import { openNotification } from 'src/utils/Notification';
+import { getDefaultApiUrl } from 'src/config';
 
 
 
@@ -53,7 +54,7 @@ export default function Login() {
     // noi functia asta o mutam pe alt Thread
     const handleLogin = async () => {
 
-        const BASE_URL = "https://store-nexus-app.azurewebsites.net/api";
+        const BASE_URL = getDefaultApiUrl();
         const body = {
             Email: email,
             Password: password
@@ -61,7 +62,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const result = await axios.post(BASE_URL + "/users/login", body);
+            const result = await axios.post(BASE_URL + "/api/users/login", body);
 
 
             console.log("result = ", result);

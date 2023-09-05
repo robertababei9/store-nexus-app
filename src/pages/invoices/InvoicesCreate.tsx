@@ -12,6 +12,7 @@ import { RootState } from 'src/redux/store';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
 import { ROUTES } from 'src/utils/Constants';
+import { getDefaultApiUrl } from 'src/config';
 
 const CreateInvoiceStepTwo = lazy(() => import("src/components/invoices/CreateInvoiceStepTwo"));
 const CreateInvoiceStepThree = lazy(() => import("src/components/invoices/CreateInvoiceStepThree"));
@@ -97,9 +98,7 @@ export default function Invoices() {
 
             try {
                 const body =  methods.getValues();
-                const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-                // const BASE_URL = "https://localhost:7268";
-
+                const BASE_URL = getDefaultApiUrl();
                 const result = await axios.post(`${BASE_URL}/api/invoices/add`, body, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`

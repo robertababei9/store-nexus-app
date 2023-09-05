@@ -12,6 +12,7 @@ import { renderInvoiceStatusTag } from 'src/components/invoices/Utils';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
 import { ClipLoader } from 'react-spinners';
+import { getDefaultApiUrl } from 'src/config';
 
 const Title = Typography.Title;
 
@@ -142,8 +143,7 @@ export default function Invoices() {
     const getInvoices = async () => {
         try {
 
-            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            // const BASE_URL = "https://localhost:7268";
+            const BASE_URL = getDefaultApiUrl();
             const result = await axios.get(`${BASE_URL}/api/invoices/GetAll`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -166,8 +166,7 @@ export default function Invoices() {
     const handleDownloadPdf = async (record: DataType, index: number) => {
         try {
             setDownloadLoading(prev => [...prev, index]);
-            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            // const BASE_URL = "https://localhost:7268";
+            const BASE_URL = getDefaultApiUrl();
             const result = await axios.get(`${BASE_URL}/api/invoices/GetPdf/${record.Id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
