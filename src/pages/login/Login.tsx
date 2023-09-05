@@ -11,6 +11,7 @@ import { ROUTES } from 'src/utils/Constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { tokenReceived } from 'src/features/authentication/authenticationSlice';
 import { RootState } from 'src/redux/store';
+import { openNotification } from 'src/utils/Notification';
 
 
 
@@ -76,8 +77,8 @@ export default function Login() {
             // arata-mi ca merge
 
         } catch (err: any) {
-
             console.log("Error: ", err);
+            openNotification("error", "Error", "Username or password incorrect");
         }
         finally {
             setLoading(false);

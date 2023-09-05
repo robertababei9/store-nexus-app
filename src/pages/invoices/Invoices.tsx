@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Table, Typography } from 'antd';
+import { Dropdown, Table, Typography, type MenuProps, Menu } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { BsThreeDots } from 'react-icons/bs';
 
-import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
-import { formatPrice } from 'src/utils/Utils';
-import { InvoiceStatus, ROUTES } from 'src/utils/Constants';
+import { Button, Card, Breadcrumb, Layout } from 'src/components/_shared';
+import { base64ToArrayBuffer, formatPrice } from 'src/utils/Utils';
+import { ROUTES } from 'src/utils/Constants';
 import { renderInvoiceStatusTag } from 'src/components/invoices/Utils';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
+import { ClipLoader } from 'react-spinners';
 
 const Title = Typography.Title;
 
 interface DataType {
+    Id: string,
     InvoiceId: string;
     InvoiceNo: string; // unique natural string key with invoice number
     BillTo: string; // email where the invoice was sent
@@ -22,6 +25,7 @@ interface DataType {
     Status: string;
     Total: number;
 }
+
 
 const columns: ColumnsType<DataType> = [
     {
@@ -76,6 +80,7 @@ const columns: ColumnsType<DataType> = [
 
 const mockData: DataType[] = [
     {
+        Id: "some-guid-1",
         InvoiceId: "random-id-1",
         InvoiceNo: 'Invoice#001',
         BillTo: 'robert.srl@gmail.com',
@@ -85,6 +90,7 @@ const mockData: DataType[] = [
         Total: 1450,
     },
     {
+        Id: "some-guid-2",
         InvoiceId: "random-id-2",
         InvoiceNo: 'Invoice#002',
         BillTo: 'razvan.moto@motoemotion.com',
@@ -94,6 +100,7 @@ const mockData: DataType[] = [
         Total: 1200,
     },
     {
+        Id: "some-guid-3",
         InvoiceId: "random-id-3",
         InvoiceNo: 'Invoice#003',
         BillTo: 'contact@kaufland.de',
@@ -103,6 +110,7 @@ const mockData: DataType[] = [
         Total: 12000,
     },
     {
+        Id: "some-guid-4",
         InvoiceId: "random-id-4",
         InvoiceNo: 'Invoice#004',
         BillTo: 'marfuri.romania@marfuriro.ro',
@@ -120,7 +128,8 @@ export default function Invoices() {
 
     // states
     const [tableData, setTableData] = useState<DataType[]>([]);
-    const [loading, setloading] = useState<boolean>(false);
+    const [dataLoading, setDataLoading] = useState<boolean>(true);
+    const [downloadLoading, setDownloadLoading] = useState<number[]>([]);
 
     // effects
     useEffect(() => {
@@ -132,10 +141,9 @@ export default function Invoices() {
     // helpers
     const getInvoices = async () => {
         try {
-            setloading(true);
 
-            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            // const BASE_URL = "https://localhost:7268";
+            // const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+            const BASE_URL = "https://localhost:7268";
             const result = await axios.get(`${BASE_URL}/api/invoices/GetAll`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -151,12 +159,100 @@ export default function Invoices() {
             openNotification("error");
         }
         finally {
-            setloading(false);
+            setDataLoading(false);
         }
-
     }
 
+    const handleDownloadPdf = async (record: DataType, index: number) => {
+        try {
+            setDownloadLoading(prev => [...prev, index]);
+            // const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+            const BASE_URL = "https://localhost:7268";
+            const result = await axios.get(`${BASE_URL}/api/invoices/GetPdf/${record.Id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }  
+            });
 
+    
+            if (result.data) {
+                const pdfData = result.data.FileContents;   // base64
+                const pdfName = result.data.FileDownloadName;
+                const blob = new Blob([base64ToArrayBuffer(pdfData)], { type: "application/json" })
+
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = pdfName;
+                document.body.appendChild(a);
+                a.click();
+
+                URL.revokeObjectURL(url);
+            }
+        }
+        catch (err: any) {
+            console.log("Error: ", err);
+            openNotification("error");
+        }
+        finally {
+            setDownloadLoading(prev => (prev.filter(x => x != index)));
+        }
+    } 
+
+
+
+    // adding the actions column so we can use navigate
+    if (!columns.find(x => x.key == 'actions')) {
+        columns.push({
+            title: '',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (text, record, index) => {
+                // IMPORTANT: --- !!! --- State not reaching here --- !!! ---  ( it was called somehow this problem)           
+                // console.log("downloadLoading from columns -----> ", downloadLoading);
+                // console.log("tableData from columns -----> ", tableData);
+                // IMPORTANT: --- !!! --- State not reaching here --- !!! ---   
+                if (downloadLoading.includes(index)) {
+                    return (
+                        <div className='flex justify-center'>
+                            <ClipLoader color="#4F46E5" size={18}/>
+                        </div>
+                    )
+                }
+
+                return (
+                    <Dropdown 
+                        overlay={  
+                            <Menu >
+                                <Menu.Item
+                                    onClick={() => {
+                                        navigate(ROUTES.InvoicesView.replace(":id", record.Id))
+                                    }} 
+                                    key="Recommend">
+                                        View
+                                </Menu.Item>
+                                <Menu.Item 
+                                    key="Newest"
+                                    onClick={() => handleDownloadPdf(record, index)}>
+                                        Download
+                                </Menu.Item>
+                            </Menu>
+                        } 
+                        trigger={['click']}>
+                            <Button className='bg-transparent text-black shadow-none hover:!bg-transparent hover:!text-black'>
+                                <BsThreeDots size={18} />
+                            </Button>
+                    </Dropdown>
+                )
+            },
+            width: 50
+        })
+    }
+    
+
+    // console.log("downloadLoading from component = ", downloadLoading);
     return (
         <Layout>
             <div className="flex items-center">
@@ -187,8 +283,7 @@ export default function Invoices() {
                     className='w-full' 
                     dataSource={tableData} 
                     columns={columns}
-                    loading={loading}
-
+                    loading={dataLoading}
                 />
             </Card>
 

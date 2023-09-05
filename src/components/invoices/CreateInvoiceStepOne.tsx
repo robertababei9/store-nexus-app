@@ -22,25 +22,25 @@ export default function CreateInvoiceStepOne({
   // form items
   const itemsMethods = useFieldArray({
     control: methods.control,
-    name: "items"
+    name: "Items"
   });
 
   // watcher
-  methods.watch("tax");
-  methods.watch("discount");
+  methods.watch("Tax");
+  methods.watch("Discount");
 
 
   // effects  --> calculate and set amounts
   useEffect(() => {
     let subTotal: number = 0;
 
-    const items = methods.getValues("items");
-    items.forEach(item => subTotal += (item.qty * item.price));
+    const items = methods.getValues("Items");
+    items.forEach(item => subTotal += (item.Qty * item.Price));
 
     let total = subTotal;
 
-    const tax = methods.getValues("tax");
-    const discount = methods.getValues("discount");
+    const tax = methods.getValues("Tax");
+    const discount = methods.getValues("Discount");
 
     const taxFromSubtotal = (tax / 100) * subTotal; 
     total = total + taxFromSubtotal;
@@ -48,10 +48,10 @@ export default function CreateInvoiceStepOne({
     const discountFromSubtotal = (discount / 100) * subTotal; 
     total = total - discountFromSubtotal;
 
-    methods.setValue("subtotal", subTotal);
-    methods.setValue("taxSubtotal", taxFromSubtotal);
-    methods.setValue("discountSubtotal", discountFromSubtotal);
-    methods.setValue("total", total);
+    methods.setValue("Subtotal", subTotal);
+    methods.setValue("TaxSubtotal", taxFromSubtotal);
+    methods.setValue("DiscountSubtotal", discountFromSubtotal);
+    methods.setValue("Total", total);
 
   }, [methods.getValues()])
 
@@ -59,16 +59,16 @@ export default function CreateInvoiceStepOne({
   // handlers
   const handleAddItem = () => {
     const newItem: ItemType = {
-      name: "",
-      description: "",
-      qty: 1,
-      price: 1
+      Name: "",
+      Description: "",
+      Qty: 1,
+      Price: 1
     };
     itemsMethods.append(newItem)
   }
 
   const handleDeleteItem = (index: number) => {
-    if (methods.getValues("items").length > 1) {
+    if (methods.getValues("Items").length > 1) {
       itemsMethods.remove(index);
     }
   }
@@ -92,7 +92,7 @@ export default function CreateInvoiceStepOne({
                   <div className='flex justify-start items-center mt-2'>
                       <p className='text-base font-semibold mr-2'>Due Date:</p>
                       <Controller
-                          name={`dueDate`}
+                          name={`DueDate`}
                           control={methods.control}
                           rules={{
                             required: true
@@ -126,7 +126,7 @@ export default function CreateInvoiceStepOne({
                 <Col xs={24} md={12} className='flex flex-col items-start'>
                     <p className='text-base font-semibold mb-4'>Bill to:</p>
                     <Controller
-                        name={`billTo.to`}
+                        name={`BillTo.To`}
                         control={methods.control}
                         rules={{
                           required: true
@@ -151,7 +151,7 @@ export default function CreateInvoiceStepOne({
                         )}
                       />
                       <Controller
-                        name={`billTo.email`}
+                        name={`BillTo.Email`}
                         control={methods.control}
                         rules={{
                           required: true, 
@@ -184,7 +184,7 @@ export default function CreateInvoiceStepOne({
                         )}
                       />
                       <Controller
-                        name={`billTo.address`}
+                        name={`BillTo.Address`}
                         control={methods.control}
                         rules={{
                           required: true
@@ -213,7 +213,7 @@ export default function CreateInvoiceStepOne({
                 <Col xs={24} md={12} className='flex flex-col items-start'>
                     <p className='text-base font-semibold mb-4'>Bill from:</p>
                     <Controller
-                        name={`billFrom.from`}
+                        name={`BillFrom.From`}
                         control={methods.control}
                         rules={{
                           required: true
@@ -238,7 +238,7 @@ export default function CreateInvoiceStepOne({
                         )}
                       />
                       <Controller
-                        name={`billFrom.email`}
+                        name={`BillFrom.Email`}
                         control={methods.control}
                         rules={{
                           required: true, 
@@ -271,7 +271,7 @@ export default function CreateInvoiceStepOne({
                         )}
                       />
                       <Controller
-                        name={`billFrom.address`}
+                        name={`BillFrom.Address`}
                         control={methods.control}
                         rules={{
                           required: true
@@ -320,20 +320,20 @@ export default function CreateInvoiceStepOne({
 
               <div className='w-full'>
                 {
-                  methods.getValues().items.map((item: ItemType, index: number) => {
+                  methods.getValues().Items.map((item: ItemType, index: number) => {
                     
-                    methods.watch(`items.${index}.qty`);
-                    methods.watch(`items.${index}.price`);
+                    methods.watch(`Items.${index}.Qty`);
+                    methods.watch(`Items.${index}.Price`);
 
                     return (
                       <Row 
-                        key={item.name + index}
+                        key={item.Name + index}
                         gutter={16} 
                         className='border-b-2 border-gray-200 mb-4 pb-2'
                       >
                         <Col xs={24} md={16} className='flex flex-col !pl-0'>
                             <Controller
-                              name={`items.${index}.name`}
+                              name={`Items.${index}.Name`}
                               control={methods.control}
                               rules={{
                                 required: true
@@ -359,7 +359,7 @@ export default function CreateInvoiceStepOne({
                             />
 
                             <Controller
-                              name={`items.${index}.description`}
+                              name={`Items.${index}.Description`}
                               control={methods.control}
                               render={({
                                 field: { onChange, value },
@@ -383,7 +383,7 @@ export default function CreateInvoiceStepOne({
                         <Col xs={24} md={3} className='flex justify-start'>
                           
                           <Controller
-                                name={`items.${index}.qty`}
+                                name={`Items.${index}.Qty`}
                                 control={methods.control}
                                 rules={{
                                   required: true
@@ -411,7 +411,7 @@ export default function CreateInvoiceStepOne({
                         </Col>
                         <Col xs={24} md={3} className='flex justify-start'>
                             <Controller
-                                name={`items.${index}.price`}
+                                name={`Items.${index}.Price`}
                                 control={methods.control}
                                 rules={{
                                   required: true
@@ -461,7 +461,7 @@ export default function CreateInvoiceStepOne({
             <div className='w-full flex flex-col items-start mt-24'>
               <p className='text-base font-semibold mb-2'>Notes:</p>
               <Controller
-                  name={`notes`}
+                  name={`Notes`}
                   control={methods.control}
                   render={({
                       field: { onChange, value },
@@ -487,7 +487,7 @@ export default function CreateInvoiceStepOne({
             <Card className='flex flex-col items-start w-full mb-4'>
               <p className='text-base font-semibold mb-2'>Tax rate:</p>
               <Controller
-                  name={`tax`}
+                  name={`Tax`}
                   control={methods.control}
                   render={({
                       field: { onChange, value },
@@ -514,7 +514,7 @@ export default function CreateInvoiceStepOne({
                 />
                 <p className='text-base font-semibold mb-2'>Discount rate:</p>
                 <Controller
-                    name={`discount`}
+                    name={`Discount`}
                     control={methods.control}
                     render={({
                         field: { onChange, value },
@@ -547,7 +547,7 @@ export default function CreateInvoiceStepOne({
                   </Col>
                   <Col xs={24} md={12} className='sm:text-right'>
                     <Controller
-                        name={`subtotal`}
+                        name={`Subtotal`}
                         control={methods.control}
                         render={({
                             field: { onChange, value },
@@ -564,7 +564,7 @@ export default function CreateInvoiceStepOne({
                   </Col>
                   <Col xs={24} md={12} className='sm:text-right'>
                     <Controller
-                        name={`discountSubtotal`}
+                        name={`DiscountSubtotal`}
                         control={methods.control}
                         render={({
                             field: { onChange, value },
@@ -581,7 +581,7 @@ export default function CreateInvoiceStepOne({
                   </Col>
                   <Col xs={24} md={12} className='sm:text-right'>
                     <Controller
-                        name={`taxSubtotal`}
+                        name={`TaxSubtotal`}
                         control={methods.control}
                         render={({
                             field: { onChange, value },
@@ -601,7 +601,7 @@ export default function CreateInvoiceStepOne({
                   </Col>
                   <Col xs={24} md={12} className='sm:text-right'>
                     <Controller
-                        name={`total`}
+                        name={`Total`}
                         control={methods.control}
                         render={({
                             field: { onChange, value },
