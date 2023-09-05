@@ -142,8 +142,8 @@ export default function Invoices() {
     const getInvoices = async () => {
         try {
 
-            // const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            const BASE_URL = "https://localhost:7268";
+            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+            // const BASE_URL = "https://localhost:7268";
             const result = await axios.get(`${BASE_URL}/api/invoices/GetAll`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
