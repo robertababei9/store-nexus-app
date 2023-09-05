@@ -25,8 +25,8 @@ export default function InvociesView() {
 
     const getInvoiceData = async () => {
         try {
-            // const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            const BASE_URL = "https://localhost:7268";
+            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+            // const BASE_URL = "https://localhost:7268";
             const result = await axios.get<InvoiceFormType>(`${BASE_URL}/api/invoices/${params.id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`

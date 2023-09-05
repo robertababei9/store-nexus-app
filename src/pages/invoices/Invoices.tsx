@@ -166,8 +166,8 @@ export default function Invoices() {
     const handleDownloadPdf = async (record: DataType, index: number) => {
         try {
             setDownloadLoading(prev => [...prev, index]);
-            // const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            const BASE_URL = "https://localhost:7268";
+            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+            // const BASE_URL = "https://localhost:7268";
             const result = await axios.get(`${BASE_URL}/api/invoices/GetPdf/${record.Id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
