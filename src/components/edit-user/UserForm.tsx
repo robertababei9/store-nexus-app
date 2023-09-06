@@ -2,6 +2,7 @@ import React from 'react';
 import { TextField } from '@mui/material';
 import { Col, Row, Card, Layout, Button } from 'antd';
 import UserAvatar from './UserAvatar';
+import { Dropdown } from '../_shared';
 
 
 
@@ -75,12 +76,15 @@ export default function AddEditUserPage() {
                 </Col>
 
                 <Col xs={24} md={8}>
-                  <TextField
-                    style={{ marginBottom: 20, width: '100%' }}
-                    label='Role'
-                    variant="outlined"
-                    onChange={value => console.log("Role value =", value)}
-                    required
+                  <Dropdown
+                    placeholder='Select Role'
+                    options={[
+                      {label: "Admin", value: "guid-1"},
+                      {label: "Manager", value: "guid-2"},
+                      {label: "User", value: "guid-3"},
+                    ]}
+                    defaultValue={"guid-2"}
+                    onChange={val => console.log("Role = ", val)}
                   />
                 </Col>
 
@@ -142,7 +146,7 @@ export default function AddEditUserPage() {
 
 
               {/* Save button  */}
-              <div className='text-right mt-4'>
+              {/* <div className='text-right mt-4'>
               <Button
                 type='primary'
                 style={{ height: '40px', backgroundColor: '#4361ee', borderColor: '#4361ee', marginRight: '24px' }}
@@ -151,7 +155,7 @@ export default function AddEditUserPage() {
               >
                 <strong style={{ fontWeight: 'bold' }}>Save</strong>
               </Button>
-              </div>
+              </div> */}
 
 
 
