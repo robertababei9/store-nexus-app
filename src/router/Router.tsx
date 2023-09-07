@@ -9,6 +9,7 @@ import NotFound404 from "../pages/not-found/NotFound";
 import Menu from '../components/_shared/Menu/Menu'
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
+import CreateCompany from "src/pages/company/CreateCompany";
 
 
 const publicRoutes: RouteType[] = [
@@ -52,16 +53,21 @@ export default function Router() {
 
   const currentUser = useSelector(
     (state: RootState) => state.authentication.currentUser
-)
+  )
+
+  const needsToCreateCompany = true;
+
 
   // console.log("-------------- Router.tsx rendering ... --------------")
   // console.log("accessToken = ", currentUser);
+
+  const showMenu = currentUser && !needsToCreateCompany;
     
   return (
     <BrowserRouter>
       <div className="flex w-full h-full">
         {
-          currentUser && (
+          showMenu && (
             <Menu />
           )
         }
@@ -91,8 +97,15 @@ export default function Router() {
                 />
               ))
             }
+            
+            {
+              needsToCreateCompany && currentUser ? (
+                <Route path={"/create-company"} element={<CreateCompany />} />
+              ) : (
+                privateRoutes.map((route, index) => renderRoute(route, index))
+              )
+            }
 
-            {privateRoutes.map((route, index) => renderRoute(route, index))}
 
             <Route path="*" element={<NotFound404 />} />
         </Routes>
