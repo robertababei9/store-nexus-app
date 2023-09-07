@@ -33,11 +33,47 @@ const Title = Typography.Title;
 export default function AddUsers() {
 
     const params = useParams();
+
     // form
+
+    // Aici nu stiu daca ar trebui pastrat 1 singur form sau cate 1 pt fiecare tab pt ca:
+    // Butonul de SAVE e unul singur sus - pt toate tabs-urile
+    // si daca e sa modifici cate ceva in fiecare tab si dupa sa dai save => trebuie sa faci handle la fiecare form din asta ( methods, methodsSecurity )
+    // 
+    //nu o sa stea butonul de save acolo, plus ca e si urat butonul tau, e mic de fraieri, nu poti sa dai calumea save
+    //o sa fie buton pt fiecare tab daca asa, gen Change password, Save la basic info, ca sa nu mai existe si spatiul gol
+
+    // E mai fain butonul meu. A<l tau e mare si gras
+    //ca sa nu il ratezi :) al tau e mic, doar culoarea e faina --- deci ramane al meu pt ca asa avem si in invoices --- bine ... mai trebuie modificate
+
+    // nu . Nu punem buton in fiecare tab
+    // pt ca .. cum ti-am zis... faci modificari in fiecare tab si apoi vrei sa dai un singur save... nu 15
+    //uite asa sa fie
+    //nu e bun ca asa nu are buton de save :))
+    // la update pass poate sa fie acolo separat, dar doar atat, mai vedem dupa, da
+    // pai in cazul asta Daca e un singur buton de save ... structura form-ului ar trebui sa se modifice asa
+
+    //      userForm: {
+    //          basicInfo: UserBasicInfoType <---- UserFormType,
+    //          security: userSecurityType <---- TO BE CREATED,
+    //          roles: userRolesType <---- ....
+    //      }
+    //  Si la SAVE -> form-ul asta se trimite cu totul la server ... si acolo server-ul face ce are de facut, verifica datele, le salveaza in parte
+
+    // Sa nu stergi comm asta pt urm 2-3 zile
+
     const methods = useForm<UserFormType>({
         // default methods o sa fie populate cand luam valorile de la backend
         // asa doar in caz de Edit
         defaultValues: {}
+    });
+
+    const methodsSecurity = useForm<SecurityFormType>({
+        defaultValues: {
+            currentPass: "",
+            newPass: '',
+            repeatPass: '',
+        }
     });
 
     const handleSave = async () => {
@@ -49,14 +85,6 @@ export default function AddUsers() {
         }
     }
 
-    /// mmm ... imediat ma intorc aici
-    const methodsSecurity = useForm<SecurityFormType>({
-        defaultValues: {
-            currentPass: "",
-            newPass: '',
-            repeatPass: '',
-        }
-    });
 
     const items: TabsProps['items'] = [
         {
@@ -71,47 +99,43 @@ export default function AddUsers() {
         },
         {
             key: '3',
-            label: `Role`,
+            label: `Roles`,
             children: <ComingSoon />,
         },
     ];
 
 
     return (
+        // Layout-ul sta doar ca si parinte ... e primul primul primul in pagina respectiva
+        // Nu in copii lui. In parinte. E bosul
+        // mai esti ? , dar arata urat butonul ala de save, acolo pe linia cu breadcrumbs o sa vina user profile, dar mai tz
         <Layout>
-            <div className="flex items-center">
-                <Title level={2}>Add User</Title>
-                <Breadcrumb
-                    items={[
-                        {
-                            path: ROUTES.Users,
-                            title: "Users"
-                        },
-                        {
-                            title: params.id == '0' ? "Add User" : "Edit",
-                        }
-                    ]}
-                />
-            </div>
+            <div className="w-full flex justify-between items-start">
+                <div className="flex items-center">
+                    <Title level={2}>Add User</Title>
+                    <Breadcrumb
+                        items={[
+                            {
+                                path: ROUTES.Users,
+                                title: "Users"
+                            },
+                            {
+                                title: params.id == '0' ? "Add User" : "Edit",
+                            }
+                        ]}
+                    />
+                </div>
 
-            {/* Save button  */}
-            <div className="w-full h-[100px] flex justify-end items-center  mt-6 mb-4">
-                <Button className="w-[80px]"
-                    type='primary'
-                    // Folosim Tailwind pt styling .. nu style ---> className
-                    style={{ height: '40px', backgroundColor: '#4361ee', borderColor: '#4361ee', marginRight: '24px' }}
-                    onClick={handleSave}
-
-                >
-                    <strong style={{ fontWeight: 'bold' }}>Save</strong>
-                </Button>
- 
-                {/* Ramane butonul de jos. Ti-am lasat ambele sa compari */}
+                {/* Save button  */}
                 <Button type="secondary" onClick={handleSave} className="flex items-center">
-                     Save
-                     <AiOutlineSave color="#FFF" size={20} className="ml-3"/>
-                 </Button> 
+                    Save
+                    <AiOutlineSave color="#FFF" size={20} className="ml-3"/>
+                </Button> 
+
             </div>
+
+
+
 
             <Card className="w-full h-full !px-0">
 

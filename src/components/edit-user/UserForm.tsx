@@ -51,12 +51,13 @@ export default function AddEditUserPage({
   methods.watch("name");
 
   return (
-    <Layout className='relative'>
-
-      <div className='w-full'>
+    // mx = margin x = margin horizontal ( axa x,y )
+    /// mai fac o chestie si gata
+    //da ft folositor, eu foloseam mr si ml...
+      <div className='mx-4'>
         <Row gutter={16}>
           <Col xs={24} md={8}>
-            <Card className='w-full mb-4'>
+            <Card className='w-full hover:shadow-[0_5px_15px_0_rgba(0,0,0,0.07)]'>
               <UserDetailsCard
                 name='Nume Utilizator'
                 location='Locație'
@@ -245,30 +246,11 @@ export default function AddEditUserPage({
 
 
               </Row>
-
-
-              {/* Save button  */}
-              {/* Ai de plm */}
-              {/* ey stiu ce trb sters, is de 2 ori scrise, ai avut 2 functii... */}
-              {/* <div className='text-right mt-4'>
-              <Button
-                type='primary'
-                style={{ height: '40px', backgroundColor: '#4361ee', borderColor: '#4361ee', marginRight: '24px' }}
-                onClick={() => console.log('Save button clicked')}
-
-              >
-                <strong style={{ fontWeight: 'bold' }}>Save</strong>
-              </Button>
-              </div> */}
-
-
-
             </Card>
           </Col>
         </Row>
       </div>
 
-    </Layout>
 
   );
 }
