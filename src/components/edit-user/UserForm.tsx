@@ -1,10 +1,16 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import { Col, Row, Card, Layout } from 'antd';
+import dayjs from 'dayjs';
+import { Controller, UseFormReturn } from 'react-hook-form';
+import { Col, Row, Card, DatePicker, Layout, DatePickerProps } from 'antd';
 import UserAvatar from './UserAvatar';
 import { Dropdown } from '../_shared';
-import { Controller, UseFormReturn } from 'react-hook-form';
 import { UserFormType } from 'src/types/users';
+
+
+const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+  console.log(date, dateString);
+};
 
 
 const UserDetailsCard: React.FC<{ name: string; location: string; email: string }> = ({
@@ -12,15 +18,23 @@ const UserDetailsCard: React.FC<{ name: string; location: string; email: string 
   location,
   email,
 }) => (
-  <Card className='mb-4'>
+  <Card className='mb-4 border-0'>
     <div className='flex flex-col items-center p-4'>
-    <UserAvatar />
+      <UserAvatar />
       <div className='text-center'>
         <p className='text-xl font-semibold'>{name}</p>
         <p className='text-gray-600'>{location}</p>
         <p className='text-gray-600'>{email}</p>
       </div>
     </div>
+    <TextField
+      style={{ marginBottom: 20, width: '100%' }}
+      label='About me'
+      variant="outlined"
+      onChange={value => console.log("value = ", value)}
+      multiline
+      rows={3}
+    />
   </Card>
 );
 
@@ -33,6 +47,9 @@ type UserFormProps = {
 export default function AddEditUserPage({
   methods
 }: UserFormProps) {
+
+  methods.watch("name");
+
   return (
     <Layout className='relative'>
 
@@ -53,72 +70,120 @@ export default function AddEditUserPage({
 
               <Row gutter={16}>
                 <Col xs={24} md={12}>
-                  <TextField
-                    style={{ marginBottom: 20, width: '100%' }}
-                    label='Name'
-                    variant="outlined"
-                    onChange={value => console.log("Name value =", value)}
-                    required
+                  <Controller
+                    name={`name`}
+                    control={methods.control}
+                    rules={{
+                      required: true
+                    }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        className='w-full'
+                        style={{ marginBottom: 15 }}
+                        label='Full Name'
+                        variant="outlined"
+                        value={value}
+                        onChange={(value) => {
+                          onChange(value);
+                        }}
+                        size='medium'
+                        error={error !== undefined}
+                        required
+                      />
+                    )}
                   />
                 </Col>
 
                 <Col xs={24} md={12}>
-                  <TextField
-                    style={{ marginBottom: 20, width: '100%' }}
-                    label='Email'
-                    variant="outlined"
-                    onChange={value => console.log("Email value =", value)}
-                    required
-                  />
+                    <Controller
+                      name={`email`}
+                      control={methods.control}
+                      rules={{
+                        required: true
+                      }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          className='w-full'
+                          style={{ marginBottom: 15 }}
+                          label='Email'
+                          variant="outlined"
+                          value={value}
+                          onChange={(value) => {
+                            onChange(value);
+                          }}
+                          size='medium'
+                          error={error !== undefined}
+                          required
+                        />
+                      )}
+                    />
                 </Col>
               </Row>
 
               <Row gutter={16}>
                 <Col xs={24} md={8}>
-                  <TextField
-                    style={{ marginBottom: 20, width: '100%' }}
-                    label='Company'
-                    variant="outlined"
-                    onChange={value => console.log("Company value =", value)}
-                    required
+                  <Controller
+                    name={`phoneNumber`}
+                    control={methods.control}
+                    rules={{
+                      required: true
+                    }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        className='w-full'
+                        style={{ marginBottom: 15 }}
+                        label='Contact'
+                        variant="outlined"
+                        value={value}
+                        onChange={(value) => {
+                          onChange(value);
+                        }}
+                        size='medium'
+                        error={error !== undefined}
+                        required
+                      />
+                    )}
                   />
                 </Col>
 
                 <Col xs={24} md={8}>
                   <Controller
-                        name={`role`}
-                        control={methods.control}
-                        rules={{
-                          required: true
-                        }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                        }) => (
-                          <Dropdown
-                              placeholder='Select Role *'
-                              options={[
-                                {label: "Admin", value: "guid-1"},
-                                {label: "Manager", value: "guid-2"},
-                                {label: "User", value: "guid-3"},
-                              ]}
-                              defaultValue={value}
-                              onChange={onChange}
-                              error={error?.message != undefined}
-                            />
-                        )}
+                    name={`role`}
+                    control={methods.control}
+                    rules={{
+                      required: true
+                    }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <Dropdown
+                        placeholder='Select Role *'
+                        options={[
+                          { label: "Admin", value: "guid-1" },
+                          { label: "Manager", value: "guid-2" },
+                          { label: "User", value: "guid-3" },
+                        ]}
+                        defaultValue={value}
+                        onChange={onChange}
+                        error={error?.message != undefined}
                       />
+                    )}
+                  />
 
                 </Col>
 
                 <Col xs={24} md={8}>
-                  <TextField
-                    style={{ marginBottom: 20, width: '100%' }}
-                    label='Department'
-                    variant="outlined"
-                    onChange={value => console.log("Department value =", value)}
-                    required
-                  />
+
                 </Col>
 
               </Row>
@@ -155,13 +220,27 @@ export default function AddEditUserPage({
                   />
                 </Col>
                 <Col xs={24} md={12}>
-                  <TextField
-                    style={{ marginBottom: 20, width: '100%' }}
-                    label='Signed up'
-                    variant="outlined"
-                    onChange={value => console.log("Signed up value =", value)}
-                    required
-                  />
+                    <Controller
+                      name={`signupDate`}
+                      control={methods.control}
+                      rules={{
+                        required: true
+                      }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <DatePicker
+                          //SI AICI E CIUDAT PT CA INALTIMILE SUNT DIFERITE DAR LA FEL PE WEB
+                          style={{ marginBottom: 20, width: '100%', height: '100%' }}
+                          format="DD-MMM-YYYY"
+                          value={value ? dayjs(value) : null}
+                          onChange={((date: any, dateString: string) => onChange(dateString))}
+                          placeholder='Signed Up *'
+                          status={error ? "error" : ""}
+                        />
+                      )}
+                    />
                 </Col>
 
 
@@ -169,6 +248,8 @@ export default function AddEditUserPage({
 
 
               {/* Save button  */}
+              {/* Ai de plm */}
+              {/* ey stiu ce trb sters, is de 2 ori scrise, ai avut 2 functii... */}
               {/* <div className='text-right mt-4'>
               <Button
                 type='primary'
@@ -188,6 +269,7 @@ export default function AddEditUserPage({
       </div>
 
     </Layout>
+
   );
 }
 

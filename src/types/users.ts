@@ -6,3 +6,9 @@ export type UserFormType = {
     phoneNumber: string;
     signupDate: string
 }
+
+export type SecurityFormType = {
+    currentPass: string;
+    newPass: string;
+    repeatPass: string;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Breadcrumb, Table, Input, Space, Tooltip, Button, Typography, Layout } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router';
 import { ROUTES } from 'src/utils/Constants';
 import { Card } from 'src/components/_shared';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { openNotification } from 'src/utils/Notification';
 
 const Title = Typography.Title;
 
@@ -212,9 +214,44 @@ const data: DataType[] = [
 ];
 
 export default function Users() {
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
+    const navigate = useNavigate();
+
+    //states
+    const [tableData, setTableData] = useState<DataType[]>([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [searchText, setSearchText] = useState('');
+    const [loading, setLoading] = useState<boolean>(false);
+
+
+    // effects
+    useEffect(() => {
+        // API: get invoices
+        getUsers();
+    }, []);
+
+    const getUsers = async () => {
+        try {
+            setLoading(true);
+            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
+            const result = await axios.get(`${BASE_URL}/api/users/GetAll`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
+
+            if (result.data) {
+                setTableData(result.data);
+            }
+        }
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
+        }
+        finally {
+            setLoading(false);
+        }
+    }
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
@@ -237,7 +274,7 @@ export default function Users() {
         })
     );
 
-    const navigate = useNavigate();
+
 
     // adding the actions column so we can use navigate
     if (!columns.find(x => x.key == 'actions')) {
