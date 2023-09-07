@@ -1,9 +1,10 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import { Col, Row, Card, Layout, Button } from 'antd';
+import { Col, Row, Card, Layout } from 'antd';
 import UserAvatar from './UserAvatar';
 import { Dropdown } from '../_shared';
-
+import { Controller, UseFormReturn } from 'react-hook-form';
+import { UserFormType } from 'src/types/users';
 
 
 const UserDetailsCard: React.FC<{ name: string; location: string; email: string }> = ({
@@ -23,7 +24,15 @@ const UserDetailsCard: React.FC<{ name: string; location: string; email: string 
   </Card>
 );
 
-export default function AddEditUserPage() {
+type UserFormProps = {
+  methods: UseFormReturn<UserFormType, any, undefined>
+}
+
+// In parinte se cheama UserForm si aici AddEditUserPage
+// nu e gresit dar e mai ok sa aiba acelasi nume
+export default function AddEditUserPage({
+  methods
+}: UserFormProps) {
   return (
     <Layout className='relative'>
 
@@ -76,16 +85,30 @@ export default function AddEditUserPage() {
                 </Col>
 
                 <Col xs={24} md={8}>
-                  <Dropdown
-                    placeholder='Select Role'
-                    options={[
-                      {label: "Admin", value: "guid-1"},
-                      {label: "Manager", value: "guid-2"},
-                      {label: "User", value: "guid-3"},
-                    ]}
-                    defaultValue={"guid-2"}
-                    onChange={val => console.log("Role = ", val)}
-                  />
+                  <Controller
+                        name={`role`}
+                        control={methods.control}
+                        rules={{
+                          required: true
+                        }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                          <Dropdown
+                              placeholder='Select Role *'
+                              options={[
+                                {label: "Admin", value: "guid-1"},
+                                {label: "Manager", value: "guid-2"},
+                                {label: "User", value: "guid-3"},
+                              ]}
+                              defaultValue={value}
+                              onChange={onChange}
+                              error={error?.message != undefined}
+                            />
+                        )}
+                      />
+
                 </Col>
 
                 <Col xs={24} md={8}>

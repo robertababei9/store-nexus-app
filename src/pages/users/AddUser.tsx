@@ -1,5 +1,5 @@
 import { Breadcrumb, Card, Typography } from "antd";
-import { AiOutlineHome } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineSave } from "react-icons/ai";
 import { Link, useParams } from "react-router-dom";
 import { ROUTES } from "src/utils/Constants";
 import UserForm from "src/components/edit-user/UserForm";
@@ -16,8 +16,13 @@ export default function AddUsers() {
         defaultValues: {}
     });
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        console.log("user form data = ", methods.getValues());
+        const isValid = await methods.trigger();
 
+        if (!isValid) {
+            return;
+        }
     }
 
 
@@ -27,6 +32,11 @@ export default function AddUsers() {
             <div className="w-full flex justify-between items-center">
                 <div className="flex items-center">
                     <Title>Add User</Title>
+                    {/*  */}
+                    {/*  */}
+                    {/* Breadcrumb-ul acum arata altfel. Modifica-l */}
+                    {/*  */}
+                    {/*  */}
                     <Breadcrumb
                         className="ml-8"
                         items={[
@@ -52,13 +62,14 @@ export default function AddUsers() {
                     />
                 </div>
 
-                <Button type="secondary" onClick={handleSave}>
+                <Button type="secondary" onClick={handleSave} className="flex items-center">
                     Save
+                    <AiOutlineSave color="#FFF" size={20} className="ml-3"/>
                 </Button>
 
             </div>
             <div className='h-full w-full'>
-                <UserForm />
+                <UserForm methods={methods}/>
             </div>
 
         </div>

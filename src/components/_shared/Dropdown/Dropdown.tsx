@@ -7,13 +7,15 @@ type DropdownProps = {
     onChange?: (value: any) => void;
     options?: OptionType[];
     placeholder?: string;
+    error?: boolean;
 }
 
 export default function Dropdown({
     defaultValue = "",
     onChange = (value) => {},
     options = [],
-    placeholder = "Select a value"
+    placeholder = "Select a value",
+    error = false,
 }: DropdownProps) {
 
     const [val, setVal] = useState<any>(defaultValue);
@@ -35,6 +37,7 @@ export default function Dropdown({
                 className='text-left'
                 value={val}
                 label={placeholder}
+                error={error}
                 onChange={handleChange}
                 >
                     {
