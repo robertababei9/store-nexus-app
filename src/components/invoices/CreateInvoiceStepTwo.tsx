@@ -11,18 +11,17 @@ import { setSendEmail } from 'src/features/invoices/invoicesSlice';
 import InvoiceTemplateDefault from './InvoiceTemplateDefault';
 
 type CreateInvoiceStepTwoProps = {
-    // To add when necessary
+    invoiceData: InvoiceFormType | null
 }
-  
 
 
 export default function CreateInvoiceStepTwo({
-
+  invoiceData
 }: CreateInvoiceStepTwoProps) {
 
   return (
     <>
-        <InvoiceTemplateDefault showSendEmail={true}/>
+        <InvoiceTemplateDefault invoiceData={invoiceData} showSendEmail={true}/>
     </>
   )
 }

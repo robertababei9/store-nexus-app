@@ -16,18 +16,18 @@ export const authenticationSlice = createSlice({
     reducers: {
         setData: (state, action: PayloadAction<InvoiceFormType>) => {
             // TODO: To find a solution for nested objects
-            const { billTo, billFrom, items, ...otherData } = action.payload;
-            const copiedItems = items.map(item => ({ ...item }));
+            const { BillTo, BillFrom, Items, ...otherData } = action.payload;
+            const copiedItems = Items.map(item => ({ ...item }));
 
             state.data = {
                 ...otherData,
-                billTo: {
-                    ...billTo,
+                BillTo: {
+                    ...BillTo,
                 },
-                billFrom: {
-                    ...billFrom,
+                BillFrom: {
+                    ...BillFrom,
                 },
-                items: copiedItems,
+                Items: copiedItems,
             };
         },
         setSendEmail: (state, action: PayloadAction<boolean>) => {

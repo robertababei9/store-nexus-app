@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
+import { ROUTES } from 'src/utils/Constants';
+import { getDefaultApiUrl } from 'src/config';
 
 const CreateInvoiceStepTwo = lazy(() => import("src/components/invoices/CreateInvoiceStepTwo"));
 const CreateInvoiceStepThree = lazy(() => import("src/components/invoices/CreateInvoiceStepThree"));
@@ -45,27 +47,27 @@ export default function Invoices() {
       // form
     const methods = useForm<InvoiceFormType>({
         defaultValues: {
-            invoiceNo: "to-do-something-with-this-id",
-            items: [
+            InvoiceNo: "to-do-something-with-this-id",
+            Items: [
                 {
-                name: "",
-                description: "",
-                qty: 1,
-                price: 1
+                    Name: "",
+                    Description: "",
+                    Qty: 1,
+                    Price: 1
                 }
             ],
-            tax: 0,                   // percentage
-            discount: 0,              // percentage
-            subtotal: 1,              // sum of all items
-            taxSubtotal: 0,           // tax from subtotal
-            discountSubtotal: 0,      // discount from subtotal
-            total: 1                  // subtotal & tax & discount
+            Tax: 0,                   // percentage
+            Discount: 0,              // percentage
+            Subtotal: 1,              // sum of all items
+            TaxSubtotal: 0,           // tax from subtotal
+            DiscountSubtotal: 0,      // discount from subtotal
+            Total: 1                  // subtotal & tax & discount
         }
     });
 
     // redux
     const dispatch = useDispatch();
-    const { sendEmail } = useSelector(
+    const { data: invoiceData, sendEmail } = useSelector(
         (state: RootState) => state.invoices
     )
 
@@ -96,9 +98,7 @@ export default function Invoices() {
 
             try {
                 const body =  methods.getValues();
-                const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-                // const BASE_URL = "https://localhost:7268";
-
+                const BASE_URL = getDefaultApiUrl();
                 const result = await axios.post(`${BASE_URL}/api/invoices/add`, body, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
@@ -121,9 +121,6 @@ export default function Invoices() {
         setCurrent(prev => prev + 1);
     }
 
-    const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
-
     const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
 
@@ -131,12 +128,16 @@ export default function Invoices() {
         <div  className='w-full h-full flex flex-col justify-start items-start '>
             <Layout ref={layoutRef} className='relative'>
                 <div className="flex items-center">
-                    <Title level={2}>Create Invoice</Title>
+                    <Title level={2}>Create</Title>
                     <Breadcrumb
                         items={[
-                        {
-                            title: "Create Invoice"
-                        }
+                            {
+                                title: "Invoices",
+                                path: ROUTES.Invoices
+                            },
+                            {
+                                title: "Create Invoice"
+                            }
                         ]}
                     />
                 </div>
@@ -158,14 +159,14 @@ export default function Invoices() {
                     {
                         current == 1 && (
                             <div className='w-full flex justify-center'>
-                                <CreateInvoiceStepTwo />
+                                <CreateInvoiceStepTwo invoiceData={invoiceData}/>
                             </div>   
                         )
                     }
 
                     {
                         current == 2 && (
-                            <CreateInvoiceStepThree />
+                            <CreateInvoiceStepThree invoiceData={invoiceData} sendEmail={sendEmail}/>
                         )
                     }
 

@@ -52,6 +52,10 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.InvoicesCreate,
     element: lazy(() => import("../pages/invoices/InvoicesCreate"))
+  },
+  {
+    path: ROUTES.InvoicesView,
+    element: lazy(() => import("../pages/invoices/InvociesView"))
   }
 
 ]

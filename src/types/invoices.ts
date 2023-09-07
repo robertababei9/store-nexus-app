@@ -1,33 +1,34 @@
 export type InvoiceFormType = {
-    dueDate: string;
-    invoiceNo: string;
-    billTo: BillToType,
-    billFrom: BillFromType,
-    items: ItemType[];
-    notes: string;
-    subtotal: number;
-    tax: number;
-    taxSubtotal: number;
-    discount: number;
-    discountSubtotal: number;
-    total: number;
+    CreatedDate: string;
+    DueDate: string;
+    InvoiceNo: string;
+    BillTo: BillToType,
+    BillFrom: BillFromType,
+    Items: ItemType[];
+    Notes: string;
+    Subtotal: number;
+    Tax: number;
+    TaxSubtotal: number;
+    Discount: number;
+    DiscountSubtotal: number;
+    Total: number;
 };
 
 type BillToType = {
-    to: string;
-    email: string;
-    address: string;
+    To: string;
+    Email: string;
+    Address: string;
 }
 
 type BillFromType = {
-    from: string;
-    email: string;
-    address: string;
+    From: string;
+    Email: string;
+    Address: string;
 }
 
 export type ItemType = {
-    name: string;
-    description: string;
-    qty: number;
-    price: number;
+    Name: string;
+    Description: string;
+    Qty: number;
+    Price: number;
 }

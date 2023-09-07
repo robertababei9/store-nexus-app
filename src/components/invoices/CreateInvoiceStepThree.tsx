@@ -1,19 +1,24 @@
 import { useEffect } from 'react';
-import { useSelector } from "react-redux";
 import { AiOutlineCloudDownload } from 'react-icons/ai';
 
 import InvoiceTemplateDefault from "./InvoiceTemplateDefault";
-import { RootState } from "src/redux/store";
 import { Button } from "../_shared";
+import { InvoiceFormType } from 'src/types/invoices';
 
 const FadeAnimation = require('react-reveal/Fade');
 
-export default function CreateInvoiceStepThree() {
+type CreateInvoiceStepThreeProps = {
+    // To add when necessary
+    invoiceData: InvoiceFormType | null,
+    sendEmail?: boolean,
+}
 
-    // redux
-    const {data: invoiceData, sendEmail} = useSelector(
-        (state: RootState) => state.invoices
-    )
+
+export default function CreateInvoiceStepThree({
+    invoiceData,
+    sendEmail
+}: CreateInvoiceStepThreeProps) {
+
 
     // effects
     useEffect(() => {
@@ -34,7 +39,7 @@ export default function CreateInvoiceStepThree() {
                 {
                     sendEmail ? (
                         <p className="text-4xl text-gray-600 font-semibold">
-                            Invoice created and sent successfully to <span className=" underline">{invoiceData?.billTo.to}</span>
+                            Invoice created and sent successfully to <span className=" underline">{invoiceData?.BillTo.To}</span>
                         </p>
                     ) : (
                         <p className="text-3xl text-gray-500 font-semibold">
@@ -53,7 +58,7 @@ export default function CreateInvoiceStepThree() {
                 </Button>
             </FadeAnimation>
 
-            <InvoiceTemplateDefault />
+            <InvoiceTemplateDefault invoiceData={invoiceData}/>
         </div>
     )
 }
