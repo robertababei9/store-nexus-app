@@ -9,6 +9,7 @@ const initialState: AuthenticationState = {
     accessToken: null,
     refreshToken: null,
     loading: false,
+    needsToCreateCompany: true
 }
 
 export const authenticationSlice = createSlice({
@@ -26,13 +27,20 @@ export const authenticationSlice = createSlice({
                 ...state,
                 ...revokeToken(),
             }
+        },
+        setNeedsToCreateCompany: (state, action: PayloadAction<boolean>) => {
+            state.needsToCreateCompany = action.payload;
         }
     },
 
 });
 
 
-export const { loggedOut, tokenReceived } = authenticationSlice.actions;
+export const { 
+    loggedOut, 
+    tokenReceived, 
+    setNeedsToCreateCompany 
+} = authenticationSlice.actions;
 
 export const authStatus = (state: RootState) => {
     if (state.authentication.loading) {

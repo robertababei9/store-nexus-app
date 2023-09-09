@@ -2,7 +2,8 @@ export interface AuthResponse {
     access_token: string
     refresh_token: string
     token_type: string
-    expires_in: number
+    expires_in: number,
+    needsToCreateCompany: boolean
 }
 
 // This is the token that is returned from the server when a user logs in we're labeling it as current user
@@ -22,4 +23,5 @@ export interface AuthenticationState {
 
     loading: boolean
     refreshToken: string | null
+    needsToCreateCompany: boolean
 }

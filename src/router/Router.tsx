@@ -51,15 +51,16 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
-  const currentUser = useSelector(
-    (state: RootState) => state.authentication.currentUser
+  const authenticationState = useSelector(
+    (state: RootState) => state.authentication
   )
-
-  const needsToCreateCompany = true;
+  const { currentUser, needsToCreateCompany } = useSelector(
+    (state: RootState) => state.authentication
+  )
 
 
   // console.log("-------------- Router.tsx rendering ... --------------")
-  // console.log("accessToken = ", currentUser);
+
 
   const showMenu = currentUser && !needsToCreateCompany;
     
@@ -72,7 +73,10 @@ export default function Router() {
           )
         }
         <Routes>
-            <Route path={"/"} element={<Navigate to={ROUTES.Dashboard} />} />
+            <Route 
+                path={"/"} 
+                element={<Navigate to={needsToCreateCompany ? ROUTES.CreateCompany : ROUTES.Dashboard} />} 
+            />
 
             {
               publicRoutes.map((route, index) => (
@@ -100,7 +104,7 @@ export default function Router() {
             
             {
               needsToCreateCompany && currentUser ? (
-                <Route path={"/create-company"} element={<CreateCompany />} />
+                <Route path={ROUTES.CreateCompany} element={<CreateCompany />} />
               ) : (
                 privateRoutes.map((route, index) => renderRoute(route, index))
               )

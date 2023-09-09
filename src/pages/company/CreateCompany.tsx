@@ -3,21 +3,32 @@ import { Button, Card, Layout } from "src/components/_shared"
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { IoCreateOutline } from 'react-icons/io5';
 import { TextField } from "@mui/material";
+import { HashLoader } from 'react-spinners';
+import { useDispatch } from 'react-redux';
+import { setNeedsToCreateCompany } from 'src/features/authentication/authenticationSlice';
+import { useNavigate } from 'react-router-dom';
 
-const ZoomAnimation = require('react-reveal/Fade');
-const SlideAnimation = require('react-reveal/Fade');
+const FadeAnimation = require('react-reveal/Fade');
 const Jump = require('react-reveal/Jump');
 
 const TOTAL_STEPS = [0, 1, 2];
 
 export default function CreateCompany() {
 
+    //redux
+    const dispatch = useDispatch();
+
+    // routing
+    const navigate = useNavigate();
+
+    // states
     const [companyName, setCompanyName] = useState<string>("");
     const [noEmployees, setNoEmployees] = useState<string>("");
     const [typeOfBusinees, setTypeOfBusinees] = useState<string>("");
     const [step, setStep] = useState<number>(0);
 
     const [createAnimation, setCreateAnimation] = useState<boolean>(false);
+    const [isCompanyCreating, setIsCompanyCreating] = useState<boolean>(false);
 
     useEffect(() => {
         setCreateAnimation(prev => !prev);
@@ -31,14 +42,33 @@ export default function CreateCompany() {
         setStep(prev => prev - 1);
     }
 
-    const handleCreate = () => {
+    const handleCreate = async () => {
+        setCreateAnimation(prev => !prev);
+        setIsCompanyCreating(true);
+        
+        await delay(2000); // Wait for that nice loader ...
         // rtk query -> API to set company and then invalidate 'needsToCreateCompany' field by API call 
-        setCreateAnimation(prev => !prev)
+
+        dispatch(setNeedsToCreateCompany(false));   // company was created
+        navigate("/")
     }
+
+    // helpers
+    const delay = (ms: number) => new Promise( resolve => setTimeout(resolve, ms) );
 
     return (
         <Layout className={`justify-center items-center relative`}>
-            <ZoomAnimation left when={createAnimation}>
+            {
+                isCompanyCreating && (
+                    <FadeAnimation up>
+                        <HashLoader 
+                            color="#3657F8"
+                            size={95}
+                        />
+                    </FadeAnimation>
+                )
+            }
+            <FadeAnimation left when={createAnimation}>
                 <div >
                     <Card >
                         <p className="text-lg text-gray-600 font-semibold mb-6">Looks like you need to create the company first. Give us some details</p>
@@ -62,11 +92,11 @@ export default function CreateCompany() {
 
                         {
                             step === 1 && (
-                                <SlideAnimation top>
+                                <FadeAnimation top>
                                     <TextField
                                         className='w-full'
                                         style={{marginBottom: 15}}
-                                        label='How many employees the company has ?' 
+                                        label='How many employees company has ?' 
                                         variant="outlined"
                                         value={noEmployees}
                                         onChange={(event) => {
@@ -76,13 +106,13 @@ export default function CreateCompany() {
                                         size='small'
                                         required
                                     />
-                                </SlideAnimation>
+                                </FadeAnimation>
                             )
                         }
 
                         {
                             step === 2 && (
-                                <SlideAnimation top>
+                                <FadeAnimation top>
                                     <TextField
                                         className='w-full'
                                         style={{marginBottom: 15}}
@@ -96,7 +126,7 @@ export default function CreateCompany() {
                                         size='small'
                                         required
                                     />
-                                </SlideAnimation>
+                                </FadeAnimation>
                             )
                         }
 
@@ -133,7 +163,7 @@ export default function CreateCompany() {
                         </div>
                     </Card>
                 </div>
-            </ZoomAnimation>
+            </FadeAnimation>
         </Layout>
     )
 }

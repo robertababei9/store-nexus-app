@@ -8,8 +8,9 @@ export const ROUTES = {
     StoresEdit: "/stores/edit/:id",
     Invoices: "/invoices",
     InvoicesCreate: "/invoices/create",
-    InvoicesView: "/invoices/:id"
+    InvoicesView: "/invoices/:id",
 
+    CreateCompany: "/create-company"
     // Users: "/users"
 }
 

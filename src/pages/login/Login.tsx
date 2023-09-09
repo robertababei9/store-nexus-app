@@ -37,10 +37,8 @@ export default function Login() {
 
     // prevent user going to /login if it's authenticated
     useEffect(() => {
-        console.log("User prevented to access /login if authenticated");
-        console.log("currentUser: ", currentUser);
         if (currentUser) {
-            navigate(ROUTES.Dashboard)
+            navigate("/")
         }
     }, [currentUser]);
 
@@ -64,16 +62,17 @@ export default function Login() {
         try {
             const result = await axios.post(BASE_URL + "/api/users/login", body);
 
-
-            console.log("result = ", result);
+            const needsToCreateCompany = true;
+            // console.log("result = ", result);
             const mockAuthResponse = {
                 access_token: result.data,
                 refresh_token: "not-implemented-yet",
                 token_type: "to-be-verified",
-                expires_in: -99999
+                expires_in: -99999,
+                needsToCreateCompany: needsToCreateCompany
             };
 
-            navigate(ROUTES.Dashboard);
+            navigate("/");
             dispatch(tokenReceived(mockAuthResponse));
             // arata-mi ca merge
 

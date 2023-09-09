@@ -11,6 +11,7 @@ export const setToken = (data: AuthResponse) => {
         refreshToken: data.refresh_token,
         loading: false,
         currentUser: jwt(data.access_token) as User,
+        needsToCreateCompany: data.needsToCreateCompany,
     }
 }
 
