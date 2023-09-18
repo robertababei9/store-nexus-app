@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Breadcrumb, Table, Input, Space, Tooltip, Button, Typography, Layout } from 'antd';
+import { Avatar, Table, Input, Space, Tooltip, Typography, Skeleton } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { AiOutlineHome } from "react-icons/ai";
 import { useNavigate } from 'react-router';
 import { ROUTES } from 'src/utils/Constants';
-import { Card } from 'src/components/_shared';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
+
+import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
+
 
 const Title = Typography.Title;
 
@@ -17,15 +19,15 @@ interface DataType {
     key: string;
     name: string;
     email: string;
+    role: string,
     location: string;
-    roleDept: string,
+    store: string;
     phoneNo: string;
-    signedup: string;
 }
 
 const columns: ColumnsType<DataType> = [
     {
-        title: 'NAME',
+        title: 'Name',
         dataIndex: 'name',
         key: 'name',
         render: (text, record) => (
@@ -37,36 +39,37 @@ const columns: ColumnsType<DataType> = [
         sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-        title: 'EMAIL',
+        title: 'E-mail',
         dataIndex: 'email',
         render: (text) => <p>{text}</p>,
         sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
-        title: 'LOCATION',
+        title: "Role",
+        dataIndex: 'role',
+        key: 'roleDept',
+        render: (text) => <p>{text}</p>,
+        sorter: (a, b) => a.role.localeCompare(b.role),
+    },
+    {
+        title: 'Location',
         dataIndex: 'location',
         key: 'location',
         render: (text) => <p>{text}</p>,
         sorter: (a, b) => a.location.localeCompare(b.location),
     },
     {
-        title: "Role/Dept",
-        dataIndex: 'roleDept',
-        key: 'roleDept',
+        title: 'Store',
+        dataIndex: 'store',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.roleDept.localeCompare(b.roleDept),
+        sorter: (a, b) => a.store.localeCompare(b.store)
     },
     {
-        title: 'CONTACT',
+        title: 'Phone number',
         dataIndex: 'phoneNo',
         key: 'phoneNo',
     },
-    {
-        title: 'SIGNED UP',
-        dataIndex: 'signedup',
-        render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.signedup.localeCompare(b.signedup)
-    },
+
 ];
 
 const data: DataType[] = [
@@ -74,146 +77,60 @@ const data: DataType[] = [
         key: '1',
         name: 'Razvan Ababei',
         email: "razvanababei@yahoo.com",
+        role: 'Admin',
         location: "Iasi",
-        roleDept: "Manipulator mafra/ Legume",
-        phoneNo: "08593",
-        signedup: "asa"
+        store: 'Admir',
+        phoneNo: "08593"
     },
     {
         key: '2',
         name: 'Robert Ababei',
         email: "robertababei@yahoo.com",
-        location: "Botosani",
-        roleDept: "Manipulator mafra/ Legume",
-        phoneNo: "091234",
-        signedup: "asa"
+        role: 'Admin',
+        location: "Iasi",
+        store: 'Admir',
+        phoneNo: "51325"
     },
     {
         key: '3',
         name: 'Dinu Ababei',
         email: "dinuababei@yahoo.com",
-        location: "Suceava",
-        roleDept: "Manipulator mafra/ Legume",
-        phoneNo: "16000",
-        signedup: "asa"
+        role: 'Admin',
+        location: "Iasi",
+        store: 'Admir',
+        phoneNo: "3333"
     },
     {
         key: '4',
         name: 'Codrin Ababei',
         email: "codrinababei@yahoo.com",
-        location: "Londra",
-        roleDept: "Manipulator mafra/ Legume",
-        phoneNo: "16000",
-        signedup: "asa"
+        role: 'Admin',
+        location: "Iasi",
+        store: 'Admir',
+        phoneNo: "056243"
     },
     {
         key: '5',
         name: 'Dana Ababei',
         email: "danaababei@yahoo.com",
-        location: "Botosani",
-        roleDept: "Manipulator mafra/ Legume",
-        phoneNo: "16000",
-        signedup: "asa"
+        role: 'Admin',
+        location: "Iasi",
+        store: 'Admir',
+        phoneNo: "007382"
     },
     {
         key: '6',
         name: 'Sorin Ababei',
         email: "sorinababei@yahoo.com",
-        location: "Hamburg",
-        roleDept: "Sofer TIR",
-        phoneNo: "000009",
-        signedup: "asa"
+        role: 'Admin',
+        location: "Iasi",
+        store: 'Admir',
+        phoneNo: "123"
     },
-    // {
-    //     key: '7',
-    //     name: 'Dorin Ababei',
-    //     email: "dorinababei@yahoo.com",
-    //     location: "15 Jul 2022",
-    //     contact: "16000",
-    //     signedup: "asa"
-    // },
-    // {
-    //     key: '8',
-    //     name: 'Lili Ababei',
-    //     email: "liliababei@yahoo.com",
-    //     location: "15 Jul 2022",
-    //     contact: "16000",
-    //     signedup: "asa"
-    // },
-    // {
-    //     key: '9',
-    //     name: 'Eliza Giuborunca',
-    //     email: "elizagiub@yahoo.com",
-    //     location: "15 Jul 2022",
-    //     contact: "16000",
-    //     signedup: "asa"
-    // },
-    // {
-    //     key: '10',
-    //     name: 'Tiberiu Giuborunca',
-    //     email: "tibigiub@yahoo.com",
-    //     location: "15 Jul 2022",
-    //     contact: "16000",
-    //     signedup: "asa"
-    // },
-    // {
-    //     key: '11',
-    //     name: 'Bunicu',
-    //     email: "bunica@yahoo.com",
-    //     location: "Vorona",
-    //     contact: "16000",
-    //     signedup: "asa"
-    // },
-    // {
-    //     key: '12',
-    //     name: 'Bunica',
-    //     email: "bunicu@yahoo.com",
-    //     location: "Vorona",
-    //     contact: "112",
-    //     signedup: "13/03/2023"
-    // },
-    // {
-    //     key: '13',
-    //     name: 'Matusa',
-    //     email: "matusa1@yahoo.com",
-    //     location: "Botosani",
-    //     contact: "123",
-    //     signedup: "10/01/2022"
-    // },
-    // {
-    //     key: '14',
-    //     name: 'Alta Matusa',
-    //     email: "altamatusa@yahoo.com",
-    //     location: "15 Jul 2022",
-    //     phone: "976321",
-    //     signedup: "02/02/2020"
-    // }, {
-    //     key: '15',
-    //     name: 'Unchiu',
-    //     email: "unchiugiub@yahoo.com",
-    //     location: "15 Jul 2022",
-    //     phone: "0725321",
-    //     signedup: "15/09/2020"
-    // },
-    // {
-    //     key: '16',
-    //     name: 'Sorina',
-    //     email: "sorinagiub@yahoo.com",
-    //     location: "15 Jul 2022",
-    //     phone: "0749674772",
-    //     signedup: "12/05/2021"
-    // },
-    // {
-    //     key: '17',
-    //     name: 'Nu mai am nume',
-    //     email: "da@yahoo.com",
-    //     location: "15 Jul 2023",
-    //     phone: "074815231",
-    //     signedup: "12/05/2020"
-    // }
 ];
 
-export default function Users() {
+export default function Users()  {
+    <Skeleton active/>
 
     const navigate = useNavigate();
 
@@ -253,14 +170,14 @@ export default function Users() {
         }
     }
 
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        setSelectedRowKeys(newSelectedRowKeys);
-    };
+    // const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    //     setSelectedRowKeys(newSelectedRowKeys);
+    // };
 
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    };
+    // const rowSelection = {
+    //     selectedRowKeys,
+    //     onChange: onSelectChange,
+    // };
 
     const filteredData = data.filter((item) =>
         Object.values(item).some((value) => {
@@ -287,7 +204,7 @@ export default function Users() {
                 <Tooltip title="Edit">
                     <Button
                         className='bg-white flex justify-center items-center'
-                        type='default'
+                        type='primary'
                         shape="circle"
                         icon={<EditOutlined />}
                         onClick={() => navigate(ROUTES.AddUser.replace(":id", record.key))}
@@ -299,60 +216,81 @@ export default function Users() {
 
 
     return (
-        <div className='w-full h-full overflow-y-auto'>
-            <div className='relative w-full h-full flex flex-col items-start sm:px-16 px-4 sm:py-8 py-6 z-30'>
-                <div className='flex items-center justify-between w-full'>
 
-                    <div className="flex items-center">
-                        <Title>Users</Title>
-                        <Breadcrumb
-                            className="ml-8"
-                            items={[
-                                {
-                                    title: (
-                                        <div className='b-6 '>
-                                            <Link className='text-blue-500' to={ROUTES.Dashboard}>
-                                                <AiOutlineHome size={22} className='text-blue-400' />
-                                            </Link>
+        <Layout>
+            <div className="flex items-center">
+                <Title level={2}>Users</Title>
+                <Breadcrumb
+                    items={[
+                        {
+                            title: "Users"
+                        }
+                    ]}
+                />
+            </div>
 
-                                        </div>
-                                    ),
-                                },
-                                {
-                                    title: "Users",
-                                },
-                            ]}
-                        />
+            <Card className='w-full flex flex-col justify-between items-center mb-4'>
+                <div className='w-full flex justify-between items-center mb-4'>
+                    <Search className='w-64' placeholder='Search user ...' />
+                    trb sa alegem
+                    <div>
+                        <Space direction='vertical' style={{ marginLeft: '24px' }}>
+                            <Input
+                                className='w-64'
+                                placeholder='Search user...'
+                                prefix={<SearchOutlined />}
+                                value={searchText}
+                                onChange={(e) => setSearchText(e.target.value)}
+                            />
+                        </Space>
                     </div>
 
                     <Button
-                        type='primary'
+                        type='secondary'
+                        className='flex justify-center items-center'
                         icon={<PlusOutlined />}
-                        style={{ height: '40px', backgroundColor: '#4361ee', borderColor: '#4361ee', marginRight: '24px' }}
                         onClick={() => navigate(ROUTES.AddUser.replace(":id", "0"))}
-
                     >
-                        <strong style={{ fontWeight: 'bold' }}>Add user</strong>
+                        Add user
                     </Button>
                 </div>
 
-                <Space direction='vertical' style={{ marginLeft: '24px' }}>
-                    <Input
-                        placeholder='Search user'
-                        prefix={<SearchOutlined />}
-                        value={searchText}
-                        onChange={(e) => setSearchText(e.target.value)}
-                        style={{ width: '200px' }}
-                    />
-                </Space>
                 <Table
-                    rowSelection={rowSelection}
-                    columns={columns}
+                    size='middle'
+                    className='w-full'
                     dataSource={filteredData}
-                    style={{ width: '100%', padding: '24px' }}
+                    columns={columns}
                 />
-            </div>
-        </div>
+            </Card>
+
+
+
+        </Layout>
+
+        ////////
+
+
+        // <div className='w-full h-full overflow-y-auto'>
+        //     <div className='relative w-full h-full flex flex-col items-start sm:px-16 px-4 sm:py-8 py-6 z-30'>
+        //         <Card className='w-full flex flex-col justify-between items-center mb-4'>
+        //             <div className='w-full flex justify-between items-center mb-4'>
+        //                 <Space direction='vertical' style={{ marginLeft: '24px' }}>
+        //                     <Input
+        //                         placeholder='Search user'
+        //                         prefix={<SearchOutlined />}
+        //                         value={searchText}
+        //                         onChange={(e) => setSearchText(e.target.value)}
+        //                         style={{ width: '200px' }}
+        //                     />
+        //                 </Space>
+        //             </div>
+        //           
+        //         </Card>
+        //     </div>
+        // </div>
+
+
 
     );
 }
+

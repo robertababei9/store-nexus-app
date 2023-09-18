@@ -1,10 +1,13 @@
 export type UserFormType = {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     role: string;
     store: string;
     phoneNumber: string;
-    signupDate: string
+    signupDate: string;
+    country: string;
+    city: string;
 }
 
 export type SecurityFormType = {

@@ -11,6 +11,7 @@ import { SecurityFormType, UserFormType } from "src/types/users";
 import ComingSoonSvg from 'src/assets/images/git.svg'
 import { useForm } from "react-hook-form";
 import Security from "src/components/edit-user/Security";
+import Roles from "src/components/edit-user/Roles";
 
 const ComingSoon = () => {
     return (
@@ -89,26 +90,23 @@ export default function AddUsers() {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: `Basic info`,
+            label: <span className="font-semibold">Profile</span>,
             children: <UserForm methods={methods} />,
         },
         {
             key: '2',
-            label: `Security`,
+            label: <span className="font-semibold">Security</span>,
             children: <Security methods={methodsSecurity} />,
         },
         {
             key: '3',
             label: `Roles`,
-            children: <ComingSoon />,
+            children: <Roles />,
         },
     ];
 
 
     return (
-        // Layout-ul sta doar ca si parinte ... e primul primul primul in pagina respectiva
-        // Nu in copii lui. In parinte. E bosul
-        // mai esti ? , dar arata urat butonul ala de save, acolo pe linia cu breadcrumbs o sa vina user profile, dar mai tz
         <Layout>
             <div className="w-full flex justify-between items-start">
                 <div className="flex items-center">
@@ -126,18 +124,9 @@ export default function AddUsers() {
                     />
                 </div>
 
-                {/* Save button  */}
-                <Button type="secondary" onClick={handleSave} className="flex items-center">
-                    Save
-                    <AiOutlineSave color="#FFF" size={20} className="ml-3"/>
-                </Button> 
-
             </div>
 
-
-
-
-            <Card className="w-full h-full !px-0">
+            <Card  className="mt-5 w-full h-full !px-0">
 
                 <Tabs
                     tabBarStyle={{ paddingLeft: 18 }}
