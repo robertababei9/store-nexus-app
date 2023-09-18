@@ -7,11 +7,16 @@ import { HashLoader } from 'react-spinners';
 import { useDispatch } from 'react-redux';
 import { setNeedsToCreateCompany } from 'src/features/authentication/authenticationSlice';
 import { useNavigate } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
 
 const FadeAnimation = require('react-reveal/Fade');
 const Jump = require('react-reveal/Jump');
 
-const TOTAL_STEPS = [0, 1, 2];
+type CreateCompanyFormType = {
+    name: string;
+    noEmployees: number;
+    type: string;
+}
 
 export default function CreateCompany() {
 
@@ -20,6 +25,9 @@ export default function CreateCompany() {
 
     // routing
     const navigate = useNavigate();
+
+    // form
+    const methods = useForm<CreateCompanyFormType>();
 
     // states
     const [companyName, setCompanyName] = useState<string>("");
@@ -34,7 +42,12 @@ export default function CreateCompany() {
         setCreateAnimation(prev => !prev);
     }, []);
 
-    const handleNext = () => {
+    const handleNext = async () => {
+        const canContinue = await methods.trigger();
+        if (canContinue == false) {
+            return;
+        }
+
         setStep(prev => prev + 1);
     }
 
@@ -43,6 +56,12 @@ export default function CreateCompany() {
     }
 
     const handleCreate = async () => {
+
+        const canContinue = await methods.trigger();
+        if (canContinue == false) {
+            return;
+        }
+
         setCreateAnimation(prev => !prev);
         setIsCompanyCreating(true);
         
@@ -74,62 +93,102 @@ export default function CreateCompany() {
                         <p className="text-lg text-gray-600 font-semibold mb-6">Looks like you need to create the company first. Give us some details</p>
                         {
                             step === 0 && (
-                                <TextField
-                                    className='w-full'
-                                    style={{marginBottom: 15}}
-                                    label='What is the name of the company ?' 
-                                    variant="outlined"
-                                    value={companyName}
-                                    onChange={(event) => {
-                                        setCompanyName(event.target.value);
+                                <Controller
+                                    name={`name`}
+                                    control={methods.control}
+                                    rules={{
+                                    required: true
                                     }}
-                                    // error={error !== undefined}
-                                    size='small'
-                                    required
+                                    render={({
+                                        field: { onChange, value },
+                                        fieldState: { error },
+                                    }) => (
+                                        <TextField
+                                            className='w-full'
+                                            style={{marginBottom: 15}}
+                                            label='What is the name of the company ?' 
+                                            variant="outlined"
+                                            value={value}
+                                            onChange={(event) => {
+                                                onChange(event.target.value);
+                                            }}
+                                            error={error?.message !== undefined}
+                                            size='small'
+                                            required
+                                        />
+                                    )}
                                 />
                             )
                         }
 
                         {
                             step === 1 && (
-                                <FadeAnimation top>
-                                    <TextField
-                                        className='w-full'
-                                        style={{marginBottom: 15}}
-                                        label='How many employees company has ?' 
-                                        variant="outlined"
-                                        value={noEmployees}
-                                        onChange={(event) => {
-                                            setNoEmployees(event.target.value);
-                                        }}
-                                        // error={error !== undefined}
-                                        size='small'
-                                        required
-                                    />
-                                </FadeAnimation>
+                                <Controller
+                                    name={`noEmployees`}
+                                    control={methods.control}
+                                    rules={{
+                                    required: true
+                                    }}
+                                    render={({
+                                        field: { onChange, value },
+                                        fieldState: { error },
+                                    }) => (
+                                        <FadeAnimation top>
+                                            <TextField
+                                                className='w-full'
+                                                style={{marginBottom: 15}}
+                                                label='How many employees the company has ?' 
+                                                variant="outlined"
+                                                type='number'
+                                                value={value}
+                                                onChange={(event) => {
+                                                    onChange(event.target.value);
+                                                }}
+                                                error={error?.message !== undefined}
+                                                size='small'
+                                                required
+                                            />
+                                        </FadeAnimation>
+                                    )}
+                                />
+
                             )
                         }
 
                         {
                             step === 2 && (
-                                <FadeAnimation top>
-                                    <TextField
-                                        className='w-full'
-                                        style={{marginBottom: 15}}
-                                        label="What's the type of business ?" 
-                                        variant="outlined"
-                                        value={typeOfBusinees}
-                                        onChange={(event) => {
-                                            setTypeOfBusinees(event.target.value);
-                                        }}
-                                        // error={error !== undefined}
-                                        size='small'
-                                        required
-                                    />
-                                </FadeAnimation>
+                                <Controller
+                                name={`type`}
+                                control={methods.control}
+                                rules={{
+                                required: true
+                                }}
+                                render={({
+                                    field: { onChange, value },
+                                    fieldState: { error },
+                                }) => (
+                                    <FadeAnimation top>
+                                        <TextField
+                                            className='w-full'
+                                            style={{marginBottom: 15}}
+                                            label="What's the type of business ?"
+                                            variant="outlined"
+                                            value={value}
+                                            onChange={(event) => {
+                                                onChange(event.target.value);
+                                            }}
+                                            error={error?.message !== undefined}
+                                            size='small'
+                                            required
+                                        />
+                                    </FadeAnimation>
+                                )}
+                            />
+
                             )
                         }
 
+                        {/* BACK, NEXT, CREATE --> buttons */}
                         <div className="w-full flex justify-between items-center mt-6">
                             {
                                 [1, 2].includes(step) ? (
