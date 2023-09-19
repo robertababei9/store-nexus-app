@@ -5,9 +5,14 @@ import { IoCreateOutline } from 'react-icons/io5';
 import { TextField } from "@mui/material";
 import { HashLoader } from 'react-spinners';
 import { useDispatch } from 'react-redux';
-import { setNeedsToCreateCompany } from 'src/features/authentication/authenticationSlice';
+import { loggedOut, setNeedsToCreateCompany } from 'src/features/authentication/authenticationSlice';
 import { useNavigate } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
+import axios from 'axios';
+import { getDefaultApiUrl } from 'src/config';
+import { CreateCompanyType } from 'src/types/company';
+import { openNotification } from 'src/utils/Notification';
+import { ROUTES } from 'src/utils/Constants';
 
 const FadeAnimation = require('react-reveal/Fade');
 const Jump = require('react-reveal/Jump');
@@ -68,8 +73,36 @@ export default function CreateCompany() {
         await delay(2000); // Wait for that nice loader ...
         // rtk query -> API to set company and then invalidate 'needsToCreateCompany' field by API call 
 
-        dispatch(setNeedsToCreateCompany(false));   // company was created
-        navigate("/")
+        try { 
+            const formValues = methods.getValues();
+            const body: CreateCompanyType = {
+                name: formValues.name,
+                noEmployees: formValues.noEmployees,
+                type: formValues.type
+            };
+            const result = await axios.post<string>(`${getDefaultApiUrl()}/api/company/create`, body, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                } 
+            });
+
+            if (result) {
+                dispatch(setNeedsToCreateCompany(false));   // company was created
+                navigate("/")
+            }
+        } 
+        catch (err: any) {
+            console.log("Error while creating the company: ", err);
+
+            dispatch(loggedOut(null));
+            navigate(ROUTES.SignIn);
+            openNotification("error", "Error", "Error while creating the company. Log in again and try one more time. If this error persist please contact support", 10)
+        }
+        finally {
+
+        }
+
+
     }
 
     // helpers

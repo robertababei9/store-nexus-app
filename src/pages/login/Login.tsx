@@ -13,6 +13,7 @@ import { tokenReceived } from 'src/features/authentication/authenticationSlice';
 import { RootState } from 'src/redux/store';
 import { openNotification } from 'src/utils/Notification';
 import { getDefaultApiUrl } from 'src/config';
+import { LoginResponse } from 'src/types/login';
 
 
 
@@ -60,16 +61,15 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const result = await axios.post(BASE_URL + "/api/users/login", body);
+            const result = await axios.post<LoginResponse>(BASE_URL + "/api/users/login", body);
 
-            const needsToCreateCompany = true;
-            // console.log("result = ", result);
+            console.log("result = ", result);
             const mockAuthResponse = {
-                access_token: result.data,
+                access_token: result.data.token,
                 refresh_token: "not-implemented-yet",
                 token_type: "to-be-verified",
                 expires_in: -99999,
-                needsToCreateCompany: needsToCreateCompany
+                needsToCreateCompany: result.data.needsToCreateCompany
             };
 
             navigate("/");
