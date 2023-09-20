@@ -63,7 +63,7 @@ export default function Login() {
         try {
             const result = await axios.post<LoginResponse>(BASE_URL + "/api/users/login", body);
 
-            console.log("result = ", result);
+            // console.log("result = ", result);
             const mockAuthResponse = {
                 access_token: result.data.token,
                 refresh_token: "not-implemented-yet",
@@ -74,7 +74,6 @@ export default function Login() {
 
             navigate("/");
             dispatch(tokenReceived(mockAuthResponse));
-            // arata-mi ca merge
 
         } catch (err: any) {
             console.log("Error: ", err);
@@ -83,10 +82,6 @@ export default function Login() {
         finally {
             setLoading(false);
         }
-
-
-        // login = success
-        // navigate(ROUTES.Dashboard); 
 
     }
 
