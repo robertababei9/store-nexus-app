@@ -11,7 +11,7 @@ import { SecurityFormType, UserFormType } from "src/types/users";
 import ComingSoonSvg from 'src/assets/images/git.svg'
 import { useForm } from "react-hook-form";
 import Security from "src/components/edit-user/Security";
-import Roles from "src/components/edit-user/Roles";
+import Permissions from "src/components/edit-user/Permissions";
 
 const ComingSoon = () => {
     return (
@@ -90,18 +90,18 @@ export default function AddUsers() {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: <span className="font-semibold">Profile</span>,
+            label: 'Profile',
             children: <UserForm methods={methods} />,
         },
         {
             key: '2',
-            label: <span className="font-semibold">Security</span>,
+            label: 'Security',
             children: <Security methods={methodsSecurity} />,
         },
         {
             key: '3',
-            label: `Roles`,
-            children: <Roles />,
+            label: `Permissions`,
+            children: <Permissions />,
         },
     ];
 

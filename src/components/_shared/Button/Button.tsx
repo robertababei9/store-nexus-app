@@ -8,7 +8,7 @@ type ButtonProps = {
     className?: string;
     style?: {};  // this means object .... {} == object
     // type?: "primary" | "link" | "text" | "ghost" | "default" | "dashed" | undefined;
-    type?: "primary" | "secondary" | undefined;
+    type?: "primary" | "secondary" | "danger" | undefined;
     icon?: any;
     shape?: "circle" | "default" | "round" | undefined
 };
@@ -32,7 +32,12 @@ export default function Button({
   return (
     <AntdButton
         style={style}
-        className={`bg-blue-500 ${type === "secondary" ? secondaryTypeClassName : ""} ${className}  active:scale-90`}
+        className={
+          `bg-blue-500 
+          ${type === "secondary" ? secondaryTypeClassName : ""} 
+          ${className}  
+          active:scale-90`
+        }
         disabled={disabled}
         loading={loading}
         onClick={onClick}
