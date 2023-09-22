@@ -12,7 +12,8 @@ export const ROUTES = {
     InvoicesView: "/invoices/:id",
 
     Users: "/users",
-    AddUser: "/users/adduser/:id"
+    EditUser: "/users/edit/:id",
+    AddUser: "/users/add"
 }
 
 

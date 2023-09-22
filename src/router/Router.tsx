@@ -30,6 +30,10 @@ const privateRoutes: RouteType[] = [
     element: lazy(() => import("../pages/users/Users"))
   },
   {
+    path: ROUTES.EditUser,
+    element: lazy(() => import("../pages/users/EditUser"))
+  },
+  {
     path: ROUTES.AddUser,
     element: lazy(() => import("../pages/users/AddUser"))
   },

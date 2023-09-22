@@ -31,18 +31,20 @@ const UserDetailsCard: React.FC<{ name: string; location: string; email: string 
 );
 
 type UserFormProps = {
-  methods: UseFormReturn<UserFormType, any, undefined>
+  methods: UseFormReturn<UserFormType, any, undefined>,
+  editable?: boolean
 }
 
 // In parinte se cheama UserForm si aici AddEditUserPage
 // nu e gresit dar e mai ok sa aiba acelasi nume
 export default function AddEditUserPage({
-  methods
+  methods,
+  editable = true
 }: UserFormProps) {
 
   //De vazut aici daca e bun !!!!!!!!!!!!!!!!!!!!!!!!!!
   const handleSave = async () => {
-    console.log("user form data = ", methods.getValues());
+    // console.log("user form data = ", methods.getValues());
     const isValid = await methods.trigger();
 
     if (!isValid) {
@@ -68,9 +70,13 @@ export default function AddEditUserPage({
             />
 
             <div className="pt-5 text-left">
-              <Button type="secondary" onClick={handleSave} >
-                Upload Avatar
-              </Button>
+              {
+                editable && (
+                  <Button type="secondary" onClick={handleSave} >
+                    Upload Avatar
+                  </Button>
+                )
+              }
             </div>
 
           </Card>
@@ -311,9 +317,13 @@ export default function AddEditUserPage({
             </Row>
 
             <div className="pt-5 text-left">
-              <Button type="secondary" onClick={handleSave} >
-                Change Details
-              </Button>
+              {
+                editable && (
+                  <Button type="secondary" onClick={handleSave} >
+                    Change Details
+                  </Button>
+                )
+              }
             </div>
 
           </Card>

@@ -144,7 +144,7 @@ export default function Users()  {
     // effects
     useEffect(() => {
         // API: get invoices
-        getUsers();
+        // getUsers();
     }, []);
 
     const getUsers = async () => {
@@ -207,7 +207,7 @@ export default function Users()  {
                         type='primary'
                         shape="circle"
                         icon={<EditOutlined />}
-                        onClick={() => navigate(ROUTES.AddUser.replace(":id", record.key))}
+                        onClick={() => navigate(ROUTES.EditUser.replace(":id", record.key))}
                     />
                 </Tooltip>
             </div>),
@@ -249,7 +249,7 @@ export default function Users()  {
                         type='secondary'
                         className='flex justify-center items-center'
                         icon={<PlusOutlined />}
-                        onClick={() => navigate(ROUTES.AddUser.replace(":id", "0"))}
+                        onClick={() => navigate(ROUTES.AddUser)}
                     >
                         Add user
                     </Button>
