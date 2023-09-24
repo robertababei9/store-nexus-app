@@ -8,6 +8,7 @@ type DropdownProps = {
     options?: OptionType[];
     placeholder?: string;
     error?: boolean;
+    loading?: boolean;
 }
 
 export default function Dropdown({
@@ -16,6 +17,7 @@ export default function Dropdown({
     options = [],
     placeholder = "Select a value",
     error = false,
+    loading = false
 }: DropdownProps) {
 
     const [val, setVal] = useState<any>(defaultValue);
@@ -30,6 +32,7 @@ export default function Dropdown({
     return (
         <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">{placeholder}</InputLabel>
+            {/* How is it possible that MUI -> Select doesn't have a Loading prop ... Like WTF */}
             <Select
                 // defaultValue=''
                 labelId="demo-simple-select-label"

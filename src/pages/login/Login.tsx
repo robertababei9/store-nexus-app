@@ -67,7 +67,7 @@ export default function Login() {
 
             console.log("result = ", result);
             const mockAuthResponse = {
-                access_token: result.data,
+                access_token: result.data.token,
                 refresh_token: "not-implemented-yet",
                 token_type: "to-be-verified",
                 expires_in: -99999

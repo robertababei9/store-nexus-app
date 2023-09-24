@@ -1,12 +1,16 @@
-import React from 'react';
-import { TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import { Controller, UseFormReturn, useForm } from 'react-hook-form';
-import { Col, Row, Card, DatePicker, Layout, DatePickerProps } from 'antd';
-import UserAvatar from './UserAvatar';
-import { Button, Dropdown } from '../_shared';
-import { UserFormType } from 'src/types/users';
+import { Controller, UseFormReturn } from 'react-hook-form';
+import { Col, Row, Card, DatePicker, DatePickerProps } from 'antd';
+import { TextField } from '@mui/material';
 
+import { Button, Dropdown } from '../_shared';
+import UserAvatar from './UserAvatar';
+import { Role, UserFormType } from 'src/types/users';
+import DropdownMultiple from '../_shared/DropdownMultiple/DropdownMultiple';
+import { OptionType } from 'src/types/_shared';
+import axios from 'axios';
+import { getDefaultApiUrl } from 'src/config';
 
 
 const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -32,17 +36,53 @@ const UserDetailsCard: React.FC<{ name: string; location: string; email: string 
 
 type UserFormProps = {
   methods: UseFormReturn<UserFormType, any, undefined>,
-  editable?: boolean
+  editable?: boolean,
+  addUser?: boolean
 }
 
 // In parinte se cheama UserForm si aici AddEditUserPage
 // nu e gresit dar e mai ok sa aiba acelasi nume
 export default function AddEditUserPage({
   methods,
-  editable = true
+  editable = true,
+  addUser = false
 }: UserFormProps) {
 
-  //De vazut aici daca e bun !!!!!!!!!!!!!!!!!!!!!!!!!!
+  // states
+  const [roleOptions, setRoleOptions] = useState<OptionType[]>([])
+  const [roleOptionsLoading, setRoleOptionsLoading] = useState<boolean>(true);
+
+  // effects
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+
+  // helpers
+  const fetchRoles = async () => {
+    try {
+      const result = await axios.get<Role[]>(getDefaultApiUrl() + "/api/users/GetUserRoles", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      });
+
+      if (result.data) {
+        const roleOptions: OptionType[] = result.data.map(x => ({value: x.Id, label: x.Name}));
+        setRoleOptions(roleOptions);
+      }
+
+    }
+    catch( error: any) {
+      console.log("Error while trying to get the Roles");
+    }
+    finally {
+      setRoleOptionsLoading(false);
+    }
+
+
+  }
+
   const handleSave = async () => {
     // console.log("user form data = ", methods.getValues());
     const isValid = await methods.trigger();
@@ -53,7 +93,7 @@ export default function AddEditUserPage({
   }
 
   ///////// AIci de facut firstName + lastName = name.... vedem cum
-  methods.watch("firstName");
+  methods.watch("FirstName");
 
   return (
     // mx = margin x = margin horizontal ( axa x,y )
@@ -90,7 +130,7 @@ export default function AddEditUserPage({
             <Row gutter={16}>
               <Col xs={24} md={12}>
                 <Controller
-                  name={`firstName`}
+                  name={`FirstName`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -118,7 +158,7 @@ export default function AddEditUserPage({
 
               <Col xs={24} md={12}>
                 <Controller
-                  name={`lastName`}
+                  name={`LastName`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -148,7 +188,7 @@ export default function AddEditUserPage({
             <Row gutter={16}>
               <Col xs={24} md={24}>
                 <Controller
-                  name={`email`}
+                  name={`Email`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -175,11 +215,90 @@ export default function AddEditUserPage({
               </Col>
             </Row>
 
+            {
+              // We display this only if the prop it's set to ADD USER
+              addUser && (
+                <Row gutter={16}>
+                  <Col xs={24} md={12}>
+                      <Controller
+                          name={`Password`}
+                          control={methods.control}
+                          rules={{
+                              required: true,
+                              minLength: {
+                                  value: 6,
+                                  message: "Password must be at least 6 characters long",
+                              },
+                              pattern: {
+                                  value: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/, // Requires at least one number and one special character
+                                  message: "Password must include at least one number and one special character",
+                              },
+                          }}
+                          render={({ field, fieldState: { error } }) => (
+                              <div>
+                                  <TextField
+                                      className='w-full'
+                                      // style={{ marginBottom: 15 }}
+                                      label='New Password'
+                                      type='password'
+                                      variant="outlined"
+                                      value={field.value}
+                                      onChange={field.onChange}
+                                      size='medium'
+                                      error={error !== undefined}
+                                      required
+                                  />
+                                  {error && (
+                                      <p className="italic text-left text-red-500 text-sm mb-2">{error.message}</p>
+                                  )}
+                              </div>
+                          )}
+                      />
+                  </Col>
+
+                  <Col xs={24} md={12}>
+                      <Controller
+                            name={`PasswordConfirm`}
+                            control={methods.control}
+                            rules={{
+                                required: true,
+
+                                validate: {
+                                    passwordMatch: (value) => value === methods.getValues("PasswordConfirm") || "Password do not match",
+                                },
+                            }}
+                            render={({
+                                field, fieldState: { error }
+                            }) => (
+                                <div>
+                                    <TextField
+                                        className='w-full'
+                                        style={{ marginBottom: 15 }}
+                                        label='Confirm New Password'
+                                        type='password'
+                                        variant="outlined"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        size='medium'
+                                        error={error !== undefined}
+                                        required
+                                    />
+                                    {error && (
+                                        <p className="italic text-left text-red-500 text-sm">{error.message}</p>
+                                    )}
+                                </div>
+                            )}
+                        />
+                  </Col>
+                </Row>
+              )
+            }
+
             <Row gutter={16}>
 
               <Col xs={24} md={8}>
                 <Controller
-                  name={`phoneNumber`}
+                  name={`Contact`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -207,7 +326,7 @@ export default function AddEditUserPage({
 
               <Col xs={24} md={8}>
                 <Controller
-                  name={`country`}
+                  name={`Country`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -235,7 +354,7 @@ export default function AddEditUserPage({
 
               <Col xs={24} md={8}>
                 <Controller
-                  name={`city`}
+                  name={`City`}
                   control={methods.control}
                   rules={{
                     required: false
@@ -266,7 +385,7 @@ export default function AddEditUserPage({
             <Row gutter={16}>
               <Col xs={24} md={12}>
                 <Controller
-                  name={`role`}
+                  name={`RoleId`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -277,11 +396,7 @@ export default function AddEditUserPage({
                   }) => (
                     <Dropdown
                       placeholder='Select Role *'
-                      options={[
-                        { label: "Admin", value: "guid-1" },
-                        { label: "Manager", value: "guid-2" },
-                        { label: "User", value: "guid-3" },
-                      ]}
+                      options={roleOptions}
                       defaultValue={value}
                       onChange={onChange}
                       error={error?.message != undefined}
@@ -291,8 +406,35 @@ export default function AddEditUserPage({
               </Col>
 
               <Col xs={24} md={12}>
+                  <Controller
+                      name={`SignupDate`}
+                      control={methods.control}
+                      rules={{
+                        required: true
+                      }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <DatePicker
+                          //SI AICI E CIUDAT PT CA INALTIMILE SUNT DIFERITE DAR LA FEL PE WEB
+                          style={{ marginBottom: 20, width: '100%', height: '100%' }}
+                          format="DD-MMM-YYYY"
+                          value={value ? dayjs(value) : null}
+                          onChange={((date: any, dateString: string) => onChange(dateString))}
+                          placeholder='Signed Up *'
+                          status={error ? "error" : ""}
+                        />
+                      )}
+                  />
+              </Col>
+
+            </Row>
+
+            <Row gutter={16} className='mt-4'>
+              <Col xs={24} md={12}>
                 <Controller
-                  name={`signupDate`}
+                  name={`StoreId`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -301,19 +443,26 @@ export default function AddEditUserPage({
                     field: { onChange, value },
                     fieldState: { error },
                   }) => (
-                    <DatePicker
-                      //SI AICI E CIUDAT PT CA INALTIMILE SUNT DIFERITE DAR LA FEL PE WEB
-                      style={{ marginBottom: 20, width: '100%', height: '100%' }}
-                      format="DD-MMM-YYYY"
-                      value={value ? dayjs(value) : null}
-                      onChange={((date: any, dateString: string) => onChange(dateString))}
-                      placeholder='Signed Up *'
-                      status={error ? "error" : ""}
+                    <DropdownMultiple 
+                        options={[
+                              { label: "Ldil", value: "store-1" },
+                              { label: "Profi SRL", value: "store-2" },
+                              { label: "S.C. Admir 24h", value: "store-3" },
+                              { label: "Kaufland", value: "store-4" },
+                              { label: "EMAG SRL 2102234", value: "store-5" },
+                              { label: "Robert Ababei SRL ", value: "store-6" },
+                              { label: "Cobyul", value: "store-7" }
+                        ]}
+                        placeholder='Select stores for user *'
+                    
                     />
                   )}
                 />
               </Col>
 
+              <Col xs={24} md={12}>
+                
+                </Col>
             </Row>
 
             <div className="pt-5 text-left">

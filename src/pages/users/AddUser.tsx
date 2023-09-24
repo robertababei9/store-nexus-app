@@ -6,6 +6,10 @@ import UserForm from 'src/components/users/UserForm';
 import { UserFormType } from 'src/types/users';
 import { ROUTES } from 'src/utils/Constants';
 import Permissions from 'src/components/users/Permissions';
+import axios from 'axios';
+import { getDefaultApiUrl } from 'src/config';
+import { openNotification } from 'src/utils/Notification';
+import { useNavigate } from 'react-router-dom';
 
 const Title = Typography.Title;
 
@@ -24,15 +28,19 @@ const STEP_ITEMS = [
 
 export default function AddUser() {
 
+  // navigation
+  const navigate = useNavigate();
 
   // form
   const methods = useForm<UserFormType>({
-    defaultValues: {}
+    defaultValues: {
+      StoreId: "6B29FC40-CA47-1067-B31D-00DD010662DA"
+    }
   })
 
   // states
   const [current, setCurrent] = useState<number>(0);
-  const [nextLoading, setNextLoading] = useState<boolean>(false);
+  const [createLoading, setCreateLoading] = useState<boolean>(false);
 
 
   // handlers
@@ -48,8 +56,38 @@ export default function AddUser() {
       setCurrent(prev => prev + 1);
   }
 
-  const handleAddUser = () => {
-    
+  const handleAddUser = async () => {
+    const isValid = await methods.trigger();
+
+    if (!isValid) {
+        return;
+    }
+
+    const formValues = methods.getValues();
+
+    try {
+      setCreateLoading(true);
+      const result = await axios.post<UserFormType>(getDefaultApiUrl() + "/api/users/add", formValues, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      })
+
+      if (result.status === 200) {
+        openNotification("success", "Success", "User created !")
+        navigate(ROUTES.Users);
+      }
+
+    }
+    catch(error: any) {
+      console.log("Error while creating the user: ", error);
+      openNotification("error");
+    }
+    finally {
+      setCreateLoading(false);
+    }
+
+    console.log("formValues = ", formValues);
   }
 
 
@@ -93,7 +131,7 @@ export default function AddUser() {
             {
               current == 0 && (
                 <SlideAnimation down>
-                  <UserForm methods={methods} editable={false}/>
+                  <UserForm methods={methods} editable={false} addUser={true} />
                 </SlideAnimation>
               )
             }
@@ -117,7 +155,6 @@ export default function AddUser() {
                     <Button
                       type='secondary' 
                       onClick={handleNext} 
-                      loading={nextLoading}
                     >
                         Next
                     </Button>
@@ -131,9 +168,11 @@ export default function AddUser() {
                       <Button
                           className={`${current == 1 ? "scale-110" : ""}`} 
                           type='primary' 
-                          onClick={handleAddUser}>
-                            Add User
-                        </Button>
+                          onClick={handleAddUser}
+                          loading={createLoading}
+                      >
+                          Add User
+                      </Button>
                     </HeadShakeAnimation>
                 ) : (
                     <></>

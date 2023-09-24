@@ -1,17 +1,25 @@
 export type UserFormType = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    role: string;
-    store: string;
-    phoneNumber: string;
-    signupDate: string;
-    country: string;
-    city: string;
+    FirstName: string;
+    LastName: string;
+    Email: string;
+    Password: string;
+    PasswordConfirm: string;
+    Contact: string;
+    Country?: string;
+    City?: string;
+    StoreId: string;
+    RoleId: string;
+    SignupDate: string;
 }
 
 export type SecurityFormType = {
     currentPass: string;
     newPass: string;
     repeatPass: string;
+}
+
+export type Role = {
+    Id: string;
+    Name: string;
+    Description: string;
 }
