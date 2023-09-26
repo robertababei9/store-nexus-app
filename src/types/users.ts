@@ -4,12 +4,12 @@ export type UserFormType = {
     Email: string;
     Password: string;
     PasswordConfirm: string;
-    Contact: string;
+    PhoneNumber: string;
     Country?: string;
     City?: string;
     StoreId: string;
     RoleId: string;
-    SignupDate: string;
+    SignUpDate: string;
 }
 
 export type SecurityFormType = {
@@ -30,6 +30,7 @@ export type UserResponse = {
     LastName: string;
     Email: string;
     Role: string;
+    RoleId: string;
     Country: string;
     City: string;
     Store: string;

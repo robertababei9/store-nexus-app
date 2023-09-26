@@ -83,7 +83,7 @@ export default function Users()  {
     const [tableData, setTableData] = useState<DataType[]>([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [searchText, setSearchText] = useState('');
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
 
     // effects
@@ -94,7 +94,6 @@ export default function Users()  {
 
     const getUsers = async () => {
         try {
-            setLoading(true);
             const BASE_URL = getDefaultApiUrl();
             const result = await axios.get<UserResponse[]>(`${BASE_URL}/api/users/GetAll`, {
                 headers: {
@@ -104,7 +103,7 @@ export default function Users()  {
 
             if (result.data) {
                 setTableData(result.data.map(x => ({
-                    Key: x.Id + Date(),
+                    Key: x.Id,
                     Name: x.FirstName + " " + x.LastName,
                     Email: x.Email,
                     Role: x.Role,

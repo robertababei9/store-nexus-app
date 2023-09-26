@@ -36,6 +36,8 @@ const UserDetailsCard: React.FC<{ name: string; location: string; email: string 
 
 type UserFormProps = {
   methods: UseFormReturn<UserFormType, any, undefined>,
+  handleSave?: () => any,
+  loading?: boolean,
   editable?: boolean,
   addUser?: boolean
 }
@@ -44,6 +46,8 @@ type UserFormProps = {
 // nu e gresit dar e mai ok sa aiba acelasi nume
 export default function AddEditUserPage({
   methods,
+  handleSave = () => {},
+  loading = false,
   editable = true,
   addUser = false
 }: UserFormProps) {
@@ -83,17 +87,14 @@ export default function AddEditUserPage({
 
   }
 
-  const handleSave = async () => {
-    // console.log("user form data = ", methods.getValues());
-    const isValid = await methods.trigger();
+  const handleSaveClick = async () => {
+    handleSave();
 
-    if (!isValid) {
-      return;
-    }
   }
 
   ///////// AIci de facut firstName + lastName = name.... vedem cum
   methods.watch("FirstName");
+  methods.watch("LastName");
 
   return (
     // mx = margin x = margin horizontal ( axa x,y )
@@ -104,9 +105,9 @@ export default function AddEditUserPage({
             title={<div className="text-left font-semibold">Profile Picture</div>}
             className='w-full hover:shadow-[0_5px_15px_0_rgba(0,0,0,0.07)]'>
             <UserDetailsCard
-              name='Nume Utilizator'
-              location='Locație'
-              email='email@example.com'
+              name={`${methods.getValues("FirstName") ?? "User"} ${methods.getValues("LastName") ?? "Name"}`}
+              location={`${methods.getValues("Country") ?? "Country"}, ${methods.getValues("City") ?? "City"}`}
+              email={`${methods.getValues("Email") ?? "Email"}`}
             />
 
             <div className="pt-5 text-left">
@@ -298,7 +299,7 @@ export default function AddEditUserPage({
 
               <Col xs={24} md={8}>
                 <Controller
-                  name={`Contact`}
+                  name={`PhoneNumber`}
                   control={methods.control}
                   rules={{
                     required: true
@@ -407,7 +408,7 @@ export default function AddEditUserPage({
 
               <Col xs={24} md={12}>
                   <Controller
-                      name={`SignupDate`}
+                      name={`SignUpDate`}
                       control={methods.control}
                       rules={{
                         required: true
@@ -468,7 +469,7 @@ export default function AddEditUserPage({
             <div className="pt-5 text-left">
               {
                 editable && (
-                  <Button type="secondary" onClick={handleSave} >
+                  <Button type="secondary" onClick={handleSaveClick} >
                     Change Details
                   </Button>
                 )

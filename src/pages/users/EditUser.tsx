@@ -1,10 +1,10 @@
-import { AiOutlineHome, AiOutlineSave } from "react-icons/ai";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
 import { TabsProps, Typography, Tabs } from "antd";
 import { Breadcrumb, Button, Card, Layout } from "src/components/_shared";
 import { ROUTES } from "src/utils/Constants";
 import UserForm from "src/components/users/UserForm";
-import { SecurityFormType, UserFormType } from "src/types/users";
+import { SecurityFormType, UserFormType, UserResponse } from "src/types/users";
 
 
 
@@ -12,6 +12,9 @@ import ComingSoonSvg from 'src/assets/images/git.svg'
 import { useForm } from "react-hook-form";
 import Security from "src/components/users/Security";
 import Permissions from "src/components/users/Permissions";
+import { getDefaultApiUrl } from 'src/config';
+import axios from 'axios';
+import { openNotification } from 'src/utils/Notification';
 
 const ComingSoon = () => {
     return (
@@ -23,10 +26,6 @@ const ComingSoon = () => {
     )
 }
 
-//   const INITIAL_STORE_DATA: StoreDataType = {
-//     name: "My store name",
-//     description: "Some small details about the store. Could be anything",
-//   }
 
 const Title = Typography.Title;
 
@@ -35,40 +34,21 @@ export default function EditUser() {
 
     const params = useParams();
 
+    // states
+    const [profileLoading, setProfileLoading] = useState<boolean>(true);
+
     // form
-
-    // Aici nu stiu daca ar trebui pastrat 1 singur form sau cate 1 pt fiecare tab pt ca:
-    // Butonul de SAVE e unul singur sus - pt toate tabs-urile
-    // si daca e sa modifici cate ceva in fiecare tab si dupa sa dai save => trebuie sa faci handle la fiecare form din asta ( methods, methodsSecurity )
-    // 
-    //nu o sa stea butonul de save acolo, plus ca e si urat butonul tau, e mic de fraieri, nu poti sa dai calumea save
-    //o sa fie buton pt fiecare tab daca asa, gen Change password, Save la basic info, ca sa nu mai existe si spatiul gol
-
-    // E mai fain butonul meu. A<l tau e mare si gras
-    //ca sa nu il ratezi :) al tau e mic, doar culoarea e faina --- deci ramane al meu pt ca asa avem si in invoices --- bine ... mai trebuie modificate
-
-    // nu . Nu punem buton in fiecare tab
-    // pt ca .. cum ti-am zis... faci modificari in fiecare tab si apoi vrei sa dai un singur save... nu 15
-    //uite asa sa fie
-    //nu e bun ca asa nu are buton de save :))
-    // la update pass poate sa fie acolo separat, dar doar atat, mai vedem dupa, da
-    // pai in cazul asta Daca e un singur buton de save ... structura form-ului ar trebui sa se modifice asa
-
-    //      userForm: {
-    //          basicInfo: UserBasicInfoType <---- UserFormType,
-    //          security: userSecurityType <---- TO BE CREATED,
-    //          roles: userRolesType <---- ....
-    //      }
-    //  Si la SAVE -> form-ul asta se trimite cu totul la server ... si acolo server-ul face ce are de facut, verifica datele, le salveaza in parte
-
-    // Sa nu stergi comm asta pt urm 2-3 zile
-
     const methods = useForm<UserFormType>({
-        // default methods o sa fie populate cand luam valorile de la backend
-        // asa doar in caz de Edit
-        defaultValues: {}
+        defaultValues: {
+            FirstName: "",
+            LastName: "",
+            Email: "",
+            PhoneNumber: "",
+            Country: "",
+            City: "",
+            SignUpDate: ""
+        }
     });
-
     const methodsSecurity = useForm<SecurityFormType>({
         defaultValues: {
             currentPass: "",
@@ -77,21 +57,67 @@ export default function EditUser() {
         }
     });
 
-    const handleSave = async () => {
-        console.log("user form data = ", methods.getValues());
+    // effects
+    useEffect(() => {
+        if (params.id) {
+            getUserById(params.id);
+        }
+    }, []);
+
+    // helpers
+    const getUserById = async (id: string) => {
+        try {
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.get<UserResponse>(`${BASE_URL}/api/users/GetById/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
+
+            if (result.data) {
+                console.log("data = ", result.data);
+                // methods.setValue("FirstName", result.data.FirstName);
+                methods.reset(result.data)
+            }
+        }
+        catch (error: any) {
+            console.log(`Error while geting the user data for ${params.id}: ${error}`);
+            openNotification("error", "Error", "Error while getting the user profile");
+        }
+        finally {
+            setProfileLoading(false);
+        }
+
+
+
+    }
+
+    // handlers
+    const handleAccountDetailsSave = async () => {
         const isValid = await methods.trigger();
 
         if (!isValid) {
             return;
         }
+
+        try {
+
+        }
+        catch (error: any) {
+
+        }
+        finally {
+
+        }
     }
+
 
 
     const items: TabsProps['items'] = [
         {
             key: '1',
             label: 'Profile',
-            children: <UserForm methods={methods} />,
+            children: <UserForm methods={methods} handleSave={handleAccountDetailsSave}/>,
         },
         {
             key: '2',

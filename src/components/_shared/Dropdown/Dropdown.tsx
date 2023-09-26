@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { useState } from 'react'
+// import { useState } from 'react'
 import { OptionType } from 'src/types/_shared';
 
 type DropdownProps = {
@@ -20,14 +20,14 @@ export default function Dropdown({
     loading = false
 }: DropdownProps) {
 
-    const [val, setVal] = useState<any>(defaultValue);
+    // const [val, setVal] = useState<any>(defaultValue);
 
-    const handleChange = (event: SelectChangeEvent) => {
-        const val = event.target.value as string;
+    // const handleChange = (event: SelectChangeEvent) => {
+    //     const val = event.target.value as string;
         
-        setVal(val);
-        onChange(val);
-    }
+    //     setVal(val);
+    //     onChange(val);
+    // }
 
     return (
         <FormControl fullWidth>
@@ -38,10 +38,10 @@ export default function Dropdown({
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 className='text-left'
-                value={val}
+                value={defaultValue}
                 label={placeholder}
                 error={error}
-                onChange={handleChange}
+                onChange={onChange}
                 >
                     {
                         options.map(option => (
