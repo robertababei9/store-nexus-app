@@ -10,128 +10,73 @@ import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
 
 import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
+import { getDefaultApiUrl } from 'src/config';
+import { UserResponse } from 'src/types/users';
 
 
 const Title = Typography.Title;
 
 
 interface DataType {
-    key: string;
-    name: string;
-    email: string;
-    role: string,
-    location: string;
-    store: string;
-    phoneNo: string;
+    Key: string;
+    Name: string;
+    Email: string;
+    Role: string,
+    Location: string;
+    Store: string;
+    PhoneNo: string;
 }
 
 const columns: ColumnsType<DataType> = [
     {
         title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'Name',
+        key: 'Name',
         render: (text, record) => (
             <div className='flex justify-start items-center cursor-pointer hover:text-blue-500'>
                 <Avatar size="default" src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4" />
                 <p className='ml-2'>{text}</p>
             </div>
         ),
-        sorter: (a, b) => a.name.localeCompare(b.name),
+        sorter: (a, b) => a.Name.localeCompare(b.Name),
     },
     {
         title: 'E-mail',
-        dataIndex: 'email',
+        dataIndex: 'Email',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.email.localeCompare(b.email),
+        sorter: (a, b) => a.Email.localeCompare(b.Email),
     },
     {
         title: "Role",
-        dataIndex: 'role',
-        key: 'roleDept',
+        dataIndex: 'Role',
+        key: 'Role',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.role.localeCompare(b.role),
+        sorter: (a, b) => a.Role.localeCompare(b.Role),
     },
     {
         title: 'Location',
-        dataIndex: 'location',
-        key: 'location',
+        dataIndex: 'Location',
+        key: 'Location',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.location.localeCompare(b.location),
+        sorter: (a, b) => a.Location.localeCompare(b.Location),
     },
     {
         title: 'Store',
-        dataIndex: 'store',
+        dataIndex: 'Store',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.store.localeCompare(b.store)
+        sorter: (a, b) => a.Store.localeCompare(b.Store)
     },
     {
-        title: 'Phone number',
-        dataIndex: 'phoneNo',
-        key: 'phoneNo',
+        title: 'Phone Number',
+        dataIndex: 'PhoneNo',
+        key: 'PhoneNo',
+        render: (text) => <p>{text}</p>,
+        sorter: (a, b) => a.Store.localeCompare(b.Store)
     },
 
-];
-
-const data: DataType[] = [
-    {
-        key: '1',
-        name: 'Razvan Ababei',
-        email: "razvanababei@yahoo.com",
-        role: 'Admin',
-        location: "Iasi",
-        store: 'Admir',
-        phoneNo: "08593"
-    },
-    {
-        key: '2',
-        name: 'Robert Ababei',
-        email: "robertababei@yahoo.com",
-        role: 'Admin',
-        location: "Iasi",
-        store: 'Admir',
-        phoneNo: "51325"
-    },
-    {
-        key: '3',
-        name: 'Dinu Ababei',
-        email: "dinuababei@yahoo.com",
-        role: 'Admin',
-        location: "Iasi",
-        store: 'Admir',
-        phoneNo: "3333"
-    },
-    {
-        key: '4',
-        name: 'Codrin Ababei',
-        email: "codrinababei@yahoo.com",
-        role: 'Admin',
-        location: "Iasi",
-        store: 'Admir',
-        phoneNo: "056243"
-    },
-    {
-        key: '5',
-        name: 'Dana Ababei',
-        email: "danaababei@yahoo.com",
-        role: 'Admin',
-        location: "Iasi",
-        store: 'Admir',
-        phoneNo: "007382"
-    },
-    {
-        key: '6',
-        name: 'Sorin Ababei',
-        email: "sorinababei@yahoo.com",
-        role: 'Admin',
-        location: "Iasi",
-        store: 'Admir',
-        phoneNo: "123"
-    },
 ];
 
 export default function Users()  {
-    <Skeleton active/>
-
     const navigate = useNavigate();
 
     //states
@@ -144,21 +89,30 @@ export default function Users()  {
     // effects
     useEffect(() => {
         // API: get invoices
-        // getUsers();
+        getUsers();
     }, []);
 
     const getUsers = async () => {
         try {
             setLoading(true);
-            const BASE_URL = "https://store-nexus-app.azurewebsites.net";
-            const result = await axios.get(`${BASE_URL}/api/users/GetAll`, {
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.get<UserResponse[]>(`${BASE_URL}/api/users/GetAll`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
                 }
             });
 
             if (result.data) {
-                setTableData(result.data);
+                setTableData(result.data.map(x => ({
+                    Key: x.Id + Date(),
+                    Name: x.FirstName + " " + x.LastName,
+                    Email: x.Email,
+                    Role: x.Role,
+                    Location: x.Country + ", " + x.City,
+                    Store: "Coming Soon",
+                    PhoneNo: x.PhoneNumber
+                })))
+                // setTableData(result.data);
             }
         }
         catch (err: any) {
@@ -170,26 +124,18 @@ export default function Users()  {
         }
     }
 
-    // const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    //     setSelectedRowKeys(newSelectedRowKeys);
-    // };
 
-    // const rowSelection = {
-    //     selectedRowKeys,
-    //     onChange: onSelectChange,
-    // };
-
-    const filteredData = data.filter((item) =>
-        Object.values(item).some((value) => {
-            if (typeof value === 'number') {
-                return value.toString().includes(searchText);
-            }
-            if (value && typeof value === 'string') {
-                return value.toLowerCase().includes(searchText.toLowerCase());
-            }
-            return false;
-        })
-    );
+    // const filteredData = data.filter((item) =>
+    //     Object.values(item).some((value) => {
+    //         if (typeof value === 'number') {
+    //             return value.toString().includes(searchText);
+    //         }
+    //         if (value && typeof value === 'string') {
+    //             return value.toLowerCase().includes(searchText.toLowerCase());
+    //         }
+    //         return false;
+    //     })
+    // );
 
 
 
@@ -207,16 +153,14 @@ export default function Users()  {
                         type='primary'
                         shape="circle"
                         icon={<EditOutlined />}
-                        onClick={() => navigate(ROUTES.EditUser.replace(":id", record.key))}
+                        onClick={() => navigate(ROUTES.EditUser.replace(":id", record.Key))}
                     />
                 </Tooltip>
             </div>),
         },)
     }
 
-
     return (
-
         <Layout>
             <div className="flex items-center">
                 <Title level={2}>Users</Title>
@@ -231,8 +175,6 @@ export default function Users()  {
 
             <Card className='w-full flex flex-col justify-between items-center mb-4'>
                 <div className='w-full flex justify-between items-center mb-4'>
-                    <Search className='w-64' placeholder='Search user ...' />
-                    trb sa alegem
                     <div>
                         <Space direction='vertical' style={{ marginLeft: '24px' }}>
                             <Input
@@ -256,40 +198,15 @@ export default function Users()  {
                 </div>
 
                 <Table
+                    rowKey="Key"
                     size='middle'
                     className='w-full'
-                    dataSource={filteredData}
+                    dataSource={tableData}
                     columns={columns}
                 />
             </Card>
 
-
-
         </Layout>
-
-        ////////
-
-
-        // <div className='w-full h-full overflow-y-auto'>
-        //     <div className='relative w-full h-full flex flex-col items-start sm:px-16 px-4 sm:py-8 py-6 z-30'>
-        //         <Card className='w-full flex flex-col justify-between items-center mb-4'>
-        //             <div className='w-full flex justify-between items-center mb-4'>
-        //                 <Space direction='vertical' style={{ marginLeft: '24px' }}>
-        //                     <Input
-        //                         placeholder='Search user'
-        //                         prefix={<SearchOutlined />}
-        //                         value={searchText}
-        //                         onChange={(e) => setSearchText(e.target.value)}
-        //                         style={{ width: '200px' }}
-        //                     />
-        //                 </Space>
-        //             </div>
-        //           
-        //         </Card>
-        //     </div>
-        // </div>
-
-
 
     );
 }
