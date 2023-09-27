@@ -1,16 +1,13 @@
 import { TextField } from '@mui/material';
-import { Col, Row, Card } from 'antd';
+import { Col, Row, Card, Modal } from 'antd';
 import { Button as AntdButtonn } from 'antd';
 import { Controller, UseFormReturn, } from 'react-hook-form';
 import { SecurityFormType } from 'src/types/users';
 import { Button } from '../_shared';
 import { useState } from 'react';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { openNotification } from 'src/utils/Notification';
 
-
-
-// const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-//     console.log(date, dateString);
-// };
 
 type SecurityUserPageProps = {
     methods: UseFormReturn<SecurityFormType, any, undefined>
@@ -20,15 +17,38 @@ export default function SecurityUserPage({
     methods
 }: SecurityUserPageProps) {
 
-    const [currentPassword, setCurrentPassword] = useState("");
+    // states
+    const [currentPassword, setCurrentPassword] = useState<string>("");
+    const [deactivateLoading, setDeactivateLoading] = useState<boolean>(false);
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-    //De vazut aici daca e bun !!!!!!!!!!!!!!!!!!!!!!!!!!
     const handleSave = async () => {
         console.log("password form data = ", methods.getValues());
         const isValid = await methods.trigger();
 
         if (!isValid) {
             return;
+        }
+    }
+
+    // helpers
+
+
+    // handlers
+    const handleDeactivateAccount = async () => {
+        const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+        try {
+            setDeactivateLoading(true);
+            await delay(4000);  // mock API call waiting
+        }
+        catch(err: any) {
+            console.log("Error while deactivating the user account", err);
+            openNotification("error");
+        }
+        finally {
+            setDeactivateLoading(false);
+            setIsModalVisible(false);
         }
     }
 
@@ -212,12 +232,43 @@ export default function SecurityUserPage({
 
                             <div className="text-left mt-7">
 
+                                {/* TODO: To be refactorize to our Button component */}
                                 <AntdButtonn
                                     className="bg-red-500 text-white hover:!bg-red-500 font-semibold border border-red-400 rounded shadow"
-                                    style={{ color: "white" }}>
+                                    style={{ color: "white" }}
+                                    onClick={() => setIsModalVisible(true)}
+                                >
 
                                     Deactivate Account
                                 </AntdButtonn>
+
+                                <Modal
+                                    width={650}
+                                    title={
+                                        <div className='flex justify-start items-center'>
+                                            <AiOutlineExclamationCircle size={24} color='#FFA500'/>
+                                            <p className='ml-2'>Are you sure ?</p>
+                                        </div>
+                                    }
+                                    open={isModalVisible}
+                                    onOk={handleDeactivateAccount}
+                                    okType='danger'
+                                    okText='Deactivate'
+                                    okButtonProps={{
+                                        loading: deactivateLoading,
+                                        disabled: deactivateLoading
+                                    }}
+                                    confirmLoading={deactivateLoading}
+                                    onCancel={() => setIsModalVisible(false)} // Close the modal if canceled
+                                >
+                                    <div>
+                                        You're about to <strong>deactivate</strong> the account for USER.FIRSTNAME USER.LASTNAME 
+                                        with the email test@test.com. 
+                                        <br />
+                                        <br />
+                                        You will be able to reactivate it back whenever you want from the Settings page.
+                                    </div>
+                                </Modal>
                             </div>
 
                         </div>

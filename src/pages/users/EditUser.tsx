@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy } from 'react';
 import { useParams } from "react-router-dom";
 import { TabsProps, Typography, Tabs } from "antd";
 import { Breadcrumb, Button, Card, Layout } from "src/components/_shared";
@@ -6,27 +6,15 @@ import { ROUTES } from "src/utils/Constants";
 import UserForm from "src/components/users/UserForm";
 import { SecurityFormType, UserFormType, UserResponse } from "src/types/users";
 
-
-
-import ComingSoonSvg from 'src/assets/images/git.svg'
 import { useForm } from "react-hook-form";
 import Security from "src/components/users/Security";
-import Permissions from "src/components/users/Permissions";
 import { getDefaultApiUrl } from 'src/config';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
 import dayjs from 'dayjs';
 
-const ComingSoon = () => {
-    return (
-        <div className='w-full h-full flex flex-col justify-center items-center'>
-            <img src={ComingSoonSvg} width={450} height={250} />
-            <p className='font-semibold text-3xl mt-3'>Coming Soon</p>
-            <p className='text-xl font-semibold mt-2'>This product it's currently in development, but be sure to check back for updates !</p>
-        </div>
-    )
-}
 
+const PermissionsTab = lazy(() => import('src/components/users/Permissions'))
 
 const Title = Typography.Title;
 
@@ -151,7 +139,7 @@ export default function EditUser() {
         {
             key: '3',
             label: `Permissions`,
-            children: <Permissions />,
+            children: <PermissionsTab />,
         },
     ];
 
