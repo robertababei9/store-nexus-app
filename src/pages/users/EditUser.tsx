@@ -15,6 +15,7 @@ import Permissions from "src/components/users/Permissions";
 import { getDefaultApiUrl } from 'src/config';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
+import dayjs from 'dayjs';
 
 const ComingSoon = () => {
     return (
@@ -36,6 +37,7 @@ export default function EditUser() {
 
     // states
     const [profileLoading, setProfileLoading] = useState<boolean>(true);
+    const [updateLoading, setUpdateLoading] = useState<boolean>(false);
 
     // form
     const methods = useForm<UserFormType>({
@@ -101,13 +103,29 @@ export default function EditUser() {
         }
 
         try {
+            setUpdateLoading(true);
 
+            const body: UserFormType = methods.getValues();
+            body.SignUpDate = dayjs(methods.getValues("SignUpDate")).format('YYYY-MM-DD').toString();
+            console.log("User -> Edit -> body = ", body);
+
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.put(`${BASE_URL}/api/users/Edit`, body, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
+
+            if (result.data) {
+                openNotification("success", "Success", "User profile successfully updated")
+            }
         }
-        catch (error: any) {
-
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
         }
         finally {
-
+            setUpdateLoading(false);
         }
     }
 
@@ -117,7 +135,13 @@ export default function EditUser() {
         {
             key: '1',
             label: 'Profile',
-            children: <UserForm methods={methods} handleSave={handleAccountDetailsSave}/>,
+            children: 
+                <UserForm 
+                    methods={methods} 
+                    handleSave={handleAccountDetailsSave} 
+                    loading={profileLoading}
+                    buttonLoading={updateLoading}
+                />,
         },
         {
             key: '2',

@@ -7,3 +7,4 @@ export { default as Search } from './Search/Search'
 export { default as Breadcrumb } from './Breadcrumb/Breadcrumb';
 export { default as Layout } from './Layout/Layout'
 export { default as Dropdown } from './Dropdown/Dropdown';
+export { default as LoadingWrapper } from './LoadingWrapper/LoadingWrapper';

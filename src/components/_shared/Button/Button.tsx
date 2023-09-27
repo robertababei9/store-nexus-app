@@ -38,7 +38,7 @@ export default function Button({
           ${className}  
           active:scale-90`
         }
-        disabled={disabled}
+        disabled={disabled || loading}
         loading={loading}
         onClick={onClick}
         type="primary"
