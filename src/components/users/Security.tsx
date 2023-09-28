@@ -7,6 +7,8 @@ import { Button } from '../_shared';
 import { useState } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { openNotification } from 'src/utils/Notification';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from 'src/utils/Constants';
 
 
 type SecurityUserPageProps = {
@@ -16,6 +18,9 @@ type SecurityUserPageProps = {
 export default function SecurityUserPage({
     methods
 }: SecurityUserPageProps) {
+
+    // navigation
+    const navigate = useNavigate();
 
     // states
     const [currentPassword, setCurrentPassword] = useState<string>("");
@@ -41,6 +46,9 @@ export default function SecurityUserPage({
         try {
             setDeactivateLoading(true);
             await delay(4000);  // mock API call waiting
+
+            navigate(ROUTES.Users);
+            openNotification("warning", "Success", "User account deactivated successfully");
         }
         catch(err: any) {
             console.log("Error while deactivating the user account", err);

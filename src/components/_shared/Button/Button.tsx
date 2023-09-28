@@ -13,6 +13,7 @@ type ButtonProps = {
     shape?: "circle" | "default" | "round" | undefined
 };
 
+const primaryTypeClassName = "bg-primary hover:!bg-primaryHover";
 const secondaryTypeClassName = "font-semibold text-white bg-secondary hover:!bg-secondaryHover"
 
 export default function Button({
@@ -34,7 +35,7 @@ export default function Button({
         style={style}
         className={
           `bg-blue-500 
-          ${type === "secondary" ? secondaryTypeClassName : ""} 
+          ${type === "secondary" ? secondaryTypeClassName : primaryTypeClassName} 
           ${className}  
           active:scale-90`
         }

@@ -14,7 +14,7 @@ let INITIAL_BREADCRUMB_ITEMS: BreadcrumbItemType[] = [
         title: (
             <div className='b-6 '>
                 <Link className='text-blue-500 hover:bg-red-500' to={ROUTES.Dashboard}>
-                    <AiOutlineHome size={22} className='text-blue-400'/>
+                    <AiOutlineHome size={22} className='text-secondary'/>
                 </Link>
                 
             </div>

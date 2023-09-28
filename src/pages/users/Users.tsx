@@ -148,7 +148,7 @@ export default function Users()  {
             render: (_, record) => (<div>
                 <Tooltip title="Edit">
                     <Button
-                        className='bg-white flex justify-center items-center'
+                        className='flex justify-center items-center'
                         type='primary'
                         shape="circle"
                         icon={<EditOutlined />}
