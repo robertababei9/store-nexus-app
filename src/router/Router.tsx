@@ -13,10 +13,10 @@ import CreateCompany from "src/pages/company/CreateCompany";
 
 
 const publicRoutes: RouteType[] = [
-    {
-        path: ROUTES.SignIn,
-        element: lazy(() => import("../pages/login/Login")),
-    }
+  {
+    path: ROUTES.SignIn,
+    element: lazy(() => import("../pages/login/Login")),
+  }
 ];
 
 const privateRoutes: RouteType[] = [
@@ -24,6 +24,21 @@ const privateRoutes: RouteType[] = [
     path: ROUTES.Dashboard,
     element: lazy(() => import("../pages/dashboard/Dashboard"))
   },
+
+  // ## USERS ###
+  {
+    path: ROUTES.Users,
+    element: lazy(() => import("../pages/users/Users"))
+  },
+  {
+    path: ROUTES.EditUser,
+    element: lazy(() => import("../pages/users/EditUser"))
+  },
+  {
+    path: ROUTES.AddUser,
+    element: lazy(() => import("../pages/users/AddUser"))
+  },
+
   // ### STORES ###
   {
     path: ROUTES.Stores,
@@ -33,6 +48,8 @@ const privateRoutes: RouteType[] = [
     path: ROUTES.StoresEdit,
     element: lazy(() => import("../pages/stores/EditStore"))
   },
+
+  // ### INVOICES ###
   {
     path: ROUTES.Invoices,
     element: lazy(() => import("../pages/invoices/Invoices"))
@@ -45,6 +62,7 @@ const privateRoutes: RouteType[] = [
     path: ROUTES.InvoicesView,
     element: lazy(() => import("../pages/invoices/InvociesView"))
   }
+
 ]
 
 
@@ -64,6 +82,7 @@ export default function Router() {
 
   const showMenu = currentUser && !needsToCreateCompany;
     
+
   return (
     <BrowserRouter>
       <div className="flex w-full h-full">
@@ -111,7 +130,7 @@ export default function Router() {
             }
 
 
-            <Route path="*" element={<NotFound404 />} />
+          <Route path="*" element={<NotFound404 />} />
         </Routes>
       </div>
     </BrowserRouter>

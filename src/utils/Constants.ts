@@ -4,14 +4,17 @@ export const ROUTES = {
 
     // private routes
     Dashboard: "/dashboard",
+
     Stores: "/stores",
     StoresEdit: "/stores/edit/:id",
     Invoices: "/invoices",
     InvoicesCreate: "/invoices/create",
     InvoicesView: "/invoices/:id",
 
-    CreateCompany: "/create-company"
-    // Users: "/users"
+    CreateCompany: "/create-company",
+    Users: "/users",
+    EditUser: "/users/edit/:id",
+    AddUser: "/users/add"
 }
 
 
