@@ -4,7 +4,7 @@ export type UserFormType = {
     Email: string;
     Password: string;
     PasswordConfirm: string;
-    Contact: string;
+    PhoneNumber: string;
     Country?: string;
     City?: string;
     StoreId: string;

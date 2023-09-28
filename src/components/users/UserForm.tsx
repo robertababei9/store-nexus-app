@@ -301,7 +301,7 @@ export default function AddEditUserPage({
 
                 <Col xs={24} md={8}>
                   <Controller
-                    name={`Contact`}
+                    name={`PhoneNumber`}
                     control={methods.control}
                     rules={{
                       required: true

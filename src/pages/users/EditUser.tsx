@@ -33,7 +33,7 @@ export default function EditUser() {
             FirstName: "",
             LastName: "",
             Email: "",
-            Contact: "",
+            PhoneNumber: "",
             Country: "",
             City: "",
             SignUpDate: ""
