@@ -2,13 +2,16 @@ import { TextField } from '@mui/material';
 import { Col, Row, Card, Modal } from 'antd';
 import { Button as AntdButtonn } from 'antd';
 import { Controller, UseFormReturn, } from 'react-hook-form';
-import { SecurityFormType } from 'src/types/users';
+import { ChangePasswordRequest, SecurityFormType } from 'src/types/users';
 import { Button } from '../_shared';
 import { useState } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { openNotification } from 'src/utils/Notification';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ROUTES } from 'src/utils/Constants';
+import { getDefaultApiUrl } from 'src/config';
+import { ApiResponseModel } from 'src/types/_shared';
+import axios from 'axios';
 
 
 type SecurityUserPageProps = {
@@ -19,22 +22,15 @@ export default function SecurityUserPage({
     methods
 }: SecurityUserPageProps) {
 
+    const params = useParams();
+
     // navigation
     const navigate = useNavigate();
 
     // states
-    const [currentPassword, setCurrentPassword] = useState<string>("");
     const [deactivateLoading, setDeactivateLoading] = useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
-    const handleSave = async () => {
-        console.log("password form data = ", methods.getValues());
-        const isValid = await methods.trigger();
-
-        if (!isValid) {
-            return;
-        }
-    }
+    const [changePasswordLoading, setChangePasswordLoading] = useState<boolean>(false);
 
     // helpers
 
@@ -60,6 +56,49 @@ export default function SecurityUserPage({
         }
     }
 
+    const handleChangePassword = async () => {
+        console.log("Change Password -> data: ", methods.getValues());
+
+        const isValid = await methods.trigger();
+
+        if (!isValid) {
+            return;
+        }
+
+        try {
+            const BASE_URL = getDefaultApiUrl();
+            const body: ChangePasswordRequest = {
+                UserId: params.id ?? "",
+                NewPassword: methods.getValues("NewPassword"),
+                ConfirmNewPassword: methods.getValues("ConfirmNewPassword")
+            };
+            setChangePasswordLoading(true);
+            
+            const result = await axios.post<ApiResponseModel>(`${BASE_URL}/api/users/ChangePassword`, body, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
+
+            if (result.data.Success) {
+                // console.log("data = ", result.data);
+                openNotification("success", "Success", "Password changed successfully");
+            }
+            else if (result.data.Success == false && result.data.Errors.length > 0) {
+                result.data.Errors.forEach(errorMessage => {
+                    openNotification("warning", "Error", errorMessage);
+                });
+            }
+        }
+        catch(err: any) {
+            console.log(`Error while geting the user data for ${params.id}: ${err}`);
+            openNotification("error", "Error", "Error while changing the user password");
+        }
+        finally {
+            setChangePasswordLoading(false);
+        }
+    }
+
     return (
 
         <div className='mx-4'>
@@ -69,7 +108,7 @@ export default function SecurityUserPage({
                         title={<div className="text-left font-semibold">Change Password</div>}
                         className='w-full mb-4 hover:shadow-[0_5px_15px_0_rgba(0,0,0,0.07)]'>
 
-                        <Row gutter={16}>
+                        {/* <Row gutter={16}>
                             <Col xs={24} md={24}>
                                 <Controller
                                     name={`currentPass`}
@@ -100,12 +139,12 @@ export default function SecurityUserPage({
                                 />
                             </Col>
 
-                        </Row>
+                        </Row> */}
 
                         <Row gutter={16}>
-                            <Col xs={24} md={12}>
+                            <Col xs={24} md={24}>
                                 <Controller
-                                    name={`newPass`}
+                                    name={`NewPassword`}
                                     control={methods.control}
                                     rules={{
                                         required: true,
@@ -122,7 +161,7 @@ export default function SecurityUserPage({
                                         <div>
                                             <TextField
                                                 className='w-full'
-                                                style={{ marginBottom: 15 }}
+                                                style={{marginBottom: error ? 0 : 15}}
                                                 label='New Password'
                                                 type='password'
                                                 variant="outlined"
@@ -133,7 +172,7 @@ export default function SecurityUserPage({
                                                 required
                                             />
                                             {error && (
-                                                <p className="italic text-left text-red-500 text-sm">{error.message}</p>
+                                                <p className="italic text-left text-red-500 text-sm mb-3">{error.message}</p>
                                             )}
                                         </div>
                                     )}
@@ -141,15 +180,15 @@ export default function SecurityUserPage({
                             </Col>
 
 
-                            <Col xs={24} md={12}>
+                            <Col xs={24} md={24} >
                                 <Controller
-                                    name={`repeatPass`}
+                                    name={`ConfirmNewPassword`}
                                     control={methods.control}
                                     rules={{
                                         required: true,
 
                                         validate: {
-                                            passwordMatch: (value) => value === methods.getValues("newPass") || "Password do not match",
+                                            passwordMatch: (value) => value === methods.getValues("NewPassword") || "Password do not match",
                                         },
                                     }}
                                     render={({
@@ -158,7 +197,6 @@ export default function SecurityUserPage({
                                         <div>
                                             <TextField
                                                 className='w-full'
-                                                style={{ marginBottom: 15 }}
                                                 label='Confirm New Password'
                                                 type='password'
                                                 variant="outlined"
@@ -189,14 +227,18 @@ export default function SecurityUserPage({
                                 <ul className="list-disc list-inside mb-0 text-gray-600">
                                     <li className="mb-0 font-sm">One special character</li>
                                     <li className="mb-0 font-sm">Min 6 characters</li>
-                                    <li className="mb-0 font-sm">One number (2 are recommended)</li>
-                                    <li className="mb-0 font-sm">Change it often</li>
+                                    <li className="mb-0 font-sm">At least one number </li>
                                 </ul>
                             </div>
 
 
                             <div className="mt-auto">
-                                <Button type="secondary" onClick={handleSave} >
+                                <Button 
+                                    type="secondary" 
+                                    onClick={handleChangePassword}
+                                    loading={changePasswordLoading}
+                                    disabled={changePasswordLoading} 
+                                >
                                     Change Password
                                 </Button>
                             </div>

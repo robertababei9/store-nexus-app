@@ -41,9 +41,8 @@ export default function EditUser() {
     });
     const methodsSecurity = useForm<SecurityFormType>({
         defaultValues: {
-            currentPass: "",
-            newPass: '',
-            repeatPass: '',
+            NewPassword: '',
+            ConfirmNewPassword: '',
         }
     });
 
