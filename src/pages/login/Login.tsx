@@ -115,7 +115,7 @@ export default function Login() {
                 </Col>
 
                 {/* De vazut daca afecteaza padding-ul cand esti pe alte dispozitive */}
-                <Col xs={24} lg={8} className='w-full flex flex-col justify-center px-20 pb-20 bg-white'>
+                <Col xs={24} lg={8} className='w-full flex flex-col justify-center px-8 sm:px-20 pb-20 bg-white'>
                     {/* ----> Asta e SVG, logo-ul */}
 
                     <AppLogo width={50} height={50} />
