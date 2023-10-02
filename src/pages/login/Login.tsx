@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Col, Row } from 'antd';
-
 import Button from 'src/components/_shared/Button/Button';
-import pxfuel from 'src/assets/images/pxfuel.png';
 import { useNavigate } from 'react-router-dom';
-
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { tokenReceived } from 'src/features/authentication/authenticationSlice';
@@ -15,10 +12,9 @@ import { LoginFormValues, LoginResponse } from 'src/types/login';
 import { Controller, useForm } from 'react-hook-form';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
 import { AppLogo } from 'src/components/_shared/Icons/Icons';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LockIcon from '@mui/icons-material/Lock';
+import { FaUserCircle } from 'react-icons/fa';
+import { PiLockKeyFill } from 'react-icons/pi';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 
 
 
@@ -29,10 +25,10 @@ export default function Login() {
     const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState(false);
 
-
+    // form
     const methods = useForm<LoginFormValues>();
 
-
+    // redux
     const { currentUser } = useSelector(
         (state: RootState) => state.authentication
     );
@@ -50,15 +46,8 @@ export default function Login() {
     }, [currentUser]);
 
 
-    const onFinish = (values: { email: string; password: string }) => {
-        console.log('Received values of form:', values);
-
-    }
-
-
-    // noi functia asta o mutam pe alt Thread
+    // handlers
     const handleLogin = async () => {
-
         const canContinue = await methods.trigger();
         if (canContinue == false) {
             return;
@@ -98,32 +87,24 @@ export default function Login() {
         finally {
             setLoading(false);
         }
-
     }
 
 
 
     return (
         <div className='w-full h-full flex justify-center items-center'>
-            {/*  daca pun w-full la un Row --> nu o sa mai mearga 'gutter' ... */}
             <Row className='w-full h-full'>
                 <Col xs={24} lg={16} className='w-full bg-[url("src/assets/images/pxfuel.png")]'>
-                    {/* Trebuie alt bg img, ceva ffffffff mare si calitativ, el acolo l a creat, el a facut jum de cerc */}
-                    {/* A folosit svg */}
-                    {/* Nu cont, copy paste de pe net ... alta imagine trebuie */}
-                    {/*  Nu-mi place asta cu  puzzle*/}
                 </Col>
 
-                {/* De vazut daca afecteaza padding-ul cand esti pe alte dispozitive */}
                 <Col xs={24} lg={8} className='w-full flex flex-col justify-center px-8 sm:px-20 pb-20 bg-white'>
-                    {/* ----> Asta e SVG, logo-ul */}
 
                     <AppLogo width={50} height={50} />
                     <div className='w-full flex flex-col mb-12 items-start mt-10'>
                         <h1 className='text-4xl font-bold mb-3'>Sign In</h1>
                         <h4 className='text-gray-500 '>Enter your email and password to sign in !</h4>
                     </div>
-                    {/* Form pt login */}
+
                     <Controller
                         name={`Email`}
                         control={methods.control}
@@ -145,7 +126,6 @@ export default function Login() {
                                 className='w-full'
                                 style={{ marginBottom: 20 }}
                                 label='Email'
-                                // color='primary' Aici e smecher de facut culoarea la chenar la fel ca butonul de login, e greu cam
                                 variant="outlined"
                                 value={value}
                                 onChange={(value) => {
@@ -157,9 +137,7 @@ export default function Login() {
                                 required
                                 InputProps={{
                                     startAdornment: (
-                                        <InputAdornment position="start">
-                                            <AccountCircleIcon />
-                                        </InputAdornment>
+                                        <FaUserCircle size={24} color="#808080" className='mr-3'/>
                                     ),
                                 }}
                             />
@@ -178,7 +156,7 @@ export default function Login() {
                         }) => (
                             <TextField
                                 className='w-full'
-                                style={{ marginBottom: 15 }}
+                                style={{ marginBottom: 15}}
                                 variant="outlined"
                                 value={value}
                                 onChange={(e) => {
@@ -190,9 +168,7 @@ export default function Login() {
                                 required
                                 InputProps={{
                                     startAdornment: (
-                                        <InputAdornment position="start">
-                                            <LockIcon />
-                                        </InputAdornment>
+                                        <PiLockKeyFill size={28} color="#808080" className='mr-3'/>
                                     ),
                                     endAdornment: (
                                         <InputAdornment position="end">
@@ -200,10 +176,12 @@ export default function Login() {
                                                 onClick={() => setShowPassword(!showPassword)}
                                                 onMouseDown={(e) => e.preventDefault()}
                                             >
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
                                             </IconButton>
                                         </InputAdornment>
                                     ),
+                                    style: {paddingLeft: 15},
+                                    className: "pl-8"
                                 }}
                                 label='Password'
                                 type={showPassword ? 'text' : 'password'}
