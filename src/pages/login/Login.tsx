@@ -15,6 +15,7 @@ import { AppLogo } from 'src/components/_shared/Icons/Icons';
 import { FaUserCircle } from 'react-icons/fa';
 import { PiLockKeyFill } from 'react-icons/pi';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import { ROUTES } from 'src/utils/Constants';
 
 
 
@@ -137,7 +138,7 @@ export default function Login() {
                                 required
                                 InputProps={{
                                     startAdornment: (
-                                        <FaUserCircle size={24} color="#808080" className='mr-3'/>
+                                        <FaUserCircle size={24} color="#808080" className='mr-3' />
                                     ),
                                 }}
                             />
@@ -156,7 +157,7 @@ export default function Login() {
                         }) => (
                             <TextField
                                 className='w-full'
-                                style={{ marginBottom: 15}}
+                                style={{ marginBottom: 15 }}
                                 variant="outlined"
                                 value={value}
                                 onChange={(e) => {
@@ -168,7 +169,7 @@ export default function Login() {
                                 required
                                 InputProps={{
                                     startAdornment: (
-                                        <PiLockKeyFill size={28} color="#808080" className='mr-3'/>
+                                        <PiLockKeyFill size={28} color="#808080" className='mr-3' />
                                     ),
                                     endAdornment: (
                                         <InputAdornment position="end">
@@ -180,7 +181,7 @@ export default function Login() {
                                             </IconButton>
                                         </InputAdornment>
                                     ),
-                                    style: {paddingLeft: 15},
+                                    style: { paddingLeft: 15 },
                                     className: "pl-8"
                                 }}
                                 label='Password'
@@ -200,7 +201,14 @@ export default function Login() {
                             <span className='text-base text-gray-900'>Remember me</span>
                         </label>
 
-                        <a href='/forgot-password' className='text-indigo-600 text-sm hover:text-indigo-300 underline hover:underline'>Forgot password?</a>
+                        <span
+                            className='text-indigo-600 text-sm hover:text-indigo-300 underline hover:underline'
+                            onClick={() => navigate(ROUTES.ForgotPassword)}
+                            style={{ cursor: 'pointer' }}
+
+                        >
+                            Forgot password?
+                        </span>
                     </div>
 
                     <Button

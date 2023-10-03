@@ -1,6 +1,7 @@
 export const ROUTES = {
     // public routes
     SignIn: "/login",
+    ForgotPassword: "/forgot-password",
 
     // private routes
     Dashboard: "/dashboard",
