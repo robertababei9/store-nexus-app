@@ -1,40 +1,43 @@
 import { useState, useEffect } from 'react';
-import { Checkbox, Form, FormInstance, Input } from 'antd';
-
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Col, Row } from 'antd';
 import Button from 'src/components/_shared/Button/Button';
-import humansImage from 'src/assets/images/humans.png';
 import { useNavigate } from 'react-router-dom';
-
 import axios from 'axios';
-import { ROUTES } from 'src/utils/Constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { tokenReceived } from 'src/features/authentication/authenticationSlice';
 import { RootState } from 'src/redux/store';
 import { openNotification } from 'src/utils/Notification';
 import { getDefaultApiUrl } from 'src/config';
-import { LoginResponse } from 'src/types/login';
+import { LoginFormValues, LoginResponse } from 'src/types/login';
+import { Controller, useForm } from 'react-hook-form';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { AppLogo } from 'src/components/_shared/Icons/Icons';
+import { FaUserCircle } from 'react-icons/fa';
+import { PiLockKeyFill } from 'react-icons/pi';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import { ROUTES } from 'src/utils/Constants';
 
 
 
 export default function Login() {
 
     // states
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-    const [form, setForm] = useState<FormInstance | null>(null);
+    // form
+    const methods = useForm<LoginFormValues>();
 
-
+    // redux
     const { currentUser } = useSelector(
         (state: RootState) => state.authentication
     );
     const dispatch = useDispatch();
-    
+
     // navigation
     const navigate = useNavigate();
-    
+
 
     // prevent user going to /login if it's authenticated
     useEffect(() => {
@@ -44,26 +47,29 @@ export default function Login() {
     }, [currentUser]);
 
 
-    const onFinish = (values: { email: string; password: string }) => {
-        console.log('Received values of form:', values);
-
-    }
-
-
-    // noi functia asta o mutam pe alt Thread
+    // handlers
     const handleLogin = async () => {
+        const canContinue = await methods.trigger();
+        if (canContinue == false) {
+            return;
+        }
 
         const BASE_URL = getDefaultApiUrl();
-        const body = {
-            Email: email,
-            Password: password
-        };
         setLoading(true);
 
         try {
+            const body = methods.getValues();
+            console.log(body);
+
+            //Optiune remember me. E ok asa? hmmm. verifica
+            const loginData = {
+                ...body,
+                rememberMe,
+            };
+
             const result = await axios.post<LoginResponse>(BASE_URL + "/api/users/login", body);
 
-            // console.log("result = ", result);
+            console.log("result = ", result);
             const mockAuthResponse = {
                 access_token: result.data.token,
                 refresh_token: "not-implemented-yet",
@@ -82,113 +88,139 @@ export default function Login() {
         finally {
             setLoading(false);
         }
-
-    }
-
-
-    const onSubmit = () => {
-        if (form) {
-            form.validateFields()
-                .then(() => {
-                    handleLogin();
-                })
-                .catch(errorInfo => {
-                    console.log('Form validation failed:', errorInfo);
-                });
-        }
     }
 
 
 
     return (
-        <div className='flex flex-col justify-center items-center h-screen w-full'>
+        <div className='w-full h-full flex justify-center items-center'>
+            <Row className='w-full h-full'>
+                <Col xs={24} lg={16} className='w-full bg-[url("src/assets/images/pxfuel.png")]'>
+                </Col>
 
-            <div className='flex w-100 max-w-[1014px] bg-white rounded-3xl p-5'>
-                <div className='w-[60%]'>
-                    <img
-                        src={humansImage}
-                        alt="Humans image"
-                    />
-                </div>
-                <div className='w-[40%] flex flex-col justify-center items-center'>
-                    <div className='w-full flex flex-col mb-12 items-start'>
+                <Col xs={24} lg={8} className='w-full flex flex-col justify-center px-8 sm:px-20 pb-20 bg-white'>
+
+                    <AppLogo width={50} height={50} />
+                    <div className='w-full flex flex-col mb-12 items-start mt-10'>
                         <h1 className='text-4xl font-bold mb-3'>Sign In</h1>
-                        <h4 className='text-gray-400 '>Enter your email and password to sign in !</h4>
+                        <h4 className='text-gray-500 '>Enter your email and password to sign in !</h4>
                     </div>
 
-                    <Form
-                        name="login-form"
-                        className='mb-3'
-                        initialValues={{
-                            email: '',
-                            password: '',
+                    <Controller
+                        name={`Email`}
+                        control={methods.control}
+                        rules={{
+                            required: "Please enter your email!",
+                            validate: {
+                                maxLength: (v) =>
+                                    v.length <= 50 || "The email should have at most 50 characters",
+                                matchPattern: (v) =>
+                                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                                    "Please enter a valid email address!",
+                            },
                         }}
-                        onFinish={onSubmit}
-                        form={form as FormInstance}
-                    >
-                        <Form.Item
-                            name='email'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter your email!',
-                                },
-                                {
-                                    type: 'email',
-                                    message: 'Please enter a valid email address!',
-                                },
-                            ]}
-                        >
-                            <Input
-                                prefix={<UserOutlined />}
-                                placeholder='Email'
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <TextField
+                                className='w-full'
+                                style={{ marginBottom: 20 }}
+                                label='Email'
+                                variant="outlined"
+                                value={value}
+                                onChange={(value) => {
+                                    onChange(value);
+                                }}
+                                size='medium'
+                                error={error !== undefined}
+                                helperText={error?.message}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <FaUserCircle size={24} color="#808080" className='mr-3' />
+                                    ),
+                                }}
                             />
-                        </Form.Item>
+                        )}
+                    />
 
-                        <Form.Item
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter your password!',
-                                },
-                            ]}
-                        >
-                            <Input.Password
-                                prefix={<LockOutlined />}
-                                placeholder='Password'
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                    <Controller
+                        name={`Password`}
+                        control={methods.control}
+                        rules={{
+                            required: 'Please enter your password!',
+                        }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <TextField
+                                className='w-full'
+                                style={{ marginBottom: 15 }}
+                                variant="outlined"
+                                value={value}
+                                onChange={(e) => {
+                                    onChange(e.target.value);
+                                }}
+                                size='medium'
+                                error={error !== undefined}
+                                helperText={error?.message}
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <PiLockKeyFill size={28} color="#808080" className='mr-3' />
+                                    ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                onMouseDown={(e) => e.preventDefault()}
+                                            >
+                                                {showPassword ? <AiFillEyeInvisible /> : <AiFillEye />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                    style: { paddingLeft: 15 },
+                                    className: "pl-8"
+                                }}
+                                label='Password'
+                                type={showPassword ? 'text' : 'password'}
                             />
-                        </Form.Item>
+                        )}
+                    />
 
-                        <Form.Item>
-                            <Form.Item
-                                name="remember"
-                                valuePropName='checked'
-                                noStyle
-                            >
-                                <Checkbox>Remember me</Checkbox>
-                            </Form.Item>
-                            <a className="login-form-forgot" href="">
-                                Forgot your password?
-                            </a>
-                        </Form.Item>
+                    <div className='flex justify-between mt-1'>
+                        <label className='flex items-center space-x-2'>
+                            <input
+                                type='checkbox'
+                                className='form-checkbox accent-indigo-600'
+                                checked={rememberMe}
+                                onChange={() => setRememberMe(!rememberMe)}
+                            />
+                            <span className='text-base text-gray-900'>Remember me</span>
+                        </label>
 
+                        <span
+                            className='text-indigo-600 text-sm hover:text-indigo-300 underline hover:underline'
+                            onClick={() => navigate(ROUTES.ForgotPassword)}
+                            style={{ cursor: 'pointer' }}
 
-                        <Button
-                            className='mt-10 w-full'
-                            type='primary'
-                            loading={loading}
-                            onClick={handleLogin}>
-                            SIGN IN
-                        </Button>
-                    </Form>
+                        >
+                            Forgot password?
+                        </span>
+                    </div>
 
-                </div>
-            </div>
+                    <Button
+                        className='h-12 rounded-full mt-10 w-full'
+                        type='secondary'
+                        loading={loading}
+                        onClick={handleLogin}>
+                        SIGN IN
+                    </Button>
+
+                </Col>
+            </Row>
         </div>
     )
 }
