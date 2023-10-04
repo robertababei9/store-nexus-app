@@ -13,9 +13,9 @@ export type UserFormType = {
 }
 
 export type SecurityFormType = {
-    currentPass: string;
-    newPass: string;
-    repeatPass: string;
+    CurrentPassword: string;
+    NewPassword: string;
+    ConfirmNewPassword: string;
 }
 
 export type Role = {
@@ -37,4 +37,11 @@ export type UserResponse = {
     Contact: string;
     PhoneNumber: string;
     SignUpDate: string;
+}
+
+export type ChangePasswordRequest = {
+    UserId: string;
+    CurrentPassword?: string;
+    NewPassword: string;
+    ConfirmNewPassword: string;
 }
