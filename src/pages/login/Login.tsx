@@ -194,15 +194,15 @@ export default function Login() {
                         <label className='flex items-center space-x-2'>
                             <input
                                 type='checkbox'
-                                className='form-checkbox accent-indigo-600'
+                                className='form-checkbox h-4 w-4 accent-secondary'
                                 checked={rememberMe}
                                 onChange={() => setRememberMe(!rememberMe)}
                             />
-                            <span className='text-base text-gray-900'>Remember me</span>
+                            <span className='text-base text-gray-600'>Remember me</span>
                         </label>
 
                         <span
-                            className='text-indigo-600 text-sm hover:text-indigo-300 underline hover:underline'
+                            className='text-secondary text-sm hover:text-indigo-500 hover:underline'
                             onClick={() => navigate(ROUTES.ForgotPassword)}
                             style={{ cursor: 'pointer' }}
 
@@ -212,7 +212,7 @@ export default function Login() {
                     </div>
 
                     <Button
-                        className='h-12 rounded-full mt-10 w-full'
+                        className='h-12 rounded-lg mt-10 w-full'
                         type='secondary'
                         loading={loading}
                         onClick={handleLogin}>
