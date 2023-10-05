@@ -16,7 +16,13 @@ const publicRoutes: RouteType[] = [
   {
     path: ROUTES.SignIn,
     element: lazy(() => import("../pages/login/Login")),
-  }
+  },
+
+  // ## FORGOT PASSWORD ##
+  {
+    path: ROUTES.ForgotPassword,
+    element: lazy(() => import("../pages/forgot-password/ForgotPassword")),
+  },
 ];
 
 const privateRoutes: RouteType[] = [
