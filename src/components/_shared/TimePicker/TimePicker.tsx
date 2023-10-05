@@ -1,4 +1,7 @@
 import { TimePicker as TimePickerAntd} from 'antd';
+import { Dayjs } from 'dayjs';
+
+const FORMAT = "HH:mm"
 
 type TimePickerProps = {
     placeholder?: [string, string];
@@ -14,7 +17,11 @@ export default function TimePicker({
         style={{fontSize: 24}}
         placeholder={placeholder}
         className={`py-4 w-full border-gray-400 hover:border-black ${className}`}
+        onChange={(time: any) => {
+          console.log("TimePicker = ", time);
+        }}
         showSecond={false}
+        format={FORMAT}
     />
   )
 }
