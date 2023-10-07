@@ -17,3 +17,16 @@ export type GroupedStoresByCountryType = {
   noStores: number;
   coordinates: any[]
 }
+
+export type CreateStoreFormType = {
+  Id: string;
+  Name: string;
+  Description: string;
+  Location: string;
+  LatLng: string;
+  Contact: string;
+  WorkingHours: string;
+  ManagerId: string;
+  StoreStatusId: string;
+  
+}

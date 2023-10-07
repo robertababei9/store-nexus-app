@@ -207,7 +207,7 @@ export default function Stores() {
                 <Button 
                     className='flex justify-center items-center' 
                     icon={<PlusOutlined />}
-                    onClick={() => navigate(ROUTES.StoresEdit.replace(":id", "0"))}
+                    onClick={() => navigate(ROUTES.StoresCreate)}
                 >
                         Add
                 </Button>

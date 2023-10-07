@@ -10,7 +10,8 @@ type ButtonProps = {
     // type?: "primary" | "link" | "text" | "ghost" | "default" | "dashed" | undefined;
     type?: "primary" | "secondary" | "danger" | undefined;
     icon?: any;
-    shape?: "circle" | "default" | "round" | undefined
+    shape?: "circle" | "default" | "round" | undefined;
+    size?: "large" | "middle" | "small"
 };
 
 const primaryTypeClassName = "bg-primary hover:!bg-primaryHover";
@@ -26,6 +27,7 @@ export default function Button({
     type = "primary",
     icon,
     shape,
+    size = "middle"
 }: PropsWithChildren<ButtonProps>) {
 
 
@@ -45,6 +47,7 @@ export default function Button({
         type="primary"
         icon={icon}
         shape={shape}
+        size={size}
     >
         {children}
     </AntdButton>
