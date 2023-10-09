@@ -19,7 +19,7 @@ export type GroupedStoresByCountryType = {
 }
 
 export type CreateStoreFormType = {
-  Id: string;
+  Id: string | null;
   Name: string;
   Description: string;
   Location: string;

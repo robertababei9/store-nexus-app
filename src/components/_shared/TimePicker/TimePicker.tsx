@@ -6,13 +6,15 @@ const FORMAT = "HH:mm"
 type TimePickerProps = {
     placeholder?: [string, string];
     className?: string;
-    onChange?: (value: any) => void
+    onChange?: (value: any) => void,
+    value?: any // RangeValue<Dayjs>
 }
 
 export default function TimePicker({
     placeholder = ["Opening hour", "Closing hour"],
     className = "",
-    onChange = () => {}
+    onChange = () => {},
+    value
 }: TimePickerProps) {
   return (
     <TimePickerAntd.RangePicker
@@ -20,11 +22,9 @@ export default function TimePicker({
         placeholder={placeholder}
         className={`py-4 w-full border-gray-400 hover:border-black ${className}`}
         onChange={(timeRange: any) => {
-          console.log("TimePicker = ", timeRange);
-          // console.log("[0]", time[0].format("HH:mm"));
-          // console.log("[1]", time[1].format("HH:mm"));
           onChange(timeRange);
         }}
+        value={value}
         showSecond={false}
         format={FORMAT}
     />

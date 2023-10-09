@@ -1,7 +1,8 @@
-import { Avatar, Col, Input, Row, Table, Tag, Tooltip, Typography } from 'antd';
+import { useState, useEffect } from 'react';
+import { Avatar, Table, Tooltip, Typography } from 'antd';
 import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
-import { ROUTES, StoreStatus, StoresStatusToStringMap } from 'src/utils/Constants';
+import { ROUTES } from 'src/utils/Constants';
 import { formatPrice } from 'src/utils/Utils';
 import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
 import {  useNavigate } from 'react-router';
@@ -9,19 +10,27 @@ import {  useNavigate } from 'react-router';
 import SalesStatistics from 'src/components/stores/SalesStatistics';
 import StoresByCountry from 'src/components/stores/StoresByCountry';
 import { renderStoreStatusTag } from 'src/components/stores/Utils';
+import { getDefaultApiUrl } from 'src/config';
+import axios from 'axios';
+import { openNotification } from 'src/utils/Notification';
+import { Link } from 'react-router-dom';
+import { ApiResponseModel } from 'src/types/_shared';
 
 const Title = Typography.Title;
 
 interface DataType {
-    key: string;
-    name: string;
-    location: string;
-    phoneNo: string;
-    workingHours: string;
-    manager: string;
-    totalSales: number;
-    status: string; // opened | closed | under renovation | building | to be opened | etc...
-    lastUpdated: string;
+    Id: string;
+    Name: string;
+    Description: string;
+    Location: string;
+    Contact: string;
+    WorkingHours: string;
+    ManagerName: string;
+    ManagerId: string;
+    TotalSales: number;
+    StatusId: string;
+    StoreStatusName: string;
+    LastUpdated: string;
 
     // inventoryLevel: string; // low, medium, high
     // noEmployees: number  
@@ -30,142 +39,113 @@ interface DataType {
 const columns: ColumnsType<DataType> = [
     {
         title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'Name',
+        key: 'Name',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.name.localeCompare(b.name),
+        sorter: (a, b) => a.Name.localeCompare(b.Name),
         filterSearch: true,
     },
     {
         title: 'Location',
-        dataIndex: 'location',
-        key: 'location',
+        dataIndex: 'Location',
+        key: 'Location',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.location.localeCompare(b.location),
+        sorter: (a, b) => a.Location.localeCompare(b.Location),
         filterSearch: true,
     },
     {
         title: 'Contact',
-        dataIndex: 'phoneNo',
-        key: 'phoneNo',
+        dataIndex: 'Contact',
+        key: 'Contact',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.phoneNo.localeCompare(b.phoneNo)
+        sorter: (a, b) => a.Contact.localeCompare(b.Contact)
     },
     {
         title: 'Working hours',
-        dataIndex: 'workingHours',
-        key: 'workingHours',
+        dataIndex: 'WorkingHours',
+        key: 'WorkingHours',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.workingHours.localeCompare(b.workingHours)
+        sorter: (a, b) => a.WorkingHours.localeCompare(b.WorkingHours)
     },
     {
         title: 'Manager',
-        dataIndex: 'manager',
-        key: 'manager',
+        dataIndex: 'ManagerName',
+        key: 'ManagerName',
         render: (text, record) => (
-            <div className='flex justify-start items-center cursor-pointer hover:text-blue-500'>
+            <Link 
+                to={ROUTES.EditUser.replace(":id", record.ManagerId)} 
+                className='flex justify-start items-center cursor-pointer hover:text-blue-500' 
+            >
                 <Avatar size="default" src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4"/>
                 <p className='ml-2'>{text}</p>
-            </div>
+            </Link>
         ),
-        sorter: (a, b) => a.manager.localeCompare(b.manager),
+        sorter: (a, b) => a.ManagerName.localeCompare(b.ManagerName),
         filterSearch: true
     },
     {
         title: 'Total Sales',
-        dataIndex: 'totalSales',
-        key: 'totalSales',
+        dataIndex: 'TotalSales',
+        key: 'TotalSales',
         render: (text: number) => <p className='font-semibold'>{formatPrice(text)}</p>,
-        sorter: (a, b) => a.totalSales - b.totalSales,
+        sorter: (a, b) => a.TotalSales - b.TotalSales,
         defaultSortOrder: "descend"
     },
     {
         title: 'Status',
-        dataIndex: 'status',
-        key: 'status',
+        dataIndex: 'StoreStatusName',
+        key: 'StoreStatusName',
         render: (text) => renderStoreStatusTag(text),
     },
     {
         title: 'Last Updated',
-        dataIndex: 'lastUpdated',
-        key: 'lastUpdated',
+        dataIndex: 'LastUpdated',
+        key: 'LastUpdated',
         render: (text) => <p>{text}</p>,
-        sorter: (a, b) => a.lastUpdated.localeCompare(b.lastUpdated)
+        sorter: (a, b) => a.LastUpdated.localeCompare(b.LastUpdated)
     }
 ];
 
-const mockData: DataType[] = [
-    {
-        key: '1',
-        name: 'Lidl Iasi',
-        location: 'Romania, Iasi',
-        phoneNo: '0745263777',
-        workingHours: '08:00 - 22:00',
-        manager: 'Robert Ababei',
-        totalSales: 20000,
-        status: 'Open',
-        lastUpdated: new Date(Date.now()).toLocaleString(),
-    },
-    {
-        key: '2',
-        name: 'Lidl Bacau',
-        location: 'Romania, Bacau',
-        phoneNo: '0745263777',
-        workingHours: '08:00 - 22:00',
-        manager: 'Robert Ababei',
-        totalSales: 17850,
-        status: 'Temporarily Closed',
-        lastUpdated: new Date(Date.now()).toLocaleString()
-    },
-    {
-        key: '3',
-        name: 'Lidl Botosani',
-        location: 'Romania, Botosani',
-        phoneNo: '0745263777',
-        workingHours: '08:00 - 22:00',
-        manager: 'Robert Ababei',
-        totalSales: 12000,
-        status: 'Closed',
-        lastUpdated: new Date(Date.now()).toLocaleString()
-    },
-    {
-        key: '4',
-        name: 'Lidl Victoriei 1 Bucuresti',
-        location: 'Romania, Bucuresti',
-        phoneNo: '0745263777',
-        workingHours: '08:00 - 22:00',
-        manager: 'Razvan Ababei',
-        totalSales: 19600,
-        status: 'Under Renovation',
-        lastUpdated: new Date(Date.now()).toLocaleString()
-    },
-    {
-        key: '5',
-        name: 'Lidl Victoriei 2 Bucuresti',
-        location: 'Romania, Bucuresti',
-        phoneNo: '0745263777',
-        workingHours: '08:00 - 22:00',
-        manager: 'Ioana Ababei',
-        totalSales: 28500,
-        status: 'Coming Soon',
-        lastUpdated: new Date(Date.now()).toLocaleString()
-    },
-    {
-        key: '6',
-        name: 'Lidl Timisoara',
-        location: 'Romania, Timisoara',
-        phoneNo: '0745263777',
-        workingHours: '08:00 - 22:00',
-        manager: 'Dinu Ababei',
-        totalSales: 22200,
-        status: 'Permanently Closed',
-        lastUpdated: new Date(Date.now()).toLocaleString()
-    },
-]
 
 export default function Stores() {
 
+    // navigation
     const navigate = useNavigate();
+
+    // states
+    const [storesData, setStoresData] = useState<DataType[]>([]);
+    const [storesLoading, setStoresLoading] = useState<boolean>(true);
+
+    // effects
+    useEffect(() => {
+        fetchStores();
+    }, []);
+
+
+    // helpers
+    const fetchStores = async () => {
+        try {
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.get<ApiResponseModel>(`${BASE_URL}/api/stores/GetAll`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
+
+            if (result.data) {
+                const { Data } = result.data;
+
+                setStoresData(Data);
+            }
+        }
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
+        }
+        finally {
+            setStoresLoading(false);
+        }
+    }
 
     // adding the actions column so we can use navigate
     if (!columns.find(x => x.key == 'actions')) {
@@ -181,7 +161,7 @@ export default function Stores() {
                         type='primary' 
                         shape="circle" 
                         icon={<EditOutlined />} 
-                        onClick={() => navigate(ROUTES.StoresEdit.replace(":id", record.key))}
+                        onClick={() => navigate(ROUTES.StoresEdit.replace(":id", record.Id))}
                     />
                 </Tooltip>
             </div>),
@@ -214,9 +194,11 @@ export default function Stores() {
             </div>
 
             <Table 
+                rowKey={(record) => record.Id}
                 size='middle' 
                 className='w-full' 
-                dataSource={mockData} 
+                loading={storesLoading}
+                dataSource={storesData} 
                 columns={columns}
 
             />

@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect }  from 'react'
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import { TextField, Autocomplete } from '@mui/material';
+import { TextField, Autocomplete, InputBase } from '@mui/material';
 import { CreateStoreFormType, StoreDataType } from 'src/types/store';
-import { StoresStatusToStringMap } from 'src/utils/Constants';
 import TimePicker from '../_shared/TimePicker/TimePicker';
 import { Avatar, Col, Row } from 'antd';
 import { Controller, UseFormReturn } from 'react-hook-form';
@@ -11,15 +10,14 @@ import { ApiResponseModel, OptionType } from 'src/types/_shared';
 import { getDefaultApiUrl } from 'src/config';
 import { openNotification } from 'src/utils/Notification';
 import { renderStoreStatusTag } from '../stores/Utils';
+import dayjs from 'dayjs';
 
 
 type BasicInfoProps = {
-    data?: StoreDataType,
     methods?: UseFormReturn<CreateStoreFormType, any, undefined>,
 }
 
 export default function BasicInfo({
-    data,
     methods
 }: BasicInfoProps) {
 
@@ -99,12 +97,40 @@ export default function BasicInfo({
 
     // handlers
 
+    // helpers
+    const getLocationLatLng = (): [number, number] => {
+        let lat = 52.5200;
+        let lng = 13.4050;
+
+        const coordinates = methods?.getValues("LatLng").split(" ");
+        if (coordinates) {
+            lat = parseFloat(coordinates[0]);
+            lng = parseFloat(coordinates[1]);
+        }
+
+        return [lat, lng];
+    }
+
 
     return (
         <div className='w-full flex flex-col'>
 
             <Row gutter={16} className=''>
                 <Col xs={24} lg={12} className='w-full flex flex-col'>
+
+                    <Controller
+                        name={`Id`}
+                        control={methods?.control}
+                        rules={{
+                        }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <input value={value || ""} onChange={onChange} className='hidden'/>
+                        )}
+                    />
+
                     <Controller
                         name={`Name`}
                         control={methods?.control}
@@ -167,7 +193,6 @@ export default function BasicInfo({
                             fieldState: { error },
                         }) => (
                             <Autocomplete
-                                // value={{ label: 'Robert Ababei', Id: value }}
                                 style={{marginBottom: 20}}
                                 disablePortal
                                 loading={managersOptionsLoading}
@@ -175,13 +200,32 @@ export default function BasicInfo({
                                 onChange={(event: any, selected: OptionType | null) => {
                                     onChange(selected?.value);
                                 }}
-                                // value={}
-                                renderInput={(params) => <TextField {...params} label="Manager" required />}
+                                value={managersOptions.find(x => x.value == value) || null}
+                                renderInput={(params) => 
+                                    <TextField 
+                                        {...params} 
+                                        label="Manager" 
+                                        required
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            startAdornment: (
+                                                <Avatar size="default" src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4"/>
+                                            )
+                                        }} 
+                                    />
+                                }
                                 renderOption={(props: object, option: OptionType) => {
                                     return (
-                                        <div {...props} key={option.value} className='flex justify-start items-center mx-2 rounded-lg px-3 py-1 cursor-pointer hover:bg-secondary/10'>
-                                            <Avatar size="default" src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4"/>
-                                            <p className='text-xl text-gray-600'>{option.label}</p>
+                                        <div 
+                                            {...props} 
+                                            key={option.value} 
+                                            className={`flex justify-start items-center mx-2 rounded-lg 
+                                            px-3 py-1 cursor-pointer hover:bg-secondary/10
+                                            ${value == option.value ? "bg-secondary/10" : ""}
+                                            `}
+                                        >
+                                                <Avatar size="default" src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4"/>
+                                                <p className='text-xl text-gray-600'>{option.label}</p>
                                         </div>
                                     )
                                 }}
@@ -233,15 +277,17 @@ export default function BasicInfo({
                                     <TextField 
                                         {...params} 
                                         label="Status" 
-                                        error={error != undefined} 
-                                        required 
+                                        error={error != undefined}
+                                        required
+
                                     />
+
                                 }
                                 sx={{width: "50%"}}
                                 onChange={(event: any, selected: OptionType | null) => {
                                     onChange(selected?.value);
                                 }}
-                                // value={}
+                                value={storeStatusOptions.find(x => x.value == value) || null}
                                 renderOption={(props: any, option: OptionType, state: any) => {
                                     // console.log(props, option, state);
                                     return (
@@ -266,12 +312,16 @@ export default function BasicInfo({
                         }) => (
                             <TimePicker 
                                 onChange={(timeRange: any) => {
-                                    console.log("TimeRange 123 = ", timeRange);
+                                    // console.log("TimeRange 123 = ", timeRange);
                                     const startHours = timeRange[0].format("HH:mm");
                                     const endHours = timeRange[1].format("HH:mm");
 
                                     onChange(`${startHours} - ${endHours}`);
                                 }}
+                                value={
+                                    [dayjs(value.split("-")[0], "HH:mm"), 
+                                    dayjs(value.split("-")[1], "HH:mm")]
+                                }   // format is "08:00 - 22:00" -> and we convert it to tuple of dayjs
                             />
                         )}
                     />
@@ -329,8 +379,8 @@ export default function BasicInfo({
                                 >
                                     <Marker
                                         position={{
-                                            lat: 52.5200,
-                                            lng: 13.4050
+                                            lat: getLocationLatLng()[0],
+                                            lng: getLocationLatLng()[1]
                                         }}
                                         draggable={true}
                                         onDragEnd={(event: any) => {

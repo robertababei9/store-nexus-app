@@ -17,14 +17,22 @@ const Title = Typography.Title;
 
 export default function AddUser() {
 
-  // navigation
-  const navigate = useNavigate();
+    // navigation
+    const navigate = useNavigate();
 
     // form
     const methods = useForm<CreateStoreFormType>({
         defaultValues: {
-
-        }
+            Id: null,
+            Name: "",
+            Description: "",
+            Contact: "",
+            Location: "",
+            LatLng: "52.5200 13.4050",
+            ManagerId: "",
+            StoreStatusId: "",
+            WorkingHours: "08:00 - 22:00",
+          },
     })
 
 
