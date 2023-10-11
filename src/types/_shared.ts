@@ -8,3 +8,8 @@ export type ApiResponseModel = {
     Data: any;
     Errors: string[];
 }
+
+export type LatLngType = {
+    Lat: string;
+    Lng: string;
+}

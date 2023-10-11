@@ -27,11 +27,13 @@ export default function AddUser() {
             Name: "",
             Description: "",
             Contact: "",
-            Location: "",
-            LatLng: "52.5200 13.4050",
             ManagerId: "",
             StoreStatusId: "",
             WorkingHours: "08:00 - 22:00",
+            Country: "",
+            CountryCode: "",
+            Location: "",
+            LatLng: "52.5200 13.4050",
           },
     })
 

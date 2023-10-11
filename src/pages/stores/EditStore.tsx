@@ -46,11 +46,13 @@ export default function EditStore() {
       Name: "",
       Description: "",
       Contact: "",
-      Location: "",
-      LatLng: "52.5200 13.4050",
       ManagerId: "",
       StoreStatusId: "",
       WorkingHours: "08:00 - 22:00",
+      Country: "",
+      CountryCode: "",
+      Location: "",
+      LatLng: "52.5200 13.4050",
     },
   });
 
@@ -92,7 +94,7 @@ export default function EditStore() {
 
       if (result.data) {
         const { Data, Success, Errors } = result.data;
-        console.log("Store -> Edit -> DATA = ", Data);
+        console.log("Store -> Edit -> DATA = ", result.data);
 
         if (Success) {
           openNotification("success", "Success", "Store successfully updated");

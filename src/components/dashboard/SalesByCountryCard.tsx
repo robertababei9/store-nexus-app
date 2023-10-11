@@ -2,7 +2,7 @@
 import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 import { Card } from '../_shared'
 import { Col } from 'antd';
-import CountryFlag from '../_shared/CountryFlag/CountryFlag';
+import ReactCountryFlag from 'react-country-flag';
 
 type SalesByCountry = {
     countryName: string;
@@ -66,7 +66,14 @@ export default function SalesByCountryCard() {
                     <div key={country.countryCode + index} className='flex justify-between items-center mb-4 px-6'>
                         <Col span={12}>
                             <div className='flex items-center justify-start'>
-                                <CountryFlag countryCode={country.countryCode}/>
+                                <ReactCountryFlag 
+                                    svg
+                                    countryCode={country.countryCode}
+                                    style={{
+                                        width: 30,
+                                        height: 30
+                                    }}
+                                />
                                 <div className='ml-2 flex flex-col justify-center items-start ml-4'>
                                     <p className='font-semibold text-gray-500'>Country:</p>
                                     <p className='whitespace-nowrap'>{country.countryName}</p>

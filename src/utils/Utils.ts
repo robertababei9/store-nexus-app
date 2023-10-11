@@ -1,3 +1,4 @@
+import axios from "axios";
 import { OptionsType } from "../types/Options";
 
 export const formatPrice = (value: number, currency?: string) => {
@@ -46,4 +47,27 @@ export const base64ToArrayBuffer = (base64: string) => {
         bytes[i] = binaryString.charCodeAt(i);
     }
     return bytes.buffer;
+}
+
+export const fetchCountryNameCodeByLatLng = async (lat: string, lng: string): Promise<[string | null, string | null]> => {
+    let countryName: string | null = null;
+    let countryCode: string | null = null;
+
+    const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat}, ${lng}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`);
+    if (response.data && response.data.status === "OK") {
+        for (const result of response.data.results) {
+            for (const component of result.address_components) {
+                if (component.types.includes('country')) {
+                    countryName = component.long_name
+                    countryCode = component.short_name;
+                    break;
+                }
+            }
+        }
+    }
+    else {
+        console.log(`Geocoding request failed for ${lat} ${lng}`);
+    }
+
+    return [countryName, countryCode]
 }

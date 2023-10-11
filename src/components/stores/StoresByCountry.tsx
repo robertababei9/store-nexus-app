@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Col, Row } from 'antd'
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Card } from '../_shared'
-import CountryFlag from '../_shared/CountryFlag/CountryFlag';
-import { COUNTRY_CODE } from 'src/utils/Constants';
-import { groupedStoresByCountry } from 'src/utils/mocks/stores/stores-by-country';
+import { getDefaultApiUrl } from 'src/config';
+import axios from 'axios';
+import { ApiResponseModel } from 'src/types/_shared';
+import { openNotification } from 'src/utils/Notification';
+import { StoreLocationGroup } from 'src/types/store';
+import ReactCountryFlag from 'react-country-flag';
 
 type CountryRowProps = {
-    countryCode?: string;
+    countryCode: string;
     name: string;
     noStores?: number; // number of stores
     dotColor?: string;  // represented in HEX
@@ -18,7 +21,15 @@ const CountryRow = ({countryCode, name, noStores, dotColor = "#FF0000"}: Country
         <Row className='w-full mb-4 '>
             <Col span={9}>
                 <div className='flex justify-start items-center'>
-                    <CountryFlag countryCode={countryCode}/>
+                    {/* <CountryFlag countryCode={countryCode}/> */}
+                    <ReactCountryFlag 
+                        svg
+                        style={{
+                            width: 30,
+                            height: 30
+                        }}
+                        countryCode={countryCode} 
+                    />
                     <p className='ml-2'>{name}</p>
                 </div>
             </Col>
@@ -51,24 +62,55 @@ const COLORS = [
 
 export default function StoresByCountry() {
 
+    // google maps
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY ?? "GOOGLE-API-KEY-NOT-SET"
     })
 
     // states
-    const [map, setMap] = React.useState(null);
+    const [groupedStoresData, setGroupedStoresData] = useState<StoreLocationGroup[]>([]);
+
+    // effects
+    useEffect(() => {
+        fetchGroupedStoresByCountry();
+    }, []);
 
 
-    const onLoad = React.useCallback(function callback(map: any) {
+    // helpers
+    const fetchGroupedStoresByCountry = async () => {
+        try {
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.get<ApiResponseModel>(`${BASE_URL}/api/stores/GetAllStoreLocationData`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
+
+            // console.log("resuuuuuuuult.data = ", result.data);
+            if (result.data) {
+                const { Data } = result.data;
+                setGroupedStoresData(Data);
+            }
+        }
+        catch (err: any) {
+            console.log("Error while getting the store locations data: ", err);
+            openNotification("error");
+        }
+        finally {
+            // setStoresLoading(false);
+        }
+    }
+
+    const onLoad = useCallback(function callback(map: any) {
         map.setZoom(3);
     
-        setMap(map)
     }, [])
 
-    const onUnmount = React.useCallback(function callback(map: any) {
-        setMap(null)
+    const onUnmount = useCallback(function callback(map: any) {
     }, [])
+
+
 
     return (
         <Row className='w-full mb-4'>
@@ -82,11 +124,12 @@ export default function StoresByCountry() {
                             <p className='text-gray-400 font-semibold mb-4'>Countries</p>
 
                             {
-                                groupedStoresByCountry.map((country, index) => (
+                                groupedStoresData.map((country, index) => (
                                     <CountryRow 
-                                        countryCode={country.countryCode} 
-                                        name={country.name} 
-                                        noStores={country.noStores} 
+                                        key={country.Id + index}
+                                        countryCode={country.CountryCode} 
+                                        name={country.Country} 
+                                        noStores={country.Stores.length} 
                                         dotColor={COLORS[index]}
                                     />        
                                 ))
@@ -112,11 +155,15 @@ export default function StoresByCountry() {
                                     }}
                                     >
                                         {
-                                            groupedStoresByCountry.map((country, countryIndex) => {
-                                                return country.coordinates.map((coordinates, coordinatesIndex) => (
+                                            groupedStoresData.map((country, countryIndex) => {
+                                                return country.Stores.map((store, storeIndex) => (
                                                     <Marker
-                                                        position={coordinates}
-                                                        title={country.name} 
+                                                        key={store.Lat + store.Lng + storeIndex}
+                                                        position={{
+                                                            lat: parseFloat(store.Lat) ?? 47, 
+                                                            lng: parseFloat(store.Lng) ?? 21
+                                                        }}
+                                                        title={store.StoreName} 
                                                         icon={{
                                                             path: google.maps.SymbolPath.CIRCLE,
                                                             scale: 6,

@@ -11,6 +11,8 @@ import { getDefaultApiUrl } from 'src/config';
 import { openNotification } from 'src/utils/Notification';
 import { renderStoreStatusTag } from '../stores/Utils';
 import dayjs from 'dayjs';
+import { fetchCountryNameCodeByLatLng } from 'src/utils/Utils';
+import { LoadingWrapper } from '../_shared';
 
 
 type BasicInfoProps = {
@@ -32,6 +34,7 @@ export default function BasicInfo({
     const [managersOptionsLoading, setManagersOptionsLoading] = useState<boolean>(true);
     const [storeStatusOptions, setStoreStatusOptions] = useState<OptionType[]>([]);
     const [storeStatusOptionsLoading, setStoreStatusOptionsLoading] = useState<boolean>(true);
+    const [countryInfoLoading, setCountryInfoLoading] = useState<boolean>(false);
 
     // effects
     useEffect(() => {
@@ -383,9 +386,25 @@ export default function BasicInfo({
                                             lng: getLocationLatLng()[1]
                                         }}
                                         draggable={true}
-                                        onDragEnd={(event: any) => {
+                                        onDragEnd={async (event: any) => {
                                             const lat = event.latLng.lat();
                                             const lng = event.latLng.lng();
+
+                                            // getting Country Name & Code based on lat lng
+                                            try {
+                                                // setCountryInfoLoading(true);
+                                                const countryInfo = await fetchCountryNameCodeByLatLng(lat, lng);
+                                                if (countryInfo[0] && countryInfo[1]) {
+                                                    methods?.setValue("Country", countryInfo[0]);
+                                                    methods?.setValue("CountryCode", countryInfo[1]);
+                                                }
+                                            }
+                                            catch(error: any) {
+                                                console.log(`Error while getting the country for ${lat}, ${lng}`, error);
+                                            }
+                                            finally{
+                                                // setCountryInfoLoading(false);
+                                            }
 
                                             methods?.setValue("LatLng" ,`${lat} ${lng}`);
                                         }}
