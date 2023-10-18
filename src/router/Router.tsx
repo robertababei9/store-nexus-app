@@ -73,16 +73,12 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
-  const authenticationState = useSelector(
-    (state: RootState) => state.authentication
-  )
   const { currentUser, needsToCreateCompany } = useSelector(
     (state: RootState) => state.authentication
   )
 
 
   // console.log("-------------- Router.tsx rendering ... --------------")
-
 
   const showMenu = currentUser && !needsToCreateCompany;
     

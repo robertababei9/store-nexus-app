@@ -15,7 +15,7 @@ type ButtonProps = {
 };
 
 const primaryTypeClassName = "bg-primary hover:!bg-primaryHover";
-const secondaryTypeClassName = "font-semibold text-white bg-secondary hover:!bg-secondaryHover"
+const secondaryTypeClassName = "font-semibold text-white !bg-secondary hover:!bg-secondaryHover"
 
 export default function Button({
     children,

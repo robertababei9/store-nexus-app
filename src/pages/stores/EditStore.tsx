@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Typography } from "antd";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Breadcrumb,
   Button,
@@ -13,6 +13,7 @@ import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import BasicInfo from "src/components/edit-store/BasicInfo";
 import { CreateStoreFormType, StoreDataType } from "src/types/store";
+import { BsArrowLeftShort } from 'react-icons/bs';
 
 import ComingSoonSvg from "src/assets/images/git.svg";
 import { useForm } from "react-hook-form";
@@ -184,18 +185,26 @@ export default function EditStore() {
       </div>
 
       <div className="w-full h-[100px] flex justify-between items-center  mt-6 mb-4">
-        <div className="w-full h-full flex justify-start items-center">
-          <img
-            width={75}
-            height={55}
-            src={require("src/assets/images/humans.png")}
-          />
-          <div className="ml-3 w-full flex flex-col justify-center items-start font-semibold">
-            <p className="text-2xl">{methods.getValues("Name")}</p>
-            <p className="text-sm text-gray-400">
-              {methods.getValues("Description")}
-            </p>
-          </div>
+
+        <div className="w-full flex flex-col justify-center items-start">
+            <Link to={ROUTES.Stores} className="flex justiy-start items-center text-gray-600">
+              <BsArrowLeftShort size={28} className=" mr-2"/>
+              <p className="font-semibold pb-1">Stores</p>
+            </Link>
+            <div className="w-full h-full flex justify-start items-center">
+                <img
+                    className="border-2 border-white rounded-lg shadow-md transition hover:cursor-pointer hover:shadow-lg hover:scale-105"
+                    width={75}
+                    height={55}
+                    src={require("src/assets/images/store-image-placeholder.png")}
+                />
+                <div className="ml-3 w-full flex flex-col justify-center items-start font-semibold">
+                  <p className="text-2xl">{methods.getValues("Name")}</p>
+                  <p className="text-sm text-gray-400">
+                    {methods.getValues("Description")}
+                  </p>
+                </div>
+            </div>
         </div>
 
         <Button

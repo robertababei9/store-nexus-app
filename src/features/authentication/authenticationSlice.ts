@@ -9,7 +9,7 @@ const initialState: AuthenticationState = {
     accessToken: null,
     refreshToken: null,
     loading: false,
-    needsToCreateCompany: true
+    needsToCreateCompany: false
 }
 
 export const authenticationSlice = createSlice({
