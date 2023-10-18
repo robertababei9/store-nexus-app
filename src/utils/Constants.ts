@@ -17,7 +17,9 @@ export const ROUTES = {
     CreateCompany: "/create-company",
     Users: "/users",
     EditUser: "/users/edit/:id",
-    AddUser: "/users/add"
+    AddUser: "/users/add",
+
+    Settings: "/settings"
 }
 
 
