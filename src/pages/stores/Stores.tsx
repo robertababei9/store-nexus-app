@@ -131,7 +131,7 @@ export default function Stores() {
             return;
         }
 
-        const filteredStoreData = storesData.filter(x => {
+        const filteredStoreData = initialStoreData.filter(x => {
             return Object.values(x).some(item => item.toString().includes(value))
         })
 
