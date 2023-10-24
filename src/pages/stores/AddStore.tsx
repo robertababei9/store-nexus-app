@@ -8,7 +8,7 @@ import axios from "axios";
 import { getDefaultApiUrl } from "src/config";
 import { openNotification } from "src/utils/Notification";
 import { Link, useNavigate } from "react-router-dom";
-import BasicInfo from "src/components/edit-store/BasicInfo";
+import BasicInfo from "src/components/stores/edit/BasicInfo";
 import { CreateStoreFormType } from "src/types/store";
 import { ApiResponseModel } from "src/types/_shared";
 import { BsArrowLeftShort } from "react-icons/bs";

@@ -11,7 +11,8 @@ import {
 import { ROUTES } from "src/utils/Constants";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
-import BasicInfo from "src/components/edit-store/BasicInfo";
+import BasicInfo from "src/components/stores/edit/BasicInfo";
+import FilesAndDocuments from "src/components/stores/edit/FilesAndDocuments";
 import { CreateStoreFormType, StoreDataType } from "src/types/store";
 import { BsArrowLeftShort } from 'react-icons/bs';
 
@@ -158,7 +159,7 @@ export default function EditStore() {
     {
       key: "2",
       label: `Files and Documents`,
-      children: <ComingSoon />,
+      children: <FilesAndDocuments />,
     },
     {
       key: "3",

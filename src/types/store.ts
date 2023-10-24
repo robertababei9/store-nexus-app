@@ -43,3 +43,16 @@ export type StoreLocationInfo = {
   Lat: string;
   Lng: string;
 }
+
+export type UploadFileType = {
+  StoreId: string;
+  Blob: any;
+}
+
+export type FileType = {
+  Name: string;
+  CreatedBy: string;
+  UploadedAt: string;
+  fileType: string;
+  Uri: string;
+}

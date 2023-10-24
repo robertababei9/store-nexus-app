@@ -219,7 +219,7 @@ export default function Stores() {
                 dataSource={storesData} 
                 columns={columns}
                 pagination={{
-                    pageSize: 10
+                    pageSize: 6
                 }}
 
             />

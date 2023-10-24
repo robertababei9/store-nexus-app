@@ -71,3 +71,21 @@ export const fetchCountryNameCodeByLatLng = async (lat: string, lng: string): Pr
 
     return [countryName, countryCode]
 }
+
+export const getFileTypeColor = (fileType: string): string => {
+
+    if (fileType === "pdf") {
+        return "bg-red-500";
+    }
+    else if (fileType === "doc") {
+        return "bg-cyan-500"
+    }
+    else if (fileType === "xls") {
+        return "bg-green-500"
+    }
+    else if (fileType === "txt") {
+        return "bg-gray-500"
+    }
+
+    return "bg-red-500";
+}

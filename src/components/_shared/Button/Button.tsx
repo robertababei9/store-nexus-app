@@ -15,7 +15,8 @@ type ButtonProps = {
 };
 
 const primaryTypeClassName = "bg-primary hover:!bg-primaryHover";
-const secondaryTypeClassName = "font-semibold text-white !bg-secondary hover:!bg-secondaryHover"
+const secondaryTypeClassName = "font-semibold text-white !bg-secondary hover:!bg-secondaryHover";
+const dangerTypeClass = "bg-red-500 hover:!bg-red-600"
 
 export default function Button({
     children,
@@ -37,7 +38,9 @@ export default function Button({
         style={style}
         className={
           `bg-blue-500 
-          ${type === "secondary" ? secondaryTypeClassName : primaryTypeClassName} 
+          ${type === "primary" && primaryTypeClassName}
+          ${type === "secondary" && secondaryTypeClassName}
+          ${type === "danger" && dangerTypeClass}
           ${className}  
           active:scale-90`
         }
