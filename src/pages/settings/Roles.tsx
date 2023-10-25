@@ -1,12 +1,66 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Checkbox, Switch, Tooltip } from 'antd';
-import { Button } from 'src/components/_shared';
+import { Button, Dropdown } from 'src/components/_shared';
+import { OptionType } from 'src/types/_shared';
+import { getDefaultApiUrl } from 'src/config';
+import axios from 'axios';
+import { Role } from 'src/types/users';
 
 interface PermissionsState {
     [section: string]: { [action: string]: boolean };
 }
 
 export default function Roles() {
+
+    // states
+    const [roleOptions, setRoleOptions] = useState<OptionType[]>([])
+    const [roleOptionsLoading, setRoleOptionsLoading] = useState<boolean>(true);
+    const [selectedRole, setSelectedRole] = useState<string>(''); // Stocăm rolul selectat
+
+
+    // effects
+    useEffect(() => {
+        fetchRoles();
+    }, []);
+
+
+    const handleRoleChange = (value: string) => {
+        setSelectedRole(value);
+    };
+
+    // helpers
+    const fetchRoles = async () => {
+        try {
+            const result = await axios.get<Role[]>(getDefaultApiUrl() + "/api/users/GetUserRoles", {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
+
+            if (result.data) {
+                const roleOptions: OptionType[] = result.data.map(x => ({ value: x.Id, label: x.Name }));
+                setRoleOptions(roleOptions);
+            }
+
+        }
+        catch (error: any) {
+            console.log("Error while trying to get the Roles");
+        }
+        finally {
+            setRoleOptionsLoading(false);
+        }
+
+
+    }
+
+    const handlePermissionChange = (section: string, action: string) => {
+        setPermissions((prevPermissions) => {
+            const updatedPermissions = { ...prevPermissions };
+            updatedPermissions[section][action] = !prevPermissions[section][action];
+            return updatedPermissions;
+        });
+    };
+
     const [permissions, setPermissions] = useState<PermissionsState>({
         'Dashboard Permissions': {
             'View Dashboard': false,
@@ -31,21 +85,26 @@ export default function Roles() {
         },
     });
 
-    const handlePermissionChange = (section: string, action: string) => {
-        setPermissions((prevPermissions) => {
-            const updatedPermissions = { ...prevPermissions };
-            updatedPermissions[section][action] = !prevPermissions[section][action];
-            return updatedPermissions;
-        });
-    };
-
     return (
         <div className="mx-4">
-            <h1 className="text-2xl font-semibold mb-4">Gestionare permisiuni</h1>
+            <div className="flex items-center space-x-4 mb-4"> {/* Utilizăm flex pentru aliniere */}
+                <h1 className="text-left text-2xl font-semibold">Select role:</h1>
+               <div className='w-[50%]'>
+
+                <Dropdown
+                    placeholder="Select Role *"
+                    options={roleOptions}
+                    // value={selectedRole}
+                    onChange={handleRoleChange}
+                    defaultValue={selectedRole}
+                    />
+                    ce cct e asta, nu mi place deloc, e prea gol, arata urat
+                    </div>
+            </div>
             <div className="space-y-4">
                 {Object.entries(permissions).map(([section, actions], index) => (
                     <div key={section} className="mb-4">
-                        <div className="text-left text-xl font-semibold">{section}</div>
+                        <div className="text-left text-gray-700 text-xl font-semibold">{section}</div>
 
                         <hr className="w-[30%] border-gray-300 mb-2" />
 
@@ -70,16 +129,16 @@ export default function Roles() {
                         </div>
                     </div>
                 ))}
-                
+
             </div>
             <div className='mt-10'>
-            <Button
-                        type='secondary'
-                        className='flex justify-center items-center'
-                        // onClick={() => navigate(ROUTES.AddUser)}
-                    >
-                        We need to save this application
-                    </Button>
+                <Button
+                    type='secondary'
+                    className='flex justify-center items-center'
+                // onClick={() => navigate(ROUTES.AddUser)}
+                >
+                    We need to save this application
+                </Button>
             </div>
         </div>
 
