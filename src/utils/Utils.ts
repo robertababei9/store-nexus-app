@@ -77,10 +77,10 @@ export const getFileTypeColor = (fileType: string): string => {
     if (fileType === "pdf") {
         return "bg-red-500";
     }
-    else if (fileType === "doc") {
+    else if (fileType === "docx") {
         return "bg-cyan-500"
     }
-    else if (fileType === "xls") {
+    else if (fileType === "xlsx") {
         return "bg-green-500"
     }
     else if (fileType === "txt") {

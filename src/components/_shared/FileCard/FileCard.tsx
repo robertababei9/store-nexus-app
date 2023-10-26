@@ -3,14 +3,12 @@ import { getFileTypeColor } from 'src/utils/Utils';
 
 type FileCardProps = {
     name: string;
-    fileType?: string;
     className?: string;
     onClick?: () => void
 }
 
 export default function FileCard({
     name,
-    fileType,
     className = "",
     onClick = () => {}
 }: FileCardProps) {
@@ -21,7 +19,7 @@ export default function FileCard({
     }
 
     // helpers
-
+    const fileType = name.split(".").pop();
 
     return (
         <div 
@@ -35,7 +33,7 @@ export default function FileCard({
             <div className={`relative w-16 flex justify-center items-center `}>
                 <DocumentTypeIcon width={64} height={64} />
                 <div className={`absolute -bottom-1 -left-1 rounded-md px-3 py-1 ${getFileTypeColor(fileType ?? "")}`}>
-                    <p className='font-semibold text-white text-sm select-none'>{fileType}</p>
+                    <p className='font-semibold text-white text-xs select-none'>{fileType}</p>
                 </div>
             </div>
             <p className='mt-4 font-semibold text-md'>{name}</p>
