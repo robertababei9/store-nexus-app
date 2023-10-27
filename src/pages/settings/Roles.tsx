@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Checkbox, Switch, Tooltip } from 'antd';
+import { Checkbox, Col, Row, Switch, Tooltip } from 'antd';
 import { Button, Dropdown } from 'src/components/_shared';
 import { OptionType } from 'src/types/_shared';
 import { getDefaultApiUrl } from 'src/config';
 import axios from 'axios';
 import { Role } from 'src/types/users';
+import { Controller, useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { ROUTES } from 'src/utils/Constants';
+
+type RolesFormType = {
+    role: string;
+}
 
 interface PermissionsState {
     [section: string]: { [action: string]: boolean };
@@ -17,6 +24,8 @@ export default function Roles() {
     const [roleOptionsLoading, setRoleOptionsLoading] = useState<boolean>(true);
     const [selectedRole, setSelectedRole] = useState<string>(''); // Stocăm rolul selectat
 
+    // form
+    const methods = useForm<RolesFormType>();
 
     // effects
     useEffect(() => {
@@ -44,7 +53,7 @@ export default function Roles() {
 
         }
         catch (error: any) {
-            console.log("Error while trying to get the Roles");
+            console.log("Error while trying to get the Roles", error);
         }
         finally {
             setRoleOptionsLoading(false);
@@ -87,19 +96,34 @@ export default function Roles() {
 
     return (
         <div className="mx-4">
-            <div className="flex items-center space-x-4 mb-4"> {/* Utilizăm flex pentru aliniere */}
-                <h1 className="text-left text-2xl font-semibold">Select role:</h1>
-               <div className='w-[50%]'>
-
-                <Dropdown
-                    placeholder="Select Role *"
-                    options={roleOptions}
-                    // value={selectedRole}
-                    onChange={handleRoleChange}
-                    defaultValue={selectedRole}
+            <div className="flex flex-col items-start mb-4">
+                <h1 className="text-left text-gray-700 text-xl font-semibold mb-3">Employee type</h1>
+                <div className='w-[30%]'>
+                    <Controller
+                        name={`role`}
+                        control={methods.control}
+                        rules={{
+                            required: false
+                        }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <Dropdown
+                                placeholder='Select Role'
+                                options={roleOptions}
+                                defaultValue={value}
+                                onChange={onChange}
+                                error={error?.message != undefined}
+                            />
+                        )}
                     />
-                    ce cct e asta, nu mi place deloc, e prea gol, arata urat
+                    <div className='text-left text-xs text-gray-500'>
+                        To assign a role to an employee, please refer to
+                        <Link className='font-semibold text-blue-500' to={ROUTES.Users}> Users page</Link>
                     </div>
+
+                </div>
             </div>
             <div className="space-y-4">
                 {Object.entries(permissions).map(([section, actions], index) => (
@@ -135,7 +159,7 @@ export default function Roles() {
                 <Button
                     type='secondary'
                     className='flex justify-center items-center'
-                // onClick={() => navigate(ROUTES.AddUser)}
+                    onClick={handleRoleChange}
                 >
                     We need to save this application
                 </Button>
@@ -166,3 +190,8 @@ function getDescriptionForPermission(permission: string): string {
     return descriptions[permission] || 'No description available';
 }
 
+// TO BE DONE: (cred ca doar prin backend se poate)
+// sa fie permisiuni prestabilite pentru fiecare rol
+// adica ADMIN sa aiba full access / MANAGER sa aiba vr 80% / USER sa aiba cateva
+// adica cand schimbi ROLUL din ADMIN in USER sa se schimbe si permisiunile (checkbox-urile)
+// si la fel, cand dai pe butonul de save, daca vrei sa mai bagi o permisiune noua pt USER, sa ramana salvat si in backend (plus ca trb sa te intrebe de 2 ori daca vrei sigur sa salvezi)

@@ -166,7 +166,7 @@ export default function CompanySettings() {
                         )}
                     />
 
-                    <Controller
+                    {/* <Controller
                         name={'email'}
                         control={methods.control}
                         rules={{
@@ -217,7 +217,7 @@ export default function CompanySettings() {
                                 required
                             />
                         )}
-                    />
+                    /> */}
                 </Col>
 
 
@@ -248,7 +248,7 @@ export default function CompanySettings() {
                         )}
                     />
 
-                    {
+                    {/* {
                         isLoaded ? (
                             <div className='text-left'>
                                 <p className='text-base text-gray-400 font-semibold mb-1'>Drag and drop the pin to get the exact location</p>
@@ -304,7 +304,7 @@ export default function CompanySettings() {
 
                             </div>
                         ) : <></>
-                    }
+                    } */}
                 </Col>
                 {/* Location with google maps --- with PIN on map*/}
             </Row>
@@ -319,7 +319,7 @@ export default function CompanySettings() {
                     <TextField
                         className='w-full'
                         style={{ marginBottom: 15 }}
-                        label='Description'
+                        label='Some links here maybe'
                         variant="outlined"
                         multiline
                         rows={2}
