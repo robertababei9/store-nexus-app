@@ -87,5 +87,5 @@ export const getFileTypeColor = (fileType: string): string => {
         return "bg-gray-500"
     }
 
-    return "bg-red-500";
+    return "bg-blue-500";
 }

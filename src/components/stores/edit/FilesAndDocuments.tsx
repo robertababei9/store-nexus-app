@@ -28,11 +28,13 @@ export default function FilesAndDocuments() {
 
     // states
     const [filesData, setFilesData] = useState<FileType[]>([]);
-    const [filesLoading, setFilesLoading] = useState<boolean>(true);
     const [rightInfoOpen, setRightInfoOpen] = useState<boolean>(false);
     const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
+    
+    const [filesLoading, setFilesLoading] = useState<boolean>(true);
     const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
     const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
+    const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
     // effects
     useEffect(() => {
@@ -101,6 +103,37 @@ export default function FilesAndDocuments() {
         }
     }
 
+    const handleDelete = async (fileName?: string) => {
+        setDeleteLoading(true);
+        try {
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.get<any>(`${BASE_URL}/api/stores/DeleteFile/${fileName}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            });
+            console.log(result);
+            if (result.data) {
+                const { Data } = result.data;
+
+                if (Data.Success) {
+                    openNotification("success", "Success", "File deleted successfully");
+                }
+                else {
+                    openNotification("error", "Error", "Couldn't delete the file");
+                }
+            }
+        }
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
+        }
+        finally {
+            setDeleteLoading(false);
+
+        }
+    }
+
     // helpers
     const fetchStoreFiles = async (storeId: string) => {
         try {
@@ -124,6 +157,7 @@ export default function FilesAndDocuments() {
         }
         finally {
             setFilesLoading(false);
+            handleCloseDrawer();
         }
     } 
 
@@ -133,11 +167,11 @@ export default function FilesAndDocuments() {
         const lastPart = parts[parts.length - 1];
         if (parts.length < 2) {
             message.warning(`File must have a file extension`, 9);
+            return false;
         }
 
-
-        return false;
       }
+      
 
 
     return (
@@ -242,7 +276,11 @@ export default function FilesAndDocuments() {
                                 >
                                     Download
                                 </Button>
-                                <Button type='danger'>
+                                <Button 
+                                    type='danger'
+                                    loading={deleteLoading}
+                                    onClick={() => handleDelete(selectedFile?.Name)}
+                                >
                                     Delete
                                 </Button>
                             </div>
