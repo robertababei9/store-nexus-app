@@ -25,7 +25,6 @@ export default function Dashboard() {
         </div>
     
       <Layout className='relative z-30'>
-
         <Fade down delay={150}>
           <Title level={2}>Welcome to Dashboard</Title>
         </Fade>
