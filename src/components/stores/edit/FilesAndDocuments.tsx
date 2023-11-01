@@ -6,14 +6,15 @@ import { getFileTypeColor } from 'src/utils/Utils';
 import { Button, LoadingWrapper } from 'src/components/_shared';
 import { AiOutlineClose } from 'react-icons/ai';
 import FileCardUpload from 'src/components/_shared/FileCard/FileCardUpload';
-import { Upload } from 'antd';
+import { Upload, message } from 'antd';
 import { RcFile, UploadChangeParam, UploadFile, UploadProps } from 'antd/es/upload';
 import { getDefaultApiUrl } from 'src/config';
 import axios from 'axios';
 import { ApiResponseModel } from 'src/types/_shared';
-import { FileType, UploadFileType } from 'src/types/store';
+import { FileType } from 'src/types/store';
 import { useParams } from 'react-router-dom';
 import { openNotification } from 'src/utils/Notification';
+import { saveAs } from 'file-saver';
 
 
 
@@ -27,10 +28,13 @@ export default function FilesAndDocuments() {
 
     // states
     const [filesData, setFilesData] = useState<FileType[]>([]);
-    const [filesLoading, setFilesLoading] = useState<boolean>(true);
     const [rightInfoOpen, setRightInfoOpen] = useState<boolean>(false);
     const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
+    
+    const [filesLoading, setFilesLoading] = useState<boolean>(true);
     const [isFileUploading, setIsFileUploading] = useState<boolean>(false);
+    const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
+    const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
     // effects
     useEffect(() => {
@@ -41,7 +45,7 @@ export default function FilesAndDocuments() {
 
     // handlers
     const handleOpenFileDetails = (file: FileType) => {
-        // console.log(containerRef.current);
+        file.fileType = file.Name.split(".").pop() ?? "";
         setSelectedFile(file);
         handleOpenDrawer();
     }
@@ -55,7 +59,6 @@ export default function FilesAndDocuments() {
     }
       
     const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-        console.log("on file change -> info: ", info);
         if (info.file.status === 'uploading') {
             setIsFileUploading(true);
             return true;
@@ -75,6 +78,62 @@ export default function FilesAndDocuments() {
         setIsFileUploading(false);
     };
 
+    const handleDownload = async (fileName?: string) => {
+        setDownloadLoading(true);
+        try {
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.get<any>(`${BASE_URL}/api/stores/DownloadFile/${fileName}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+                responseType: "blob" // very very important
+            });
+
+            const fileExtension = selectedFile?.Name.split(".").pop();
+
+            const blob = new Blob([result.data]);
+            saveAs(blob, `${selectedFile?.Name}`);
+        }
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
+        }
+        finally {
+            setDownloadLoading(false);
+        }
+    }
+
+    const handleDelete = async (fileName?: string) => {
+        setDeleteLoading(true);
+        try {
+            const BASE_URL = getDefaultApiUrl();
+            const result = await axios.get<any>(`${BASE_URL}/api/stores/DeleteFile/${fileName}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            });
+            console.log(result);
+            if (result.data) {
+                const { Data } = result.data;
+
+                if (Data.Success) {
+                    openNotification("success", "Success", "File deleted successfully");
+                }
+                else {
+                    openNotification("error", "Error", "Couldn't delete the file");
+                }
+            }
+        }
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
+        }
+        finally {
+            setDeleteLoading(false);
+
+        }
+    }
+
     // helpers
     const fetchStoreFiles = async (storeId: string) => {
         try {
@@ -89,7 +148,7 @@ export default function FilesAndDocuments() {
                 const { Data } = result.data;
 
                 setFilesData(Data);
-                console.log("DATA ====== ", Data);
+                // console.log("DATA ====== ", Data);
             }
         }
         catch (err: any) {
@@ -98,8 +157,21 @@ export default function FilesAndDocuments() {
         }
         finally {
             setFilesLoading(false);
+            handleCloseDrawer();
         }
     } 
+
+    const beforeUpload = (file: RcFile) => {
+
+        const parts = file.name.split(".");
+        const lastPart = parts[parts.length - 1];
+        if (parts.length < 2) {
+            message.warning(`File must have a file extension`, 9);
+            return false;
+        }
+
+      }
+      
 
 
     return (
@@ -107,6 +179,7 @@ export default function FilesAndDocuments() {
             <div ref={containerRef} className='w-full flex flex-wrap justify-start items-start px-2 py-4'>
                 <Upload
                     showUploadList={false}
+                    beforeUpload={beforeUpload}
                     onChange={handleChange}
                     name='Upload'
                     action={`${getDefaultApiUrl()}/api/stores/upload/${params.id ?? ""}`}
@@ -127,7 +200,6 @@ export default function FilesAndDocuments() {
                             <FileCard
                                 key={file.Name + index}
                                 name={file.Name} 
-                                fileType={file.fileType || "pdf"} 
                                 className='m-3'
                                 onClick={() => handleOpenFileDetails(file)}
                             />
@@ -164,8 +236,11 @@ export default function FilesAndDocuments() {
                         <div className='h-60 w-60 flex justify-center items-center bg-gray-100 rounded-md shadow-md'>
                             <div className='relative w-30 h-30 flex justify-center items-center'>
                                 <DocumentTypeIcon width={64} height={64} />
-                                <div className={`absolute -bottom-1 -left-1 rounded-md px-3 py-1 ${getFileTypeColor(selectedFile?.fileType ?? "")}`}>
-                                    <p className='font-semibold text-white text-sm select-none'>{selectedFile?.fileType}</p>
+                                <div 
+                                    className={`
+                                            absolute -bottom-1 -left-1 rounded-md px-3 py-1 
+                                            ${getFileTypeColor(selectedFile?.fileType ?? "")}`}>
+                                        <p className='font-semibold text-white text-xs select-none'>{selectedFile?.fileType}</p>
                                 </div>
                             </div>
                         </div>
@@ -194,10 +269,18 @@ export default function FilesAndDocuments() {
                             <div className='w-full h-[1px] bg-gray-200 my-4'/>
 
                             <div className='w-full flex justify-between items-center mt-8'>
-                                <Button type='secondary'>
+                                <Button 
+                                    type='secondary'
+                                    loading={downloadLoading}
+                                    onClick={() => handleDownload(selectedFile?.Name)} 
+                                >
                                     Download
                                 </Button>
-                                <Button type='danger'>
+                                <Button 
+                                    type='danger'
+                                    loading={deleteLoading}
+                                    onClick={() => handleDelete(selectedFile?.Name)}
+                                >
                                     Delete
                                 </Button>
                             </div>
