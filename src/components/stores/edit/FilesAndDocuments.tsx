@@ -112,12 +112,18 @@ export default function FilesAndDocuments() {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             });
-            console.log(result);
             if (result.data) {
-                const { Data } = result.data;
+                const { Success } = result.data;
 
-                if (Data.Success) {
+                if (Success) {
                     openNotification("success", "Success", "File deleted successfully");
+
+                    // TODO: After you'll change to rtk query, the tag will be invalidated
+                    // and a new fetch will be requsted to get the updated data ... but now
+                    // we will remove it from the array
+
+                    setFilesData(prev => prev.filter(x => x.Name != fileName));
+
                 }
                 else {
                     openNotification("error", "Error", "Couldn't delete the file");
@@ -130,7 +136,7 @@ export default function FilesAndDocuments() {
         }
         finally {
             setDeleteLoading(false);
-
+            handleCloseDrawer();
         }
     }
 
@@ -148,7 +154,6 @@ export default function FilesAndDocuments() {
                 const { Data } = result.data;
 
                 setFilesData(Data);
-                // console.log("DATA ====== ", Data);
             }
         }
         catch (err: any) {
