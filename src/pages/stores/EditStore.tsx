@@ -79,7 +79,7 @@ export default function EditStore() {
       return;
     }
 
-    console.log("Store -> Edit -> formValues = ", methods.getValues());
+    // console.log("Store -> Edit -> formValues = ", methods.getValues());
 
     try {
       setEditStoreLoading(true);
@@ -96,7 +96,7 @@ export default function EditStore() {
 
       if (result.data) {
         const { Data, Success, Errors } = result.data;
-        console.log("Store -> Edit -> DATA = ", result.data);
+        // console.log("Store -> Edit -> DATA = ", result.data);
 
         if (Success) {
           openNotification("success", "Success", "Store successfully updated");
@@ -131,7 +131,7 @@ export default function EditStore() {
 
       if (result.data) {
         const { Data } = result.data;
-        console.log("DATA = ", Data);
+        // console.log("DATA = ", Data);
         methods.reset(Data);
       }
     } catch (error: any) {
