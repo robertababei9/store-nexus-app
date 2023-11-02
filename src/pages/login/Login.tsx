@@ -90,7 +90,11 @@ export default function Login() {
         }
     }
 
-
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleLogin();
+        }
+    }
 
     return (
         <div className='w-full h-full flex justify-center items-center'>
@@ -103,7 +107,7 @@ export default function Login() {
                     <AppLogo width={50} height={50} />
                     <div className='w-full flex flex-col mb-12 items-start mt-10'>
                         <h1 className='text-4xl font-bold mb-3'>Sign In</h1>
-                        <h4 className='text-gray-500 '>Enter your email and password to sign in !</h4>
+                        <h4 className='text-gray-500 '>Enter your email and password to sign in!</h4>
                     </div>
 
                     <Controller
@@ -136,6 +140,7 @@ export default function Login() {
                                 error={error !== undefined}
                                 helperText={error?.message}
                                 required
+                                onKeyPress={handleKeyPress} 
                                 InputProps={{
                                     startAdornment: (
                                         <FaUserCircle size={24} color="#808080" className='mr-3' />
@@ -167,6 +172,7 @@ export default function Login() {
                                 error={error !== undefined}
                                 helperText={error?.message}
                                 required
+                                onKeyPress={handleKeyPress}
                                 InputProps={{
                                     startAdornment: (
                                         <PiLockKeyFill size={28} color="#808080" className='mr-3' />
@@ -191,12 +197,13 @@ export default function Login() {
                     />
 
                     <div className='flex justify-between mt-1'>
-                        <label className='flex items-center space-x-2'>
+                        <label className='flex items-center space-x-2 hover:cursor-pointer'>
                             <input
                                 type='checkbox'
                                 className='form-checkbox h-4 w-4 accent-secondary'
                                 checked={rememberMe}
                                 onChange={() => setRememberMe(!rememberMe)}
+                                style={{cursor: 'pointer'}}
                             />
                             <span className='text-base text-gray-600'>Remember me</span>
                         </label>
