@@ -14,7 +14,6 @@ import type { TabsProps } from "antd";
 import BasicInfo from "src/components/stores/edit/BasicInfo";
 import FilesAndDocuments from "src/components/stores/edit/FilesAndDocuments";
 import { CreateStoreFormType, StoreDataType } from "src/types/store";
-import { BsArrowLeftShort } from 'react-icons/bs';
 
 import ComingSoonSvg from "src/assets/images/git.svg";
 import { useForm } from "react-hook-form";
@@ -170,42 +169,40 @@ export default function EditStore() {
 
   return (
     <Layout>
-      <div className="flex items-center">
-        <Title level={2}>Edit Store</Title>
-        <Breadcrumb
-          items={[
-            {
-              path: ROUTES.Stores,
-              title: "Stores",
-            },
-            {
-              title: "Edit",
-            },
-          ]}
-        />
+      <div className="w-full flex flex-col items-start">
+        <div className="flex items-center">
+          <Breadcrumb
+            items={[
+              {
+                path: ROUTES.Stores,
+                title: "Stores",
+              },
+              {
+                title: "Edit",
+              },
+            ]}
+          />
+        </div>
+        <Title level={2} className='ml-4'>Edit Store</Title>
       </div>
 
-      <div className="w-full h-[100px] flex justify-between items-center  mt-6 mb-4">
+      <div className="w-full h-[100px] flex justify-between items-center mb-2">
 
         <div className="w-full flex flex-col justify-center items-start">
-            <Link to={ROUTES.Stores} className="flex justiy-start items-center text-gray-600">
-              <BsArrowLeftShort size={28} className=" mr-2"/>
-              <p className="font-semibold pb-1">Stores</p>
-            </Link>
-            <div className="w-full h-full flex justify-start items-center">
-                <img
-                    className="border-2 border-white rounded-lg shadow-md transition hover:cursor-pointer hover:shadow-lg hover:scale-105"
-                    width={75}
-                    height={55}
-                    src={require("src/assets/images/store-image-placeholder.png")}
-                />
-                <div className="ml-3 w-full flex flex-col justify-center items-start font-semibold">
-                  <p className="text-2xl">{methods.getValues("Name")}</p>
-                  <p className="text-sm text-gray-400">
-                    {methods.getValues("Description")}
-                  </p>
-                </div>
+          <div className="w-full h-full flex justify-start items-center">
+            <img
+              className="border-2 border-white rounded-lg shadow-md transition hover:cursor-pointer hover:shadow-lg hover:scale-105"
+              width={75}
+              height={55}
+              src={require("src/assets/images/store-image-placeholder.png")}
+            />
+            <div className="ml-3 w-full flex flex-col justify-center items-start font-semibold">
+              <p className="text-2xl">{methods.getValues("Name")}</p>
+              <p className="text-sm text-gray-400">
+                {methods.getValues("Description")}
+              </p>
             </div>
+          </div>
         </div>
 
         <Button
@@ -213,6 +210,7 @@ export default function EditStore() {
           loading={editStoreLoading}
           disabled={editStoreLoading}
           onClick={handleEditStore}
+          type="secondary"
         >
           Save
         </Button>
@@ -224,7 +222,7 @@ export default function EditStore() {
           size="large"
           defaultActiveKey="1"
           items={items}
-          onChange={() => {}}
+          onChange={() => { }}
         />
       </Card>
     </Layout>

@@ -21,18 +21,18 @@ const Title = Typography.Title;
 
 const steps = [
     {
-      title: 'Create',
-      content: 'First-content',
+        title: 'Create',
+        content: 'First-content',
     },
     {
-      title: 'Confirmation',
-      content: 'Second-content',
+        title: 'Confirmation',
+        content: 'Second-content',
     },
     {
-      title: 'Summary',
-      content: 'Last-content',
+        title: 'Summary',
+        content: 'Last-content',
     },
-  ];
+];
 
 
 export default function Invoices() {
@@ -44,7 +44,7 @@ export default function Invoices() {
     const [current, setCurrent] = useState(0);
     const [nextLoading, setNextLoading] = useState<boolean>(false);
 
-      // form
+    // form
     const methods = useForm<InvoiceFormType>({
         defaultValues: {
             InvoiceNo: "to-do-something-with-this-id",
@@ -75,7 +75,7 @@ export default function Invoices() {
     useEffect(() => {
         // We will scroll at the top of the page in the LAST STEP
         if (current == 2 && window) {
-            window.scrollTo({top: 0, left: 0, behavior: "smooth"})
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
             layoutRef.current!.scrollTop = 0;
         }
     }, [current]);
@@ -88,7 +88,7 @@ export default function Invoices() {
             if (!isValid) {
                 return;
             }
-            
+
             dispatch(setData(methods.getValues()));
         }
 
@@ -97,15 +97,15 @@ export default function Invoices() {
 
 
             try {
-                const body =  methods.getValues();
+                const body = methods.getValues();
                 const BASE_URL = getDefaultApiUrl();
                 const result = await axios.post(`${BASE_URL}/api/invoices/add`, body, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-                      }  
+                    }
                 });
-            } 
-            catch(err: any) {
+            }
+            catch (err: any) {
                 console.log("err = ", err);
                 openNotification("error");
                 return;
@@ -125,26 +125,28 @@ export default function Invoices() {
 
 
     return (
-        <div  className='w-full h-full flex flex-col justify-start items-start '>
+        <div className='w-full h-full flex flex-col justify-start items-start '>
             <Layout ref={layoutRef} className='relative'>
-                <div className="flex items-center">
-                    <Title level={2}>Create</Title>
-                    <Breadcrumb
-                        items={[
-                            {
-                                title: "Invoices",
-                                path: ROUTES.Invoices
-                            },
-                            {
-                                title: "Create Invoice"
-                            }
-                        ]}
-                    />
+                <div className="w-full flex flex-col items-start">
+                    <div className="flex items-center">
+                        <Breadcrumb
+                            items={[
+                                {
+                                    title: "Invoices",
+                                    path: ROUTES.Invoices
+                                },
+                                {
+                                    title: "Create Invoice"
+                                }
+                            ]}
+                        />
+                    </div>
+                    <Title level={2} className='ml-4'>Create Invoice</Title>
                 </div>
 
 
                 {/* Stepper Create -> Review -> Success */}
-                <div className='flex justify-center w-full mt-4'>
+                <div className='flex justify-center w-full'>
                     <Steps className='max-w-xl' current={current} items={items} />
                 </div>
 
@@ -152,21 +154,21 @@ export default function Invoices() {
 
                     {
                         current == 0 && (
-                            <CreateInvoiceStepOne methods={methods}/>
+                            <CreateInvoiceStepOne methods={methods} />
                         )
                     }
 
                     {
                         current == 1 && (
                             <div className='w-full flex justify-center'>
-                                <CreateInvoiceStepTwo invoiceData={invoiceData}/>
-                            </div>   
+                                <CreateInvoiceStepTwo invoiceData={invoiceData} />
+                            </div>
                         )
                     }
 
                     {
                         current == 2 && (
-                            <CreateInvoiceStepThree invoiceData={invoiceData} sendEmail={sendEmail}/>
+                            <CreateInvoiceStepThree invoiceData={invoiceData} sendEmail={sendEmail} />
                         )
                     }
 
@@ -180,20 +182,20 @@ export default function Invoices() {
                 ) : (
                     <div className='w-full flex justify-between items-center bg-primary px-6 py-4'>
                         {
-                            ([1,2].includes(current)) ? (
-                                <Button onClick={() => setCurrent(prev => prev - 1)}>Previous</Button>
+                            ([1, 2].includes(current)) ? (
+                                <Button type='secondary' onClick={() => setCurrent(prev => prev - 1)}>Previous</Button>
                             ) : (
                                 <div></div>
                             )
                         }
                         {
                             (current < steps.length - 1) ? (
-                                <Button onClick={handleNext} loading={nextLoading}>
+                                <Button type='secondary' onClick={handleNext} loading={nextLoading}>
                                     {
-                                        current == 1 ? 
-                                        sendEmail ? "Send and Create" : "Create" 
-                                        : 
-                                        "Next"
+                                        current == 1 ?
+                                            sendEmail ? "Send and Create" : "Create"
+                                            :
+                                            "Next"
                                     }
                                 </Button>
                             ) : (
@@ -203,9 +205,6 @@ export default function Invoices() {
                     </div>
                 )
             }
-
-
-
         </div>
     )
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState, lazy } from 'react';
 import { useParams } from "react-router-dom";
 import { TabsProps, Typography, Tabs } from "antd";
-import { Breadcrumb, Button, Card, Layout } from "src/components/_shared";
+import { Breadcrumb, Card, Layout } from "src/components/_shared";
 import { ROUTES } from "src/utils/Constants";
 import UserForm from "src/components/users/UserForm";
 import { SecurityFormType, UserFormType, UserResponse } from "src/types/users";
@@ -142,9 +142,8 @@ export default function EditUser() {
 
     return (
         <Layout>
-            <div className="w-full flex justify-between items-start">
+            <div className="w-full flex flex-col items-start">
                 <div className="flex items-center">
-                    <Title level={2}>Edit User</Title>
                     <Breadcrumb
                         items={[
                             {
@@ -157,11 +156,10 @@ export default function EditUser() {
                         ]}
                     />
                 </div>
-
+                <Title level={2} className='ml-4'>Edit User</Title>
             </div>
 
-            <Card  className="mt-5 w-full h-full !px-0">
-
+            <Card  className="w-full h-full !px-0">
                 <Tabs
                     tabBarStyle={{ paddingLeft: 18 }}
                     size='large'
@@ -169,7 +167,6 @@ export default function EditUser() {
                     items={items}
                     onChange={() => { }}
                 />
-
             </Card>
 
         </Layout>

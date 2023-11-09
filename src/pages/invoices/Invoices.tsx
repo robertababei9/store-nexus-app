@@ -147,7 +147,7 @@ export default function Invoices() {
             const result = await axios.get(`${BASE_URL}/api/invoices/GetAll`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-                }  
+                }
             });
 
             if (result.data) {
@@ -170,10 +170,10 @@ export default function Invoices() {
             const result = await axios.get(`${BASE_URL}/api/invoices/GetPdf/${record.Id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-                }  
+                }
             });
 
-    
+
             if (result.data) {
                 const pdfData = result.data.FileContents;   // base64
                 const pdfName = result.data.FileDownloadName;
@@ -198,7 +198,7 @@ export default function Invoices() {
         finally {
             setDownloadLoading(prev => (prev.filter(x => x != index)));
         }
-    } 
+    }
 
 
 
@@ -216,71 +216,75 @@ export default function Invoices() {
                 if (downloadLoading.includes(index)) {
                     return (
                         <div className='flex justify-center'>
-                            <ClipLoader color="#4F46E5" size={18}/>
+                            <ClipLoader color="#4F46E5" size={18} />
                         </div>
                     )
                 }
 
                 return (
-                    <Dropdown 
-                        overlay={  
+                    <Dropdown
+                        overlay={
                             <Menu >
                                 <Menu.Item
                                     onClick={() => {
                                         navigate(ROUTES.InvoicesView.replace(":id", record.Id))
-                                    }} 
+                                    }}
                                     key="Recommend">
-                                        View
+                                    View
                                 </Menu.Item>
-                                <Menu.Item 
+                                <Menu.Item
                                     key="Newest"
                                     onClick={() => handleDownloadPdf(record, index)}>
-                                        Download
+                                    Download
                                 </Menu.Item>
                             </Menu>
-                        } 
+                        }
                         trigger={['click']}>
-                            <Button className='bg-transparent text-black shadow-none hover:!bg-transparent hover:!text-black'>
-                                <BsThreeDots size={18} />
-                            </Button>
+                        <Button className='bg-transparent text-black shadow-none hover:!bg-transparent hover:!text-black'>
+                            <BsThreeDots size={18} />
+                        </Button>
                     </Dropdown>
                 )
             },
             width: 50
         })
     }
-    
+
 
     // console.log("downloadLoading from component = ", downloadLoading);
     return (
         <Layout>
-            <div className="flex items-center">
-                <Title level={2}>Invoices</Title>
-                <Breadcrumb
-                    items={[
-                    {
-                        title: "Invoices"
-                    }
-                    ]}
-                />
+            <div className="w-full flex flex-col items-start">
+                <div className="flex items-center">
+                    <Breadcrumb
+                        items={[
+                            {
+                                title: "Invoices"
+                            }
+                        ]}
+                    />
+                </div>
+                <Title level={2} className='ml-4'>Invoices</Title>
             </div>
+
 
             <Card className='w-full flex flex-col justify-between items-center mb-4'>
                 <div className='w-full flex justify-between items-center mb-4'>
                     <div></div>
-                    <Button 
-                        className='flex justify-center items-center' 
+                    <Button
+                        type='secondary'
+                        className='flex justify-center items-center'
                         icon={<PlusOutlined />}
                         onClick={() => navigate(ROUTES.InvoicesCreate)}
                     >
-                            Create
+                        Create Invoice
                     </Button>
                 </div>
 
-                <Table 
-                    size='middle' 
-                    className='w-full' 
-                    dataSource={tableData} 
+                <Table
+                    size='middle'
+                    className='w-full'
+                    dataSource={tableData}
                     columns={columns}
                     loading={dataLoading}
                 />

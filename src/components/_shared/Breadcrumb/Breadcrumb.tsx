@@ -52,7 +52,7 @@ export default function Breadcrumb({
 
     return (
         <BreadcrumbAntd
-            className='ml-8 mb-1'
+            className='ml-4 mb-2' separator=">"
             items={breadcrumbItems}
         />
     )
