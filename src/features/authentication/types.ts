@@ -4,6 +4,7 @@ export interface AuthResponse {
     token_type: string
     expires_in: number,
     needsToCreateCompany: boolean
+    rolePermissions: RolePermissionsType
 }
 
 // This is the token that is returned from the server when a user logs in we're labeling it as current user
@@ -23,5 +24,8 @@ export interface AuthenticationState {
 
     loading: boolean
     refreshToken: string | null
-    needsToCreateCompany: boolean
+    needsToCreateCompany: boolean,
+    rolePermissions: RolePermissionsType | null
 }
+
+export type RolePermissionsType = string[];

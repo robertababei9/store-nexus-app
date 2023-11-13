@@ -22,17 +22,6 @@ export const ROUTES = {
     Settings: "/settings"
 }
 
-
-// export const COUNTRY_CODE = {
-//     UnitedStates: "USA",
-//     Germany: "DE",
-//     France: "FR",
-//     UnitedKingdom: "UK",
-//     Romania: "RO",
-//     Greece: "GR",
-//     Italy: "IT"
-// }
-
 export enum StoreStatus {
     Open = 0,
     Closed = 1,

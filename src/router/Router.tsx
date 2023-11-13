@@ -1,6 +1,6 @@
-import { Suspense, lazy } from "react"
+import { Suspense, lazy, useEffect, useState } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import { ClipLoader } from "react-spinners"
+import { HashLoader, ClipLoader } from "react-spinners"
 import { RouteType, renderRoute } from "./utils"
 import { ROUTES } from "../utils/Constants";
 
@@ -77,22 +77,18 @@ const privateRoutes: RouteType[] = [
 ]
 
 
-
 export default function Router() {
 
   const authenticationState = useSelector(
     (state: RootState) => state.authentication
   )
-  const { currentUser, needsToCreateCompany } = useSelector(
+  const { currentUser, needsToCreateCompany, rolePermissions } = useSelector(
     (state: RootState) => state.authentication
   )
+  
+  const showMenu         = currentUser && !needsToCreateCompany; 
+  const canAccessApp     = currentUser; // logged in with role permissions
 
-
-  // console.log("-------------- Router.tsx rendering ... --------------")
-
-
-  const showMenu = currentUser && !needsToCreateCompany;
-    
 
   return (
     <BrowserRouter>
@@ -133,10 +129,10 @@ export default function Router() {
             }
             
             {
-              needsToCreateCompany && currentUser ? (
+              canAccessApp && needsToCreateCompany ? (
                 <Route path={ROUTES.CreateCompany} element={<CreateCompany />} />
               ) : (
-                privateRoutes.map((route, index) => renderRoute(route, index))
+                privateRoutes.map((route, index) => renderRoute(route, index, rolePermissions))
               )
             }
 

@@ -2,14 +2,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from 'src/redux/store';
 import { AuthenticationState, AuthResponse } from './types';
 
-import { setToken, revokeToken } from './services/authenticationServices';
+import { setAuthentication, revoleAuthentication } from './services/authenticationServices';
 
 const initialState: AuthenticationState = {
     currentUser: null,
     accessToken: null,
     refreshToken: null,
     loading: false,
-    needsToCreateCompany: true
+    needsToCreateCompany: true,
+    rolePermissions: null,
 }
 
 export const authenticationSlice = createSlice({
@@ -19,13 +20,13 @@ export const authenticationSlice = createSlice({
         tokenReceived: (state, action: PayloadAction<AuthResponse>) => {
             return {
                 ...state,
-                ...setToken(action.payload),
+                ...setAuthentication(action.payload),
             }
         },
         loggedOut: (state, action: PayloadAction<null>) => {
             return {
                 ...state,
-                ...revokeToken(),
+                ...revoleAuthentication(),
             }
         },
         setNeedsToCreateCompany: (state, action: PayloadAction<boolean>) => {
