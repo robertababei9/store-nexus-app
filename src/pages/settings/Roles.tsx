@@ -11,10 +11,29 @@ import { ROUTES } from 'src/utils/Constants';
 
 type RolesFormType = {
     role: string;
+
+    // permissions
+    ViewDashboard: boolean;
+    EditDashboard: boolean;
+
+
 }
 
 interface PermissionsState {
-    [section: string]: { [action: string]: boolean };
+    [section: string]: { [action: string]: string };
+}
+
+type PermissionRowType = {
+    title: string;
+}
+const PermissionRow = ({
+    title,
+}: PermissionRowType) => {
+    return (
+        <div>
+
+        </div>
+    )
 }
 
 export default function Roles() {
@@ -26,6 +45,7 @@ export default function Roles() {
 
     // form
     const methods = useForm<RolesFormType>();
+    methods.watch("role");
 
     // effects
     useEffect(() => {
@@ -50,7 +70,6 @@ export default function Roles() {
                 const roleOptions: OptionType[] = result.data.map(x => ({ value: x.Id, label: x.Name }));
                 setRoleOptions(roleOptions);
             }
-
         }
         catch (error: any) {
             console.log("Error while trying to get the Roles", error);
@@ -58,39 +77,62 @@ export default function Roles() {
         finally {
             setRoleOptionsLoading(false);
         }
+    }
 
+    const fetchRolePermissions = async (roleId: string) => {
+        try {
+            // ["ViewDashboard", ... ]
+            const result = await axios.get<string[]>(getDefaultApiUrl() + `/api/settings/GetRolePermissions${roleId}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            });
 
+            if (result.data) {
+                const rolePermissions = result.data;
+                // methods.reset(rolePermissions);
+            }
+        }
+        catch (error: any) {
+            console.log("Error while trying to get the Roles", error);
+        }
+        finally {
+            setRoleOptionsLoading(false);
+        }
     }
 
     const handlePermissionChange = (section: string, action: string) => {
         setPermissions((prevPermissions) => {
             const updatedPermissions = { ...prevPermissions };
-            updatedPermissions[section][action] = !prevPermissions[section][action];
+            // updatedPermissions[section][action] = !prevPermissions[section][action];
             return updatedPermissions;
         });
     };
 
+
     const [permissions, setPermissions] = useState<PermissionsState>({
         'Dashboard Permissions': {
-            'View Dashboard': false,
-            'Edit dashboards': false,
-            'Create dashboards': false,
-            'Delete dashboards': false,
+            // "ViewDashboard": "View Dashboard",
+
+
+            'View Dashboard': "ViewDashboard",
+            'Edit dashboards': "EditDashboard",
         },
         'Store Management': {
-            'View stores': false,
-            'Edit stores': false,
-            'Add stores': false,
-            'Delete stores': false,
+            'View stores': "ViewStore",
+            'Edit stores': "EditStore",
+            'Add stores': "CreateStore",
+            'Delete stores': "DeleteStore",
         },
         'Invoice Actions': {
-            'View invoices': false,
-            'Create invoices': false,
+            'View invoices': "ViewInvoice",
+            'Create invoices': "CreateInvoice",
         },
         'User Management': {
-            'View users': false,
-            'Edit users': false,
-            'Add users': false,
+            'View users': "ViewUser",
+            'Edit users': "EditUser",
+            'Add users': "CreateUser",
+            'Delete user': "DeleteUser"
         },
     });
 
@@ -113,7 +155,10 @@ export default function Roles() {
                                 placeholder='Select Role'
                                 options={roleOptions}
                                 defaultValue={value}
-                                onChange={onChange}
+                                onChange={() => {
+                                    onChange();
+                                    fetchRolePermissions(value);
+                                }}
                                 error={error?.message != undefined}
                             />
                         )}
@@ -126,6 +171,60 @@ export default function Roles() {
                 </div>
             </div>
             <div className="space-y-4">
+                <div className="mb-4">
+                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
+
+                            <hr className="w-[30%] border-gray-300 mb-2" />
+
+                            <div className="flex flex-col">
+                                {/* copii lui Dashboard */}
+                                <PermissionRow title="View Dashboard" />
+                                <PermissionRow title="Edit Dashboard"/>
+                                
+                            </div>
+                </div>
+
+                <div className="mb-4">
+                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
+
+                            <hr className="w-[30%] border-gray-300 mb-2" />
+
+                            <div className="flex flex-col">
+                                {/* copii lui Dashboard */}
+                                <PermissionRow title="View Dashboard"/>
+                                <PermissionRow title="Edit Dashboard"/>
+                                
+                            </div>
+                </div>
+
+                <div className="mb-4">
+                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
+
+                            <hr className="w-[30%] border-gray-300 mb-2" />
+
+                            <div className="flex flex-col">
+                                {/* copii lui Dashboard */}
+                                <PermissionRow title="View Dashboard"/>
+                                <PermissionRow title="Edit Dashboard"/>
+                                
+                            </div>
+                </div>
+
+                <div className="mb-4">
+                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
+
+                            <hr className="w-[30%] border-gray-300 mb-2" />
+
+                            <div className="flex flex-col">
+                                {/* copii lui Dashboard */}
+                                <PermissionRow title="View Dashboard"/>
+                                <PermissionRow title="Edit Dashboard"/>
+                                
+                            </div>
+                </div>
+            </div>
+            {/* <div className="space-y-4">
+
                 {Object.entries(permissions).map(([section, actions], index) => (
                     <div key={section} className="mb-4">
                         <div className="text-left text-gray-700 text-xl font-semibold">{section}</div>
@@ -138,12 +237,25 @@ export default function Roles() {
                                     key={`${section}-${action}`}
                                     className="flex text-gray-700 items-center space-x-4"
                                 >
-                                    <Switch
-                                        size='small'
-                                        className='bg-gray-300'
-                                        checked={value}
-                                        onChange={() => handlePermissionChange(section, action)}
+                                    <Controller
+                                        name={}
+                                        control={methods.control}
+                                        rules={{
+                                            required: false
+                                        }}
+                                        render={({
+                                            field: { onChange, value },
+                                            fieldState: { error },
+                                        }) => (
+                                            <Switch
+                                                size='small'
+                                                className='bg-gray-300'
+                                                checked={value}
+                                                onChange={() => handlePermissionChange(section, action)}
+                                            />
+                                        )}
                                     />
+
                                     <Tooltip placement='rightBottom'
                                         title={getDescriptionForPermission(action)}>
                                         <span className="flex p-1 cursor-pointer">{action}</span>
@@ -154,7 +266,7 @@ export default function Roles() {
                     </div>
                 ))}
 
-            </div>
+            </div> */}
             <div className='mt-10'>
                 <Button
                     type='secondary'
