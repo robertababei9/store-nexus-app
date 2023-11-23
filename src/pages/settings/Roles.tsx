@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Checkbox, Col, Row, Switch, Tooltip } from 'antd';
 import { Button, Dropdown } from 'src/components/_shared';
-import { OptionType } from 'src/types/_shared';
+import { ApiResponseModel, OptionType } from 'src/types/_shared';
 import { getDefaultApiUrl } from 'src/config';
 import axios from 'axios';
 import { Role } from 'src/types/users';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'src/utils/Constants';
 
@@ -16,7 +16,20 @@ type RolesFormType = {
     ViewDashboard: boolean;
     EditDashboard: boolean;
 
+    ViewStore: boolean;
+    EditStore: boolean;
+    CreateStore: boolean;
+    DeleteStore: boolean;
 
+    ViewInvoice: boolean;
+    CreateInvoice: boolean;
+
+    ViewUser: boolean;
+    EditUser: boolean;
+    CreateUser: boolean;
+    DeleteUser: boolean;
+
+    Settings: boolean;
 }
 
 interface PermissionsState {
@@ -24,14 +37,40 @@ interface PermissionsState {
 }
 
 type PermissionRowType = {
+    name: "ViewDashboard" | "EditDashboard" | "ViewStore" | "EditStore" | "CreateStore" | "DeleteStore" | "ViewInvoice" | "CreateInvoice" | "ViewUser" | "EditUser" | "CreateUser" | "DeleteUser" | "Settings";
     title: string;
+    control: Control<RolesFormType, any>;
 }
 const PermissionRow = ({
-    title,
+    name, title, control,
 }: PermissionRowType) => {
     return (
         <div>
-
+            <div className="flex text-gray-700 items-center space-x-4">
+                <Controller
+                    name={name}
+                    control={control}
+                    rules={{
+                        required: false
+                    }}
+                    render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                    }) => (
+                        <Switch
+                            size='small'
+                            className='bg-gray-300'
+                            checked={value}
+                            onChange={onChange}
+                        />
+                    )}
+                />
+                <Tooltip placement='rightBottom'
+                    title={getDescriptionForPermission(name)}
+                >
+                    <span className="flex cursor-pointer">{title}</span>
+                </Tooltip>
+            </div>
         </div>
     )
 }
@@ -45,6 +84,7 @@ export default function Roles() {
 
     // form
     const methods = useForm<RolesFormType>();
+    const x = methods.control
     methods.watch("role");
 
     // effects
@@ -81,16 +121,22 @@ export default function Roles() {
 
     const fetchRolePermissions = async (roleId: string) => {
         try {
-            // ["ViewDashboard", ... ]
-            const result = await axios.get<string[]>(getDefaultApiUrl() + `/api/settings/GetRolePermissions${roleId}`, {
+            const result = await axios.get<ApiResponseModel>(getDefaultApiUrl() + `/api/settings/GetRolePermissions/${roleId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
                 }
             });
 
+            // console.log("result =", result)
+
             if (result.data) {
-                const rolePermissions = result.data;
-                // methods.reset(rolePermissions);
+                const { Data } = result.data
+                const mappedData = Object.fromEntries(Data.map((field: string) => [field, true]))
+                // console.log("mapData=", mappedData)
+                methods.reset({
+                    ...mappedData,
+                    role: methods.getValues("role")
+                })
             }
         }
         catch (error: any) {
@@ -101,20 +147,9 @@ export default function Roles() {
         }
     }
 
-    const handlePermissionChange = (section: string, action: string) => {
-        setPermissions((prevPermissions) => {
-            const updatedPermissions = { ...prevPermissions };
-            // updatedPermissions[section][action] = !prevPermissions[section][action];
-            return updatedPermissions;
-        });
-    };
-
-
+    // I think this const it's not necessary. So we can delete it when we merge to main!
     const [permissions, setPermissions] = useState<PermissionsState>({
         'Dashboard Permissions': {
-            // "ViewDashboard": "View Dashboard",
-
-
             'View Dashboard': "ViewDashboard",
             'Edit dashboards': "EditDashboard",
         },
@@ -136,6 +171,8 @@ export default function Roles() {
         },
     });
 
+    console.log(methods.getValues())
+
     return (
         <div className="mx-4">
             <div className="flex flex-col items-start mb-4">
@@ -155,9 +192,9 @@ export default function Roles() {
                                 placeholder='Select Role'
                                 options={roleOptions}
                                 defaultValue={value}
-                                onChange={() => {
-                                    onChange();
-                                    fetchRolePermissions(value);
+                                onChange={(event) => {
+                                    onChange(event);
+                                    fetchRolePermissions(event.target.value);
                                 }}
                                 error={error?.message != undefined}
                             />
@@ -170,60 +207,62 @@ export default function Roles() {
 
                 </div>
             </div>
+
+            {/* PERMISSIONS */}
             <div className="space-y-4">
                 <div className="mb-4">
-                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
-
-                            <hr className="w-[30%] border-gray-300 mb-2" />
-
-                            <div className="flex flex-col">
-                                {/* copii lui Dashboard */}
-                                <PermissionRow title="View Dashboard" />
-                                <PermissionRow title="Edit Dashboard"/>
-                                
-                            </div>
+                    <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
+                    <hr className="w-[30%] border-gray-300 mb-2" />
+                    <div className="flex flex-col">
+                        {/* copii lui Dashboard */}
+                        <PermissionRow control={methods.control} name="ViewDashboard" title="View Dashboard" />
+                        <PermissionRow control={methods.control} name="EditDashboard" title="Edit Dashboard" />
+                    </div>
                 </div>
 
                 <div className="mb-4">
-                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
-
-                            <hr className="w-[30%] border-gray-300 mb-2" />
-
-                            <div className="flex flex-col">
-                                {/* copii lui Dashboard */}
-                                <PermissionRow title="View Dashboard"/>
-                                <PermissionRow title="Edit Dashboard"/>
-                                
-                            </div>
+                    <div className="text-left text-gray-700 text-xl font-semibold">Store Management</div>
+                    <hr className="w-[30%] border-gray-300 mb-2" />
+                    <div className="flex flex-col">
+                        <PermissionRow control={methods.control} name="ViewStore" title="View stores" />
+                        <PermissionRow control={methods.control} name="EditStore" title="Edit Store" />
+                        <PermissionRow control={methods.control} name="CreateStore" title="Create Store" />
+                        <PermissionRow control={methods.control} name="DeleteStore" title="Delete Store" />
+                    </div>
                 </div>
 
                 <div className="mb-4">
-                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
-
-                            <hr className="w-[30%] border-gray-300 mb-2" />
-
-                            <div className="flex flex-col">
-                                {/* copii lui Dashboard */}
-                                <PermissionRow title="View Dashboard"/>
-                                <PermissionRow title="Edit Dashboard"/>
-                                
-                            </div>
+                    <div className="text-left text-gray-700 text-xl font-semibold">Invoice Actions</div>
+                    <hr className="w-[30%] border-gray-300 mb-2" />
+                    <div className="flex flex-col">
+                        <PermissionRow control={methods.control} name="ViewInvoice" title="View Invoice" />
+                        <PermissionRow control={methods.control} name="CreateInvoice" title="Create Invoice" />
+                    </div>
                 </div>
 
                 <div className="mb-4">
-                            <div className="text-left text-gray-700 text-xl font-semibold">Dashboard Permissions</div>
-
-                            <hr className="w-[30%] border-gray-300 mb-2" />
-
-                            <div className="flex flex-col">
-                                {/* copii lui Dashboard */}
-                                <PermissionRow title="View Dashboard"/>
-                                <PermissionRow title="Edit Dashboard"/>
-                                
-                            </div>
+                    <div className="text-left text-gray-700 text-xl font-semibold">User Management</div>
+                    <hr className="w-[30%] border-gray-300 mb-2" />
+                    <div className="flex flex-col">
+                        <PermissionRow control={methods.control} name="ViewUser" title="View User" />
+                        <PermissionRow control={methods.control} name="EditUser" title="Edit User" />
+                        <PermissionRow control={methods.control} name="CreateUser" title="Create User" />
+                        <PermissionRow control={methods.control} name="DeleteUser" title="Delete User" />
+                    </div>
+                </div>
+                <div className="mb-4">
+                    <div className="text-left text-gray-700 text-xl font-semibold">Settings</div>
+                    <hr className="w-[30%] border-gray-300 mb-2" />
+                    <div className="flex flex-col">
+                        <PermissionRow control={methods.control} name="Settings" title="Settings" />
+                    </div>
                 </div>
             </div>
-            {/* <div className="space-y-4">
+
+            
+            {/* ALSO WE NEED TO DELETE THIS IS NOTHING IS USEFUL HERE! 
+
+            <div className="space-y-4">
 
                 {Object.entries(permissions).map(([section, actions], index) => (
                     <div key={section} className="mb-4">
@@ -284,26 +323,26 @@ export default function Roles() {
 
 function getDescriptionForPermission(permission: string): string {
     const descriptions: { [key: string]: string } = {
-        'View Dashboard': 'Allows users to access and view the dashboard page',
-        'Edit dashboards': 'Grants the ability to modify the layout and content of the dashboard',
-        'Create dashboards': 'Allows users to create new dashboards',
-        'Delete dashboards': 'Allows users to delete dashboards',
-        'View stores': 'Allows users to access and view the store management',
-        'Edit stores': 'Grants the ability to modify store information',
-        'Add stores': 'Allows users to add new stores',
-        'Delete stores': 'Allows users to delete stores',
-        'View invoices': 'Allows users to access and view invoices',
-        'Create invoices': 'Allows users to create new invoices',
-        'View users': 'Allows users to access and view user management',
-        'Edit users': 'Grants the ability to modify user information',
-        'Add users': 'Allows users to add new users',
+        'ViewDashboard': 'Allows users to access and view the dashboard page',
+        'EditDashboard': 'Grants the ability to modify the layout and content of the dashboard',
+        // 'Create dashboards': 'Allows users to create new dashboards',
+        // 'Delete dashboards': 'Allows users to delete dashboards',
+
+        'ViewStore': 'Allows users to access and view the store management',
+        'EditStore': 'Grants the ability to modify store information',
+        'CreateStore': 'Allows users to add new stores',
+        'DeleteStore': 'Allows users to delete stores',
+
+        'ViewInvoice': 'Allows users to access and view invoices',
+        'CreateInvoice': 'Allows users to create new invoices',
+
+        'ViewUser': 'Allows users to access and view user management',
+        'EditUser': 'Grants the ability to modify user information',
+        'CreateUser': 'Allows users to add new users',
+        'DeleteUser': 'Allows users to delete users',
+
+        'Settings': 'Allows users to access and modify application settings',
     };
 
     return descriptions[permission] || 'No description available';
 }
-
-// TO BE DONE: (cred ca doar prin backend se poate)
-// sa fie permisiuni prestabilite pentru fiecare rol
-// adica ADMIN sa aiba full access / MANAGER sa aiba vr 80% / USER sa aiba cateva
-// adica cand schimbi ROLUL din ADMIN in USER sa se schimbe si permisiunile (checkbox-urile)
-// si la fel, cand dai pe butonul de save, daca vrei sa mai bagi o permisiune noua pt USER, sa ramana salvat si in backend (plus ca trb sa te intrebe de 2 ori daca vrei sigur sa salvezi)
