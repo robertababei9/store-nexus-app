@@ -45,3 +45,8 @@ export type ChangePasswordRequest = {
     NewPassword: string;
     ConfirmNewPassword: string;
 }
+
+export type InviteUserForm = {
+    Email: string;
+    RoleId: string;
+}

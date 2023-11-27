@@ -85,8 +85,6 @@ export default function AddEditUserPage({
     finally {
       setRoleOptionsLoading(false);
     }
-
-
   }
 
   const handleSaveClick = async () => {
