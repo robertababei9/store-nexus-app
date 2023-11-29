@@ -138,7 +138,7 @@ export default function InviteUserModal({
         >
             <p className='mb-3 text-2xl font-semibold text-gray-900'>Invite a user to create an account</p>
 
-            <p className='mb-6 text-base text-gray-500'>The user will receive and e-mail with instructions to
+            <p className='mb-6 text-base text-gray-500'>The user will receive an e-mail with instructions to
             create an account with the selected role bellow</p>
 
             <Controller

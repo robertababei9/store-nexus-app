@@ -1,6 +1,6 @@
-import { Suspense, lazy, useEffect, useState } from "react"
+import { Suspense, lazy } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import { HashLoader, ClipLoader } from "react-spinners"
+import { ClipLoader } from "react-spinners"
 import { RouteType, renderRoute } from "./utils"
 import { ROUTES } from "../utils/Constants";
 
@@ -16,6 +16,10 @@ const publicRoutes: RouteType[] = [
   {
     path: ROUTES.SignIn,
     element: lazy(() => import("../pages/login/Login")),
+  },
+  {
+    path: ROUTES.UserInvitation,
+    element: lazy(() => import("../pages/user-invitation/UserInvitation")),
   }
 ];
 
@@ -79,14 +83,26 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
+
   const authenticationState = useSelector(
     (state: RootState) => state.authentication
   )
   const { currentUser, needsToCreateCompany, rolePermissions } = useSelector(
     (state: RootState) => state.authentication
   )
-  
-  const showMenu         = currentUser && !needsToCreateCompany; 
+
+  const excludedRoutes = (): boolean => {
+
+    const path = window.location.pathname;
+    // we do not want to show menu if it's a public route
+    if (publicRoutes.map(x => x.path).includes(path)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  const showMenu         = currentUser && !needsToCreateCompany && excludedRoutes(); 
   const canAccessApp     = currentUser; // logged in with role permissions
 
 
