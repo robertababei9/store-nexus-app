@@ -90,6 +90,14 @@ export default function Router() {
     (state: RootState) => state.authentication
   )
 
+  // Helpers
+  const getDefaultPath = (): string => {
+    if (currentUser && !needsToCreateCompany) return ROUTES.Dashboard;
+    if (currentUser && needsToCreateCompany) return ROUTES.CreateCompany;
+    
+    return ROUTES.SignIn;
+  }
+
   const excludedRoutes = (): boolean => {
 
     const path = window.location.pathname;
@@ -103,6 +111,7 @@ export default function Router() {
 
   const showMenu         = currentUser && !needsToCreateCompany && excludedRoutes(); 
   const canAccessApp     = currentUser; // logged in with role permissions
+  const redirectToCreateCompany = needsToCreateCompany && currentUser;
 
 
   return (
@@ -116,7 +125,7 @@ export default function Router() {
         <Routes>
             <Route 
                 path={"/"} 
-                element={<Navigate to={needsToCreateCompany ? ROUTES.CreateCompany : ROUTES.Dashboard} />} 
+                element={<Navigate to={getDefaultPath()} />} 
             />
 
             {
