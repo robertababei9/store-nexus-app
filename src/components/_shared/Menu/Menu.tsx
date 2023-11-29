@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React, { useMemo, useState } from 'react';
 import {
   SettingOutlined,
   ShopOutlined,
@@ -12,10 +11,12 @@ import {
 } from '@ant-design/icons';
 import { Menu, Layout, Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
 import { loggedOut } from 'src/features/authentication/authenticationSlice';
 import { ROUTES } from 'src/utils/Constants';
 import { AppLogo } from '../Icons/Icons';
+import { PERMISSIONS, getPathsFromRolePermissions } from 'src/utils/Permissions';
 
 const { Header, Sider } = Layout;
 
@@ -43,33 +44,73 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuItem[] = [
-  getItem('Dashboard', '/dashboard', <HomeOutlined />),
-  getItem('Stores', '/stores', <ShopOutlined />),
-  getItem('Invoices', ROUTES.Invoices, <FileDoneOutlined />),
-  getItem('Users', '/users', <UserOutlined />),
-  getItem('Settings', '/settings', <SettingOutlined />),
-  getItem('Log Out', '/login', <LogoutOutlined />),
-];
+
 
 
 const MenuComponent: React.FC = () => {
+  // navigation
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const { rolePermissions } = useSelector(
+    (state: RootState) => state.authentication
+  )
 
+  // redux
   const dispatch = useDispatch();
 
+  // states
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
+
+  // handlers
   const handleMenuClick = ({ key }: { key: React.Key }) => {
 
     // logout
     if (key === "/login") {
-      dispatch(loggedOut(null));
+      dispatch(loggedOut(null)); // logout
     }
 
     if (key) {
       navigate(String(key));
     }
   };
+
+  // helpers
+
+  const getMenuItems = useMemo(() => {
+    const items: MenuItem[] = [];
+
+    if (getPathsFromRolePermissions(rolePermissions).includes(ROUTES.Dashboard)) {
+      items.push(
+        getItem('Dashboard', ROUTES.Dashboard, <HomeOutlined />)
+      )
+    }
+    if (getPathsFromRolePermissions(rolePermissions).includes(ROUTES.Stores)) {
+      items.push(
+        getItem('Stores', ROUTES.Stores, <ShopOutlined />),
+      )
+    }
+    if (getPathsFromRolePermissions(rolePermissions).includes(ROUTES.Invoices)) {
+      items.push(
+        getItem('Invoices', ROUTES.Invoices, <FileDoneOutlined />)
+      )
+    }
+    if (getPathsFromRolePermissions(rolePermissions).includes(ROUTES.Users)) {
+      items.push(
+        getItem('Users', ROUTES.Users, <UserOutlined />)
+      )
+    }
+    if (getPathsFromRolePermissions(rolePermissions).includes(ROUTES.Settings)) {
+      items.push(
+        getItem('Settings', ROUTES.Settings, <SettingOutlined />)
+      )
+    }
+
+    items.push(getItem('Log Out', ROUTES.SignIn, <LogoutOutlined />))
+
+    return items;
+    
+  }, [rolePermissions]);
+
 
   return (
     <Layout className='z-50 '>
@@ -97,7 +138,7 @@ const MenuComponent: React.FC = () => {
                 mode="inline"
                 defaultSelectedKeys={['/dashboard']}
                 defaultOpenKeys={['/dashboard']}
-                items={items}
+                items={getMenuItems}
                 onClick={handleMenuClick}
                 className='bg-rgb-28-37-54'
               />

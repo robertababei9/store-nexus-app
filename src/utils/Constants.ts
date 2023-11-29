@@ -2,6 +2,7 @@ export const ROUTES = {
     // public routes
     SignIn: "/login",
     ForgotPassword: "/forgot-password",
+    UserInvitation: "/user-invitation",
 
     // private routes
     Dashboard: "/dashboard",
@@ -17,19 +18,10 @@ export const ROUTES = {
     CreateCompany: "/create-company",
     Users: "/users",
     EditUser: "/users/edit/:id",
-    AddUser: "/users/add"
+    AddUser: "/users/add",
+
+    Settings: "/settings"
 }
-
-
-// export const COUNTRY_CODE = {
-//     UnitedStates: "USA",
-//     Germany: "DE",
-//     France: "FR",
-//     UnitedKingdom: "UK",
-//     Romania: "RO",
-//     Greece: "GR",
-//     Italy: "IT"
-// }
 
 export enum StoreStatus {
     Open = 0,

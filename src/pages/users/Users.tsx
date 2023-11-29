@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Table, Input, Space, Tooltip, Typography, Skeleton } from 'antd';
+import { Avatar, Table, Input, Space, Tooltip, Typography, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { AiOutlineHome } from "react-icons/ai";
+import { TbMailUp } from "react-icons/tb";
 import { useNavigate } from 'react-router';
 import { ROUTES } from 'src/utils/Constants';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
 
 import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
+import InviteUserModal from 'src/components/users/InviteUserModal';
 import { getDefaultApiUrl } from 'src/config';
 import { UserResponse } from 'src/types/users';
 
@@ -84,6 +84,7 @@ export default function Users()  {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [searchText, setSearchText] = useState('');
     const [loading, setLoading] = useState<boolean>(true);
+    const [inviteUserModalOpen, setInviteUserModalOpen] = useState<boolean>(false);
 
 
     // effects
@@ -122,20 +123,6 @@ export default function Users()  {
             setLoading(false);
         }
     }
-
-
-    // const filteredData = data.filter((item) =>
-    //     Object.values(item).some((value) => {
-    //         if (typeof value === 'number') {
-    //             return value.toString().includes(searchText);
-    //         }
-    //         if (value && typeof value === 'string') {
-    //             return value.toLowerCase().includes(searchText.toLowerCase());
-    //         }
-    //         return false;
-    //     })
-    // );
-
 
 
     // adding the actions column so we can use navigate
@@ -186,14 +173,25 @@ export default function Users()  {
                         </Space>
                     </div>
 
-                    <Button
-                        type='secondary'
-                        className='flex justify-center items-center'
-                        icon={<PlusOutlined />}
-                        onClick={() => navigate(ROUTES.AddUser)}
-                    >
-                        Add user
-                    </Button>
+                    <div className='flex items-center'>
+                        <Button
+                            type='primary'
+                            className='flex justify-center items-center'
+                            onClick={() => setInviteUserModalOpen(true)}
+                            icon={<TbMailUp />}
+                        >
+                            Invite
+                        </Button>
+
+                        <Button
+                            type='secondary'
+                            className='flex justify-center items-center ml-5'
+                            icon={<PlusOutlined />}
+                            onClick={() => navigate(ROUTES.AddUser)}
+                        >
+                            Add
+                        </Button>
+                    </div>
                 </div>
 
                 <Table
@@ -204,6 +202,11 @@ export default function Users()  {
                     columns={columns}
                 />
             </Card>
+
+            <InviteUserModal 
+                isOpen={inviteUserModalOpen}
+                onClose={() => setInviteUserModalOpen(false)}
+            />
 
         </Layout>
 

@@ -16,6 +16,10 @@ const publicRoutes: RouteType[] = [
   {
     path: ROUTES.SignIn,
     element: lazy(() => import("../pages/login/Login")),
+  },
+  {
+    path: ROUTES.UserInvitation,
+    element: lazy(() => import("../pages/user-invitation/UserInvitation")),
   }
 ];
 
@@ -65,23 +69,41 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.InvoicesView,
     element: lazy(() => import("../pages/invoices/InvociesView"))
-  }
+  },
+
+  // ### SETTINGS ###
+  {
+    path: ROUTES.Settings,
+    element: lazy(() => import("../pages/settings/Settings"))
+  },
+
 
 ]
 
 
-
 export default function Router() {
 
-  const { currentUser, needsToCreateCompany } = useSelector(
+  const authenticationState = useSelector(
+    (state: RootState) => state.authentication
+  )
+  const { currentUser, needsToCreateCompany, rolePermissions } = useSelector(
     (state: RootState) => state.authentication
   )
 
+  const excludedRoutes = (): boolean => {
 
-  // console.log("-------------- Router.tsx rendering ... --------------")
+    const path = window.location.pathname;
+    // we do not want to show menu if it's a public route
+    if (publicRoutes.map(x => x.path).includes(path)) {
+      return false;
+    }
 
-  const showMenu = currentUser && !needsToCreateCompany;
-    
+    return true;
+  }
+
+  const showMenu         = currentUser && !needsToCreateCompany && excludedRoutes(); 
+  const canAccessApp     = currentUser; // logged in with role permissions
+
 
   return (
     <BrowserRouter>
@@ -122,10 +144,10 @@ export default function Router() {
             }
             
             {
-              needsToCreateCompany && currentUser ? (
+              canAccessApp && needsToCreateCompany ? (
                 <Route path={ROUTES.CreateCompany} element={<CreateCompany />} />
               ) : (
-                privateRoutes.map((route, index) => renderRoute(route, index))
+                privateRoutes.map((route, index) => renderRoute(route, index, rolePermissions))
               )
             }
 

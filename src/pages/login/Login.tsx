@@ -69,17 +69,18 @@ export default function Login() {
 
             const result = await axios.post<LoginResponse>(BASE_URL + "/api/users/login", body);
 
-            console.log("result = ", result);
+            console.log("Login result = ", result);
             const mockAuthResponse = {
                 access_token: result.data.token,
                 refresh_token: "not-implemented-yet",
                 token_type: "to-be-verified",
                 expires_in: -99999,
-                needsToCreateCompany: result.data.needsToCreateCompany
+                needsToCreateCompany: result.data.needsToCreateCompany,
+                rolePermissions: result.data.rolePermissions,
             };
 
-            navigate("/");
             dispatch(tokenReceived(mockAuthResponse));
+            navigate("/");
 
         } catch (err: any) {
             console.log("Error: ", err);
