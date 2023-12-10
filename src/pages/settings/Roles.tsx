@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Checkbox, Col, Row, Switch, Tooltip } from 'antd';
+import { Switch, Tooltip } from 'antd';
 import { Button, Dropdown } from 'src/components/_shared';
 import { ApiResponseModel, OptionType } from 'src/types/_shared';
 import { getDefaultApiUrl } from 'src/config';
@@ -8,6 +8,8 @@ import { Role } from 'src/types/users';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'src/utils/Constants';
+import CreateRoleModal from 'src/components/create-role/CreateRoleModal';
+import { PlusOutlined } from '@ant-design/icons';
 
 type RolesFormType = {
     role: string;
@@ -81,6 +83,7 @@ export default function Roles() {
     const [roleOptions, setRoleOptions] = useState<OptionType[]>([])
     const [roleOptionsLoading, setRoleOptionsLoading] = useState<boolean>(true);
     const [selectedRole, setSelectedRole] = useState<string>(''); // Stocăm rolul selectat
+    const [CreateRoleModalOpen, setCreateRoleModalOpen] = useState<boolean>(false);
 
     // form
     const methods = useForm<RolesFormType>();
@@ -174,37 +177,49 @@ export default function Roles() {
     console.log(methods.getValues())
 
     return (
-        <div className="mx-4">
+        <div className="mx-4 relative">
             <div className="flex flex-col items-start mb-4">
-                <h1 className="text-left text-gray-700 text-xl font-semibold mb-3">Employee type</h1>
-                <div className='w-[30%]'>
-                    <Controller
-                        name={`role`}
-                        control={methods.control}
-                        rules={{
-                            required: false
-                        }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                        }) => (
-                            <Dropdown
-                                placeholder='Select Role'
-                                options={roleOptions}
-                                defaultValue={value}
-                                onChange={(event) => {
-                                    onChange(event);
-                                    fetchRolePermissions(event.target.value);
-                                }}
-                                error={error?.message != undefined}
-                            />
-                        )}
-                    />
-                    <div className='text-left text-xs text-gray-500'>
-                        To assign a role to an employee, please refer to
-                        <Link className='font-semibold text-blue-500' to={ROUTES.Users}> Users page</Link>
+                <div className="w-full">
+                    <h1 className="text-left text-gray-700 text-xl font-semibold mb-3">Employee type</h1>
+                    <div className='w-[30%]'>
+                        <Controller
+                            name={`role`}
+                            control={methods.control}
+                            rules={{
+                                required: false
+                            }}
+                            render={({
+                                field: { onChange, value },
+                                fieldState: { error },
+                            }) => (
+                                <Dropdown
+                                    placeholder='Select Role'
+                                    options={roleOptions}
+                                    defaultValue={value}
+                                    onChange={(event) => {
+                                        onChange(event);
+                                        fetchRolePermissions(event.target.value);
+                                    }}
+                                    error={error?.message != undefined}
+                                />
+                            )}
+                        />
+                        <div className='text-left text-xs text-gray-500'>
+                            To assign a role to an employee, please refer to
+                            <Link className='font-semibold text-blue-500' to={ROUTES.Users}> Users page</Link>
+                        </div>
                     </div>
+                </div>
 
+                <div className="absolute top-0 right-0 mt-4 mr-4">
+                    <Button
+                        type='secondary'
+                        className='flex justify-center items-center'
+                        onClick={() => setCreateRoleModalOpen(true)}
+                        icon={<PlusOutlined />}
+                    >
+                        Create Role
+                    </Button>
                 </div>
             </div>
 
@@ -259,63 +274,22 @@ export default function Roles() {
                 </div>
             </div>
 
-            
-            {/* ALSO WE NEED TO DELETE THIS IS NOTHING IS USEFUL HERE! 
-
-            <div className="space-y-4">
-
-                {Object.entries(permissions).map(([section, actions], index) => (
-                    <div key={section} className="mb-4">
-                        <div className="text-left text-gray-700 text-xl font-semibold">{section}</div>
-
-                        <hr className="w-[30%] border-gray-300 mb-2" />
-
-                        <div className="flex flex-col">
-                            {Object.entries(actions).map(([action, value]) => (
-                                <div
-                                    key={`${section}-${action}`}
-                                    className="flex text-gray-700 items-center space-x-4"
-                                >
-                                    <Controller
-                                        name={}
-                                        control={methods.control}
-                                        rules={{
-                                            required: false
-                                        }}
-                                        render={({
-                                            field: { onChange, value },
-                                            fieldState: { error },
-                                        }) => (
-                                            <Switch
-                                                size='small'
-                                                className='bg-gray-300'
-                                                checked={value}
-                                                onChange={() => handlePermissionChange(section, action)}
-                                            />
-                                        )}
-                                    />
-
-                                    <Tooltip placement='rightBottom'
-                                        title={getDescriptionForPermission(action)}>
-                                        <span className="flex p-1 cursor-pointer">{action}</span>
-                                    </Tooltip>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-
-            </div> */}
             <div className='mt-10'>
                 <Button
                     type='secondary'
                     className='flex justify-center items-center'
                     onClick={handleRoleChange}
                 >
-                    We need to save this application
+                    Save Changes
                 </Button>
             </div>
+
+            <CreateRoleModal 
+                isOpen={CreateRoleModalOpen}
+                onClose={() => setCreateRoleModalOpen(false)}
+            />
         </div>
+
 
 
     );
