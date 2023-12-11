@@ -29,8 +29,8 @@ export default function FirstStep({
                     label='Email'
                     name='email'
                     variant="outlined"
-                    value={"robert.ababei9@gmail.com"}
-                    defaultValue={"robert.ababei9@gmail.com"}
+                    value={value}
+                    // defaultValue={"robert.ababei9@gmail.com"}
                     // onChange={(value) => {
                     //     onChange(value);
                     // }}

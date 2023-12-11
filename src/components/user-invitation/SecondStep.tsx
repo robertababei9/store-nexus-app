@@ -29,8 +29,8 @@ export default function SecondStep({
                     label='Email'
                     name='email'
                     variant="outlined"
-                    value={"robert.ababei9@gmail.com"}
-                    defaultValue={"robert.ababei9@gmail.com"}
+                    value={value}
+                    // defaultValue={"robert.ababei9@gmail.com"}
                     // onChange={(value) => {
                     //     onChange(value);
                     // }}
@@ -85,7 +85,7 @@ export default function SecondStep({
                 required: true,
 
                 validate: {
-                    passwordMatch: (value) => value === methods.getValues("PasswordConfirm") || "Password do not match",
+                    passwordMatch: (value) => value === methods.getValues("Password") || "Password do not match",
                 },
             }}
             render={({

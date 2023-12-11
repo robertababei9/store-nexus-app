@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from 'react-icons/ai';
 import { FiUserCheck } from "react-icons/fi";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
@@ -9,6 +9,11 @@ import { Button, Card, Layout } from "src/components/_shared"
 import { UserInvitationFormType } from 'src/types/userInvitation';
 import FirstStep from 'src/components/user-invitation/FirstStep';
 import SecondStep from 'src/components/user-invitation/SecondStep';
+import { HashLoader } from 'react-spinners';
+import { getDefaultApiUrl } from 'src/config';
+import { ApiResponseModel } from 'src/types/_shared';
+import { openNotification } from 'src/utils/Notification';
+import { ROUTES } from 'src/utils/Constants';
 
 const FadeAnimation = require('react-reveal/Fade');
 const Jump = require('react-reveal/Jump');
@@ -19,6 +24,9 @@ export default function UserInvitation() {
 
     // routing
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const email = searchParams.get("email");
+    const token = searchParams.get("token");
 
     // form
     const methods = useForm<UserInvitationFormType>();
@@ -28,12 +36,19 @@ export default function UserInvitation() {
 
     // states
     const [step, setStep] = useState<number>(0);
-
     const [createAnimation, setCreateAnimation] = useState<boolean>(false);
+    const [isUserCreating, setIsUserCreating] = useState<boolean>(false);
 
+    // effects
     useEffect(() => {
       setCreateAnimation(prev => !prev);
   }, []);
+
+    useEffect(() => {
+        if (email) {
+            methods.setValue("Email", email);
+        }
+    }, [])
 
     // steps
     const handleNext = async () => {
@@ -49,20 +64,43 @@ export default function UserInvitation() {
         setStep(prev => prev - 1);
     }
 
+    // HANDLERS
     const handleCreate = async () => {
+
+        console.log("UserInvitation -> form = ", methods.getValues());
 
         const canContinue = await methods.trigger();
         if (canContinue == false) {
             return;
         }
-
-        setCreateAnimation(prev => !prev);
         
-        await delay(2000); // Wait for that nice loader ...
-        // rtk query -> API to set company and then invalidate 'needsToCreateCompany' field by API call 
+        
 
         try { 
             const formValues = methods.getValues();
+
+            const body = formValues;
+            const result = await axios.post<ApiResponseModel>(`${getDefaultApiUrl()}/api/users/RegisterFromInvitee`, body, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                } 
+            });
+
+            console.log("result = ", result);
+            if (result.status === 200 && result.data.Success) {
+
+                setCreateAnimation(prev => !prev);
+                setIsUserCreating(true);
+
+                await delay(3000); // Wait for that nice loader ... Just something fancy ... the user will like it, trust me
+                navigate(ROUTES.SignIn);
+                openNotification("success", "Success", "Please login with your newly created account");
+            }
+            else {
+                console.log("Error: ", result.data.Errors);
+                openNotification("error");
+            }
+
             
         } 
         catch (err: any) {
@@ -76,11 +114,24 @@ export default function UserInvitation() {
 
     }
 
-    // helpers
+    // HELPERS
     const delay = (ms: number) => new Promise( resolve => setTimeout(resolve, ms) );
 
     return (
         <Layout className={`justify-center items-center relative`}>
+            {
+                isUserCreating && (
+                    <div className='flex flex-col justify-center items-center'>
+                        <p className='text-lg font-semibold text-gray-400 mb-12'>We are creating your account, please wait ...</p>
+                        <FadeAnimation up>
+                            <HashLoader 
+                                color="#3657F8"
+                                size={95}
+                            />
+                        </FadeAnimation>
+                    </div>
+                )
+            }
             <FadeAnimation left when={createAnimation}>
                 <div >
                     <Card >
@@ -109,11 +160,6 @@ export default function UserInvitation() {
                             )
                         }
 
-                        {
-                            step === 2 && (
-                              <div></div>
-                            )
-                        }
 
                         {/* BACK, NEXT, CREATE --> buttons */}
                         <div className="w-full flex justify-between items-center mt-6">
