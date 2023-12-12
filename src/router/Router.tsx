@@ -113,6 +113,10 @@ export default function Router() {
   const canAccessApp     = currentUser; // logged in with role permissions
   const redirectToCreateCompany = needsToCreateCompany && currentUser;
 
+// console.log("showMenu = ", showMenu);
+// console.log("currentUser = ", currentUser);
+// console.log("!needsToCreateCompany = ", !needsToCreateCompany, " ------ needsToCreateCompany = ", needsToCreateCompany);
+// console.log("excludedRoutes() = ", excludedRoutes())
 
   return (
     <BrowserRouter>

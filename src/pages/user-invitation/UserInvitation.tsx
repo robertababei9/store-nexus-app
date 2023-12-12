@@ -14,6 +14,8 @@ import { getDefaultApiUrl } from 'src/config';
 import { ApiResponseModel } from 'src/types/_shared';
 import { openNotification } from 'src/utils/Notification';
 import { ROUTES } from 'src/utils/Constants';
+import { loggedOut } from 'src/features/authentication/authenticationSlice';
+import { useDispatch } from 'react-redux';
 
 const FadeAnimation = require('react-reveal/Fade');
 const Jump = require('react-reveal/Jump');
@@ -28,6 +30,9 @@ export default function UserInvitation() {
     const email = searchParams.get("email");
     const token = searchParams.get("token");
 
+// redux
+  const dispatch = useDispatch();
+
     // form
     const methods = useForm<UserInvitationFormType>();
 
@@ -37,7 +42,8 @@ export default function UserInvitation() {
     // states
     const [step, setStep] = useState<number>(0);
     const [createAnimation, setCreateAnimation] = useState<boolean>(false);
-    const [isUserCreating, setIsUserCreating] = useState<boolean>(false);
+    const [hashAnimation, setHashAnimation] = useState<boolean>(false);
+    const [createAccountLoading, setCreateAccountLoading] = useState<boolean>(false);
 
     // effects
     useEffect(() => {
@@ -75,7 +81,7 @@ export default function UserInvitation() {
         }
         
         
-
+        setCreateAccountLoading(true);
         try { 
             const formValues = methods.getValues();
 
@@ -90,9 +96,10 @@ export default function UserInvitation() {
             if (result.status === 200 && result.data.Success) {
 
                 setCreateAnimation(prev => !prev);
-                setIsUserCreating(true);
+                setHashAnimation(true);
 
                 await delay(3000); // Wait for that nice loader ... Just something fancy ... the user will like it, trust me
+                dispatch(loggedOut(null)); // logout
                 navigate(ROUTES.SignIn);
                 openNotification("success", "Success", "Please login with your newly created account");
             }
@@ -108,7 +115,7 @@ export default function UserInvitation() {
             // openNotification("error", "Error", "Error while creating the company. Log in again and try one more time. If this error persist please contact support", 10)
         }
         finally {
-
+            setCreateAccountLoading(false);
         }
 
 
@@ -120,7 +127,7 @@ export default function UserInvitation() {
     return (
         <Layout className={`justify-center items-center relative`}>
             {
-                isUserCreating && (
+                hashAnimation && (
                     <div className='flex flex-col justify-center items-center'>
                         <p className='text-lg font-semibold text-gray-400 mb-12'>We are creating your account, please wait ...</p>
                         <FadeAnimation up>
@@ -184,7 +191,13 @@ export default function UserInvitation() {
                             {
                                 step === 1 ? (
                                     <Jump>
-                                        <Button type="secondary" className={`flex items-center scale-125`} onClick={handleCreate}>
+                                        <Button 
+                                            type="secondary" 
+                                            className={`flex items-center scale-125`} 
+                                            onClick={handleCreate}
+                                            loading={createAccountLoading}
+                                            disabled={createAccountLoading}
+                                        >
                                             Create
                                             <FiUserCheck className="ml-2" size={16}/>
                                         </Button>
