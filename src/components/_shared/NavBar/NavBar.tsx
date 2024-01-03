@@ -5,6 +5,8 @@ import { IoNotificationsOutline } from 'react-icons/io5';
 import Badge from '@mui/material/Badge';
 import { SwipeableDrawer } from '@mui/material';
 import { AiOutlineClose } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
 
 const content = (
     <div>
@@ -16,6 +18,11 @@ const content = (
 );
 
 export default function NavBar() {
+
+    // redux
+    const { currentUser } = useSelector(
+        (state: RootState) => state.authentication
+      )
 
     //states
     const [hasNotifications, setHasNotifications] = useState(true);
@@ -53,10 +60,10 @@ export default function NavBar() {
                     <div className='flex items-center mr-8 px-4 hover:cursor-pointer hover:bg-gray-100 hover:rounded-3xl'>
                         <div className='flex flex-col items-end mr-2'>
                             <p className='font-semibold text-base'>
-                                Kamikaze
+                                {currentUser?.sub}
                             </p>
                             <p className='text-xs text-gray-600'>
-                                Admin
+                                {currentUser?.Role}
                             </p>
                         </div>
                         <Avatar size={'large'} src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4" />

@@ -83,9 +83,6 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
-  const authenticationState = useSelector(
-    (state: RootState) => state.authentication
-  )
   const { currentUser, needsToCreateCompany, rolePermissions } = useSelector(
     (state: RootState) => state.authentication
   )
