@@ -5,5 +5,10 @@ type PermissionItemType = {
 }
 
 export type CreateRoleForm = {
-    RoleId: string;
+    RoleName: string;
+}
+
+export type SaveRolePermissionsRequest = {
+    rolePermissions: { [key: string]: boolean }
+    
 }

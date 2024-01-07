@@ -42,7 +42,6 @@ export default function AddUser() {
     const handleCreateStore = async () => {
         const isValid = await methods.trigger();
         const formValues = methods.getValues();
-        console.log("formValues = ", formValues);
 
         if (!isValid) {
             return;

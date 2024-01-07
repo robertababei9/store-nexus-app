@@ -8,11 +8,13 @@ import { Role } from 'src/types/users';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'src/utils/Constants';
-import CreateRoleModal from 'src/components/create-role/CreateRoleModal';
+import CreateRoleModal from 'src/components/settings/roles/CreateRoleModal';
 import { PlusOutlined } from '@ant-design/icons';
+import { SaveRolePermissionsRequest } from 'src/types/permissions';
+import { openNotification } from 'src/utils/Notification';
 
 type RolesFormType = {
-    role: string;
+    roleId: string;
 
     // permissions
     ViewDashboard: boolean;
@@ -82,23 +84,52 @@ export default function Roles() {
     // states
     const [roleOptions, setRoleOptions] = useState<OptionType[]>([])
     const [roleOptionsLoading, setRoleOptionsLoading] = useState<boolean>(true);
-    const [selectedRole, setSelectedRole] = useState<string>(''); // Stocăm rolul selectat
     const [CreateRoleModalOpen, setCreateRoleModalOpen] = useState<boolean>(false);
 
     // form
     const methods = useForm<RolesFormType>();
     const x = methods.control
-    methods.watch("role");
+    methods.watch("roleId");
 
     // effects
     useEffect(() => {
         fetchRoles();
     }, []);
 
+    // handlers
 
-    const handleRoleChange = (value: string) => {
-        setSelectedRole(value);
-    };
+    const SaveRolePermissions = async () => {
+
+        try {
+            // destructuring + spread operator
+            const { 
+                roleId,
+                 ...rolePermissions
+            } = methods.getValues();
+
+
+            const body: SaveRolePermissionsRequest = {
+                rolePermissions: rolePermissions
+            };
+
+            const result = await axios.post<ApiResponseModel>(getDefaultApiUrl() + `/api/settings/SaveRolePermissions/${roleId}`,
+                body,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+            if (result.data.Success) {
+                openNotification("success", "Success", "Permissions saved successfully")
+            }
+        }
+        catch (err: any) {
+            console.log(err);
+            openNotification("error");
+        }
+    }
 
     // helpers
     const fetchRoles = async () => {
@@ -138,7 +169,7 @@ export default function Roles() {
                 // console.log("mapData=", mappedData)
                 methods.reset({
                     ...mappedData,
-                    role: methods.getValues("role")
+                    roleId: methods.getValues("roleId")
                 })
             }
         }
@@ -183,7 +214,7 @@ export default function Roles() {
                     <h1 className="text-left text-gray-700 text-xl font-semibold mb-3">Employee type</h1>
                     <div className='w-[30%]'>
                         <Controller
-                            name={`role`}
+                            name={`roleId`}
                             control={methods.control}
                             rules={{
                                 required: false
@@ -278,15 +309,25 @@ export default function Roles() {
                 <Button
                     type='secondary'
                     className='flex justify-center items-center'
-                    onClick={handleRoleChange}
+                    onClick={SaveRolePermissions}
                 >
                     Save Changes
                 </Button>
             </div>
 
-            <CreateRoleModal 
+            <CreateRoleModal
                 isOpen={CreateRoleModalOpen}
                 onClose={() => setCreateRoleModalOpen(false)}
+                onCreateCompleted={
+                    (roleName) => {
+                        // console.log("roleName = ", roleName);
+                        // Manager / Admin / User
+                        // ---> Super Admin 1
+                        // spread operator
+                        setRoleOptions([...roleOptions, { value: "id-from-backend", label: roleName }]);
+                        methods.setValue("roleId", "id-from-backend");
+                    }
+                }
             />
         </div>
 
