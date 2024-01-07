@@ -16,6 +16,10 @@ const publicRoutes: RouteType[] = [
   {
     path: ROUTES.SignIn,
     element: lazy(() => import("../pages/login/Login")),
+  },
+  {
+    path: ROUTES.UserInvitation,
+    element: lazy(() => import("../pages/user-invitation/UserInvitation")),
   }
 ];
 
@@ -65,23 +69,51 @@ const privateRoutes: RouteType[] = [
   {
     path: ROUTES.InvoicesView,
     element: lazy(() => import("../pages/invoices/InvociesView"))
-  }
+  },
+
+  // ### SETTINGS ###
+  {
+    path: ROUTES.Settings,
+    element: lazy(() => import("../pages/settings/Settings"))
+  },
+
 
 ]
 
 
-
 export default function Router() {
 
-  const { currentUser, needsToCreateCompany } = useSelector(
+  const { currentUser, needsToCreateCompany, rolePermissions } = useSelector(
     (state: RootState) => state.authentication
   )
 
-
-  // console.log("-------------- Router.tsx rendering ... --------------")
-
-  const showMenu = currentUser && !needsToCreateCompany;
+  // Helpers
+  const getDefaultPath = (): string => {
+    if (currentUser && !needsToCreateCompany) return ROUTES.Dashboard;
+    if (currentUser && needsToCreateCompany) return ROUTES.CreateCompany;
     
+    return ROUTES.SignIn;
+  }
+
+  const excludedRoutes = (): boolean => {
+
+    const path = window.location.pathname;
+    // we do not want to show menu if it's a public route
+    if (publicRoutes.map(x => x.path).includes(path)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  const showMenu         = currentUser && !needsToCreateCompany && excludedRoutes(); 
+  const canAccessApp     = currentUser; // logged in with role permissions
+  const redirectToCreateCompany = needsToCreateCompany && currentUser;
+
+// console.log("showMenu = ", showMenu);
+// console.log("currentUser = ", currentUser);
+// console.log("!needsToCreateCompany = ", !needsToCreateCompany, " ------ needsToCreateCompany = ", needsToCreateCompany);
+// console.log("excludedRoutes() = ", excludedRoutes())
 
   return (
     <BrowserRouter>
@@ -94,7 +126,7 @@ export default function Router() {
         <Routes>
             <Route 
                 path={"/"} 
-                element={<Navigate to={needsToCreateCompany ? ROUTES.CreateCompany : ROUTES.Dashboard} />} 
+                element={<Navigate to={getDefaultPath()} />} 
             />
 
             {
@@ -122,10 +154,10 @@ export default function Router() {
             }
             
             {
-              needsToCreateCompany && currentUser ? (
+              canAccessApp && needsToCreateCompany ? (
                 <Route path={ROUTES.CreateCompany} element={<CreateCompany />} />
               ) : (
-                privateRoutes.map((route, index) => renderRoute(route, index))
+                privateRoutes.map((route, index) => renderRoute(route, index, rolePermissions))
               )
             }
 
