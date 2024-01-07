@@ -9,8 +9,10 @@ export interface AuthResponse {
 
 // This is the token that is returned from the server when a user logs in we're labeling it as current user
 export interface User {
+    Id: string;
     email: string
-    role: string;
+    Role: string;
+    CompanyId: string;
     iat: number
     exp: number
     iss: string

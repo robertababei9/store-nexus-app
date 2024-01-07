@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Avatar, Table, Tooltip, Typography } from 'antd';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { ROUTES } from 'src/utils/Constants';
 import { formatPrice } from 'src/utils/Utils';
+import { AiOutlineRight } from 'react-icons/ai';
 import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
 import {  useNavigate } from 'react-router';
 
@@ -113,6 +114,7 @@ export default function Stores() {
     const navigate = useNavigate();
 
     // states
+    const [initialStoreData, setInitialStoreData] = useState<DataType[]>([]);
     const [storesData, setStoresData] = useState<DataType[]>([]);
     const [storesLoading, setStoresLoading] = useState<boolean>(true);
 
@@ -120,6 +122,21 @@ export default function Stores() {
     useEffect(() => {
         fetchStores();
     }, []);
+
+
+    // handlers
+    const handleSearch = (value: string) => {
+        if (!value) {
+            setStoresData(initialStoreData);
+            return;
+        }
+
+        const filteredStoreData = initialStoreData.filter(x => {
+            return Object.values(x).some(item => item.toString().includes(value))
+        })
+
+        setStoresData(filteredStoreData);
+    }
 
 
     // helpers
@@ -136,6 +153,7 @@ export default function Stores() {
                 const { Data } = result.data;
 
                 setStoresData(Data);
+                setInitialStoreData(Data);
             }
         }
         catch (err: any) {
@@ -158,9 +176,9 @@ export default function Stores() {
                 <Tooltip title="Edit">
                     <Button
                         className='bg-white flex justify-center items-center' 
-                        type='primary' 
+                        type='secondary' 
                         shape="circle" 
-                        icon={<EditOutlined />} 
+                        icon={<AiOutlineRight />} 
                         onClick={() => navigate(ROUTES.StoresEdit.replace(":id", record.Id))}
                     />
                 </Tooltip>
@@ -183,7 +201,7 @@ export default function Stores() {
 
         <Card className='w-full flex flex-col justify-between items-center mb-4'>
             <div className='w-full flex justify-between items-center mb-4'>
-                <Search className='w-64' placeholder='Search store ...' />
+                <Search className='w-64' placeholder='Search store ...' onChange={handleSearch}/>
                 <Button 
                     className='flex justify-center items-center' 
                     icon={<PlusOutlined />}
@@ -200,6 +218,9 @@ export default function Stores() {
                 loading={storesLoading}
                 dataSource={storesData} 
                 columns={columns}
+                pagination={{
+                    pageSize: 6
+                }}
 
             />
         </Card>

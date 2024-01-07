@@ -144,6 +144,7 @@ export default function Roles() {
                 const roleOptions: OptionType[] = result.data.map(x => ({ value: x.Id, label: x.Name }));
                 setRoleOptions(roleOptions);
             }
+
         }
         catch (error: any) {
             console.log("Error while trying to get the Roles", error);

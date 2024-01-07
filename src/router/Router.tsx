@@ -1,6 +1,6 @@
-import { Suspense, lazy, useEffect, useState } from "react"
+import { Suspense, lazy } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-import { HashLoader, ClipLoader } from "react-spinners"
+import { ClipLoader } from "react-spinners"
 import { RouteType, renderRoute } from "./utils"
 import { ROUTES } from "../utils/Constants";
 
@@ -16,6 +16,10 @@ const publicRoutes: RouteType[] = [
   {
     path: ROUTES.SignIn,
     element: lazy(() => import("../pages/login/Login")),
+  },
+  {
+    path: ROUTES.UserInvitation,
+    element: lazy(() => import("../pages/user-invitation/UserInvitation")),
   }
 ];
 
@@ -79,16 +83,37 @@ const privateRoutes: RouteType[] = [
 
 export default function Router() {
 
-  const authenticationState = useSelector(
-    (state: RootState) => state.authentication
-  )
   const { currentUser, needsToCreateCompany, rolePermissions } = useSelector(
     (state: RootState) => state.authentication
   )
-  
-  const showMenu         = currentUser && !needsToCreateCompany; 
-  const canAccessApp     = currentUser; // logged in with role permissions
 
+  // Helpers
+  const getDefaultPath = (): string => {
+    if (currentUser && !needsToCreateCompany) return ROUTES.Dashboard;
+    if (currentUser && needsToCreateCompany) return ROUTES.CreateCompany;
+    
+    return ROUTES.SignIn;
+  }
+
+  const excludedRoutes = (): boolean => {
+
+    const path = window.location.pathname;
+    // we do not want to show menu if it's a public route
+    if (publicRoutes.map(x => x.path).includes(path)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  const showMenu         = currentUser && !needsToCreateCompany && excludedRoutes(); 
+  const canAccessApp     = currentUser; // logged in with role permissions
+  const redirectToCreateCompany = needsToCreateCompany && currentUser;
+
+// console.log("showMenu = ", showMenu);
+// console.log("currentUser = ", currentUser);
+// console.log("!needsToCreateCompany = ", !needsToCreateCompany, " ------ needsToCreateCompany = ", needsToCreateCompany);
+// console.log("excludedRoutes() = ", excludedRoutes())
 
   return (
     <BrowserRouter>
@@ -101,7 +126,7 @@ export default function Router() {
         <Routes>
             <Route 
                 path={"/"} 
-                element={<Navigate to={needsToCreateCompany ? ROUTES.CreateCompany : ROUTES.Dashboard} />} 
+                element={<Navigate to={getDefaultPath()} />} 
             />
 
             {

@@ -26,7 +26,7 @@ export default function Search({
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
         style={style}
-        className={`${className}`}
+        className={`hover:!border-secondary ${className}`}
         allowClear={allowClear}      
         prefix={<SearchOutlined />}  
     />

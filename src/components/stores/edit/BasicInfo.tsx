@@ -2,17 +2,17 @@ import { useState, useCallback, useEffect }  from 'react'
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { TextField, Autocomplete, InputBase } from '@mui/material';
 import { CreateStoreFormType, StoreDataType } from 'src/types/store';
-import TimePicker from '../_shared/TimePicker/TimePicker';
+import TimePicker from '../../_shared/TimePicker/TimePicker';
 import { Avatar, Col, Row } from 'antd';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import axios from 'axios';
 import { ApiResponseModel, OptionType } from 'src/types/_shared';
 import { getDefaultApiUrl } from 'src/config';
 import { openNotification } from 'src/utils/Notification';
-import { renderStoreStatusTag } from '../stores/Utils';
+import { renderStoreStatusTag } from '../Utils';
 import dayjs from 'dayjs';
 import { fetchCountryNameCodeByLatLng } from 'src/utils/Utils';
-import { LoadingWrapper } from '../_shared';
+import { LoadingWrapper } from '../../_shared';
 
 
 type BasicInfoProps = {
