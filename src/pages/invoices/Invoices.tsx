@@ -277,7 +277,7 @@ export default function Invoices() {
                         icon={<PlusOutlined />}
                         onClick={() => navigate(ROUTES.InvoicesCreate)}
                     >
-                        Create Invoice
+                        Create
                     </Button>
                 </div>
 

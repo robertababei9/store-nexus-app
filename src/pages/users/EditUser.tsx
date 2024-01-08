@@ -14,7 +14,6 @@ import { openNotification } from 'src/utils/Notification';
 import dayjs from 'dayjs';
 
 
-const PermissionsTab = lazy(() => import('src/components/users/Permissions'))
 
 const Title = Typography.Title;
 
@@ -131,11 +130,6 @@ export default function EditUser() {
             key: '2',
             label: 'Security',
             children: <Security methods={methodsSecurity} />,
-        },
-        {
-            key: '3',
-            label: `Permissions`,
-            children: <PermissionsTab />,
         },
     ];
 

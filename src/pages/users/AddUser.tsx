@@ -5,7 +5,6 @@ import { Breadcrumb, Button, Card, Layout } from 'src/components/_shared'
 import UserForm from 'src/components/users/UserForm';
 import { UserFormType } from 'src/types/users';
 import { ROUTES } from 'src/utils/Constants';
-import Permissions from 'src/components/users/Permissions';
 import axios from 'axios';
 import { getDefaultApiUrl } from 'src/config';
 import { openNotification } from 'src/utils/Notification';
@@ -19,9 +18,6 @@ const HeadShakeAnimation = require("react-reveal/HeadShake");
 const STEP_ITEMS = [
   {
     title: 'Basic Info',
-  },
-  {
-    title: 'Permissions',
   }
 ]
 
@@ -90,6 +86,8 @@ export default function AddUser() {
     // console.log("formValues = ", formValues);
   }
 
+    // de modificat totul aici, nu mai e nev de steps
+
 
   return (
     <Layout>
@@ -110,72 +108,23 @@ export default function AddUser() {
         <Title level={2} className='ml-4'>Add User</Title>
       </div>
 
-
-      <div className='w-full bg-white rounded-t-lg h-[70px] px-8 pt-8 flex justify-center items-center'>
-        <Steps
-          className='max-w-[512px]'
-          current={current}
-          items={[
-            {
-              title: 'Basic Info',
-            },
-            {
-              title: 'Permissions',
-            }
-          ]}
-        />
-      </div>
       <Card className='w-full h-full rounded-none overflow-y-scroll'>
-        {
-          current == 0 && (
             <SlideAnimation down>
               <UserForm methods={methods} editable={false} addUser={true} />
             </SlideAnimation>
-          )
-        }
-
-        {
-          current == 1 && (
-            <Permissions />
-          )
-        }
       </Card>
-      <div className='w-full h-[70px] bg-white rounded-b-lg px-8 pb-8 flex justify-between items-center'>
-        {
-          ([1].includes(current)) ? (
-            <Button type='secondary' onClick={() => setCurrent(prev => prev - 1)}>Previous</Button>
-          ) : (
-            <div></div>
-          )
-        }
-        {
-          ([0].includes(current)) ? (
-            <Button
-              type='secondary'
-              onClick={handleNext}
-            >
-              Next
-            </Button>
-          ) : (
-            <div></div>
-          )
-        }
-        {
-          ([1].includes(current)) ? (
-            <HeadShakeAnimation delay={6000}>
-              <Button
-                className={`${current == 1 ? "scale-110" : ""}`}
-                type='secondary'
-                onClick={handleAddUser}
-                loading={createLoading}
-              >
-                Add User
-              </Button>
-            </HeadShakeAnimation>
-          ) : (
-            <></>
-          )
-        }
+      
+      <div className='w-full h-[70px] bg-white rounded-b-lg px-10 pb-8 flex items-end justify-end'>
+        <HeadShakeAnimation delay={6000}>
+          <Button
+            className={`${current === 1 ? "scale-110" : ""}`}
+            type='secondary'
+            onClick={handleAddUser}
+            loading={createLoading}
+          >
+            Add User
+          </Button>
+        </HeadShakeAnimation>
       </div>
 
     </Layout>

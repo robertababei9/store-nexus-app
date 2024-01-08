@@ -212,7 +212,7 @@ export default function Stores() {
                         icon={<PlusOutlined />}
                         onClick={() => navigate(ROUTES.StoresCreate)}
                     >
-                        Add Store
+                        Add 
                     </Button>
                 </div>
 
