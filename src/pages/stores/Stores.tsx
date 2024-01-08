@@ -6,7 +6,7 @@ import { ROUTES } from 'src/utils/Constants';
 import { formatPrice } from 'src/utils/Utils';
 import { AiOutlineRight } from 'react-icons/ai';
 import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
-import {  useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import SalesStatistics from 'src/components/stores/SalesStatistics';
 import StoresByCountry from 'src/components/stores/StoresByCountry';
@@ -73,11 +73,11 @@ const columns: ColumnsType<DataType> = [
         dataIndex: 'ManagerName',
         key: 'ManagerName',
         render: (text, record) => (
-            <Link 
-                to={ROUTES.EditUser.replace(":id", record.ManagerId)} 
-                className='flex justify-start items-center cursor-pointer hover:text-blue-500' 
+            <Link
+                to={ROUTES.EditUser.replace(":id", record.ManagerId)}
+                className='flex justify-start items-center cursor-pointer hover:text-blue-500'
             >
-                <Avatar size="default" src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4"/>
+                <Avatar size="default" src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=4" />
                 <p className='ml-2'>{text}</p>
             </Link>
         ),
@@ -175,10 +175,10 @@ export default function Stores() {
             render: (_, record) => (<div>
                 <Tooltip title="Edit">
                     <Button
-                        className='bg-white flex justify-center items-center' 
-                        type='secondary' 
-                        shape="circle" 
-                        icon={<AiOutlineRight />} 
+                        className='bg-white flex justify-center items-center'
+                        type='secondary'
+                        shape="circle"
+                        icon={<AiOutlineRight />}
                         onClick={() => navigate(ROUTES.StoresEdit.replace(":id", record.Id))}
                     />
                 </Tooltip>
@@ -186,49 +186,54 @@ export default function Stores() {
         },)
     }
 
-  return (
-    <Layout>
-        <div className="flex items-center">
-            <Title level={2}>Stores</Title>
-            <Breadcrumb
-                items={[
-                  {
-                    title: "Stores"
-                  }
-                ]}
-              />
-        </div>
+    return (
+        <Layout>
+            <div className="w-full flex flex-col items-start">
+                <div className="flex items-center">       
+                    <Breadcrumb
+                        items={[
+                            {
+                                title: "Stores"
+                            }
+                        ]}
+                    />
+                </div>
+                <Title level={2} className='ml-4'>Stores</Title>
 
-        <Card className='w-full flex flex-col justify-between items-center mb-4'>
-            <div className='w-full flex justify-between items-center mb-4'>
-                <Search className='w-64' placeholder='Search store ...' onChange={handleSearch}/>
-                <Button 
-                    className='flex justify-center items-center' 
-                    icon={<PlusOutlined />}
-                    onClick={() => navigate(ROUTES.StoresCreate)}
-                >
-                        Add
-                </Button>
             </div>
 
-            <Table 
-                rowKey={(record) => record.Id}
-                size='middle' 
-                className='w-full' 
-                loading={storesLoading}
-                dataSource={storesData} 
-                columns={columns}
-                pagination={{
-                    pageSize: 6
-                }}
 
-            />
-        </Card>
+            <Card className='w-full flex flex-col justify-between items-center mb-4'>
+                <div className='w-full flex justify-between items-center mb-4'>
+                    <Search className='w-64' placeholder='Search store ...' onChange={handleSearch} />
+                    <Button
+                        type='secondary'
+                        className='flex justify-center items-center'
+                        icon={<PlusOutlined />}
+                        onClick={() => navigate(ROUTES.StoresCreate)}
+                    >
+                        Add 
+                    </Button>
+                </div>
 
-        <SalesStatistics />
+                <Table
+                    rowKey={(record) => record.Id}
+                    size='middle'
+                    className='w-full'
+                    loading={storesLoading}
+                    dataSource={storesData}
+                    columns={columns}
+                    pagination={{
+                        pageSize: 6
+                    }}
 
-        <StoresByCountry />
+                />
+            </Card>
 
-    </Layout>
-  )
+            <SalesStatistics />
+
+            <StoresByCountry />
+
+        </Layout>
+    )
 }

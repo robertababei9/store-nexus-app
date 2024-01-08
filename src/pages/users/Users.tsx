@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router';
 import { ROUTES } from 'src/utils/Constants';
 import axios from 'axios';
 import { openNotification } from 'src/utils/Notification';
-
 import { Button, Card, Search, Breadcrumb, Layout } from 'src/components/_shared';
 import InviteUserModal from 'src/components/users/InviteUserModal';
 import { getDefaultApiUrl } from 'src/config';
 import { UserResponse } from 'src/types/users';
+import { AiOutlineRight } from 'react-icons/ai';
 
 
 const Title = Typography.Title;
@@ -76,7 +76,7 @@ const columns: ColumnsType<DataType> = [
 
 ];
 
-export default function Users()  {
+export default function Users() {
     const navigate = useNavigate();
 
     //states
@@ -132,13 +132,14 @@ export default function Users()  {
             title: '',
             dataIndex: 'actions',
             key: 'actions',
-            render: (_, record) => (<div>
+            render: (_, record) =>
+            (<div>
                 <Tooltip title="Edit">
                     <Button
                         className='flex justify-center items-center'
-                        type='primary'
+                        type='secondary'
                         shape="circle"
-                        icon={<EditOutlined />}
+                        icon={<AiOutlineRight />}
                         onClick={() => navigate(ROUTES.EditUser.replace(":id", record.Key))}
                     />
                 </Tooltip>
@@ -148,15 +149,17 @@ export default function Users()  {
 
     return (
         <Layout>
-            <div className="flex items-center">
-                <Title level={2}>Users</Title>
-                <Breadcrumb
-                    items={[
-                        {
-                            title: "Users"
-                        }
-                    ]}
-                />
+            <div className="w-full flex flex-col items-start">
+                <div className="flex items-center">
+                    <Breadcrumb
+                        items={[
+                            {
+                                title: "Users"
+                            }
+                        ]}
+                    />
+                </div>
+                <Title level={2} className='ml-4'>Users</Title>
             </div>
 
             <Card className='w-full flex flex-col justify-between items-center mb-4'>
