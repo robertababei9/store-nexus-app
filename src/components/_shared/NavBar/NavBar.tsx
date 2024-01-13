@@ -98,7 +98,7 @@ export default function NavBar() {
                         </div>
 
                         <div className='w-full flex flex-col items-start mt-8'>
-                            <p className='text-xl font-medium mt-2'>Notifications</p>
+                            <p className='text-2xl font-medium mt-2'>Notifications</p>
                             <div className='w-full h-[1px] bg-gray-200 my-4' />
                         </div>
                     </div>
