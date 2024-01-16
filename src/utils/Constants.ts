@@ -55,3 +55,8 @@ export const InvoiceStatusToStringMap = {
     [InvoiceStatus.Overdue]: "Overdue",
     [InvoiceStatus.Paid]: "Paid"
 }
+export const APP = {
+    MENU_MAX_WIDTH: 200,
+    MENU_COLLAPSED_MAX_WIDTH: 70,
+    LAYOUT_PADDING_X: 50
+}

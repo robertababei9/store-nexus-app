@@ -7,7 +7,9 @@ import MapStoreCard from 'src/components/dashboard/MapStoreCard';
 import SalesByCountryCard from 'src/components/dashboard/SalesByCountryCard';
 import BestSellersCard from 'src/components/dashboard/BestSellersCard';
 import ProfitRadarChart from 'src/components/dashboard/ProfitRadarChart';
-import { Layout } from 'src/components/_shared';
+import { Button, Layout } from 'src/components/_shared';
+import { MdEdit } from "react-icons/md";
+import TotalSales from 'src/components/dashboard/TotalSales';
 
 const Fade = require('react-reveal/Fade');
 
@@ -19,50 +21,58 @@ export default function Dashboard() {
 
   return (
 
-    <div className='w-full h-full '>
-        <div className="relative">
-            <div className='absolute top-0 left-0 w-full h-[400px] bg-gradient-to-r from-cyan-200 to-cyan-500 z-10'/>
-        </div>
     
-      <Layout className='relative z-30'>
+    <Layout className='relative'>
+
+      <div className='w-full flex justify-between items-start'>
         <Fade down delay={150}>
-          <Title level={2}>Welcome to Dashboard</Title>
+          <Title level={3}>Dashboard</Title>
         </Fade>
 
-        {/* 4 Cards with statisctics */}
-        <StatisticsCards />
+        <div className='flex justify-center items-center'>
+          <Button type='simple' icon={<MdEdit />} className='flex items-center font-semibold px-2'>
+            Edit
+          </Button>
+        </div>
 
-        <Row gutter={[16, 16]} className='w-full'>
-          <Col md={24} xl={14}>
-            <SalesAreaChart />
-          </Col>
+      </div>
 
-          <Col md={24} xl={10}>
-            <MapStoreCard />
-          </Col>
-        </Row>
+      <Row className='w-full justify-center items-center mb-6'>
+          <StatisticsCards />
+      </Row>
 
-        <Row gutter={16} className='w-full mt-8'>
-          <Col span={24}>
-            <BestSellersCard />
-          </Col>
-        </Row>
+      <Row gutter={[16, 16]} className='w-full mb-6'>
+        <Col md={24} xl={14}>
+          <SalesAreaChart />
+        </Col>
 
-        <Row gutter={[32, 16]} className='w-full mt-8'>
-          <Col xs={24} xl={8}>
-            <TeamCard />
-          </Col>
+        <Col md={24} xl={10}>
+          <MapStoreCard />
+        </Col>
+      </Row>
 
-          <Col xs={24} xl={8}>
-            <SalesByCountryCard />
-          </Col>
+      <TotalSales />
 
-          <Col xs={24} xl={8}>
-            <ProfitRadarChart />
-          </Col>
-          
-        </Row>
-      </Layout>
-    </div>
+      <Row gutter={16} className='w-full mt-4'>
+        <Col xs={24} xl={14}>
+          <BestSellersCard />
+        </Col>
+      </Row>
+
+      <Row gutter={[32, 16]} className='w-full mt-4'>
+        <Col xs={24} xl={8}>
+          <TeamCard />
+        </Col>
+
+        <Col xs={24} xl={8}>
+          <SalesByCountryCard />
+        </Col>
+
+        <Col xs={24} xl={8}>
+          <ProfitRadarChart />
+        </Col>
+        
+      </Row>
+    </Layout>
   )
 }

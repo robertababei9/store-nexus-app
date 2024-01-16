@@ -8,7 +8,7 @@ type ButtonProps = {
     className?: string;
     style?: {};  // this means object .... {} == object
     // type?: "primary" | "link" | "text" | "ghost" | "default" | "dashed" | undefined;
-    type?: "primary" | "secondary" | "danger" | undefined;
+    type?: "primary" | "secondary" | "danger" | "simple" | undefined;
     icon?: any;
     shape?: "circle" | "default" | "round" | undefined;
     size?: "large" | "middle" | "small"
@@ -17,6 +17,7 @@ type ButtonProps = {
 const primaryTypeClassName = "bg-primary hover:!bg-primaryHover";
 const secondaryTypeClassName = "font-semibold text-white !bg-secondary hover:!bg-secondaryHover";
 const dangerTypeClass = "bg-red-500 hover:!bg-red-600"
+const simpleTypeClass = "text-black bg-white hover:!bg-gray-300/25 hover:!text-black "
 
 export default function Button({
     children,
@@ -41,6 +42,7 @@ export default function Button({
           ${type === "primary" && primaryTypeClassName}
           ${type === "secondary" && secondaryTypeClassName}
           ${type === "danger" && dangerTypeClass}
+          ${type === "simple" && simpleTypeClass}
           ${className}  
           active:scale-90`
         }

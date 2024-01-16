@@ -1,10 +1,18 @@
 import { LatLngType } from "./_shared";
 
-export type StoreDataType = {
-    name: string;
-    description?: string;
-    manager?: {}; // type Manager,
-    contactInfo?: string;
+export type StoreDtoType = {
+  Id: string;
+  Name: string;
+  Description: string;
+  Location: string;
+  Contact: string;
+  WorkingHours: string;
+  ManagerName: string;
+  ManagerId: string;
+  TotalSales: string;
+  StatusId: string;
+  StoreStatusName: string;
+  LastUpdated: string;
 }
 
 export type GroupedStoresByCountryType = {

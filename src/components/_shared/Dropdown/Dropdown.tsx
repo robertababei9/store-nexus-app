@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
 // import { useState } from 'react'
 import { OptionType } from 'src/types/_shared';
 
@@ -9,6 +9,7 @@ type DropdownProps = {
     placeholder?: string;
     error?: boolean;
     loading?: boolean;
+    containerClassName?: string;
 }
 
 export default function Dropdown({
@@ -17,20 +18,12 @@ export default function Dropdown({
     options = [],
     placeholder = "Select a value",
     error = false,
-    loading = false
+    loading = false,
+    containerClassName = "",
 }: DropdownProps) {
 
-    // const [val, setVal] = useState<any>(defaultValue);
-
-    // const handleChange = (event: SelectChangeEvent) => {
-    //     const val = event.target.value as string;
-        
-    //     setVal(val);
-    //     onChange(val);
-    // }
-
     return (
-        <FormControl fullWidth>
+        <FormControl className={`w-full ${containerClassName}`}>
             <InputLabel id="demo-simple-select-label">{placeholder}</InputLabel>
             {/* How is it possible that MUI -> Select doesn't have a Loading prop ... Like WTF */}
             <Select
@@ -42,6 +35,10 @@ export default function Dropdown({
                 label={placeholder}
                 error={error}
                 onChange={onChange}
+                // TODO: Add loading icon --- you will also have to add back the Carrot icon 
+                // IconComponent={() => (
+                //     loading ? <CircularProgress size={20} className='mr-4 bg-red-500 text-gray-100' /> : null
+                // )}
                 >
                     {
                         options.map(option => (

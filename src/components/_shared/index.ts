@@ -9,3 +9,4 @@ export { default as Layout } from './Layout/Layout'
 export { default as Dropdown } from './Dropdown/Dropdown';
 export { default as LoadingWrapper } from './LoadingWrapper/LoadingWrapper';
 export { default as NavBar } from './NavBar/NavBar';
+export { default as Tag } from './Tag/Tag';

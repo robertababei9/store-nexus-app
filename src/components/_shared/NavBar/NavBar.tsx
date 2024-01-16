@@ -43,7 +43,6 @@ export default function NavBar() {
 
 
     return (
-        //am folosit aici zIndex pentru ca daca nu il ai, shadow-ul de la navbar nu trece peste card-uri. (problem doar la dashboard)
         <div className='flex justify-between items-center h-[50px] w-full bg-white py-7 shadow-md' style={{ zIndex: 999 }}> 
             <div>
             </div>
@@ -74,7 +73,6 @@ export default function NavBar() {
                     sx={{
                         width: 300
                     }}
-                    // container={containerRef.current} nush ce e asta si daca trebuie
                     anchor="right"
                     open={rightInfoOpen}
                     onClose={handleCloseDrawer}

@@ -13,7 +13,7 @@ import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import BasicInfo from "src/components/stores/edit/BasicInfo";
 import FilesAndDocuments from "src/components/stores/edit/FilesAndDocuments";
-import { CreateStoreFormType, StoreDataType } from "src/types/store";
+import { CreateStoreFormType } from "src/types/store";
 import { BsArrowLeftShort } from 'react-icons/bs';
 
 import ComingSoonSvg from "src/assets/images/git.svg";

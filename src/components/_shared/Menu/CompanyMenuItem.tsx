@@ -18,7 +18,7 @@ export default function CompanyMenuItem({
   
     return (
         <div className={`flex items-center rounded-xl shadow-secondary transition-all
-                        mx-1 px-1 mb-6 sm:mb-16
+                        mx-1 px-1 mb-12 sm:mb-24
                         ${collapsed ? "justify-center" : "justify-start duration-1000 "} 
                         `}
             style={{

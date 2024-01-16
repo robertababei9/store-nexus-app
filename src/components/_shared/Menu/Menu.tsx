@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/redux/store';
 import { loggedOut } from 'src/features/authentication/authenticationSlice';
-import { ROUTES } from 'src/utils/Constants';
+import { APP, ROUTES } from 'src/utils/Constants';
 import { AppLogo } from '../Icons/Icons';
 import { PERMISSIONS, getPathsFromRolePermissions } from 'src/utils/Permissions';
 import CompanyMenuItem from './CompanyMenuItem';
@@ -66,7 +66,7 @@ const MenuComponent: React.FC = () => {
   )
 
   // states
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [collapsed, setCollapsed] = useState<boolean>(true);
   const [companyData, setCompanyData] = useState<CompanyInfoType | null>(null);
   const [companyDataLoading, setCompanyDataLoading] = useState<boolean>(true);
 
@@ -159,9 +159,16 @@ const MenuComponent: React.FC = () => {
 
   return (
     <Layout className='z-50 '>
-        <Sider trigger={null} collapsible collapsed={collapsed} className='h-full relative w-auto'>
+        <Sider 
+          style={{width: APP.MENU_MAX_WIDTH}} 
+          trigger={null} 
+          collapsible 
+          collapsed={collapsed} 
+          collapsedWidth={APP.MENU_COLLAPSED_MAX_WIDTH}
+          className='h-full relative'
+        >
           <div className=' w-inherit'>
-              <Header className={`bg-transparent p-0 flex ${collapsed && "flex-col"}  justify-between items-center sm:mb-20`}>
+              <Header className={`bg-transparent p-0 flex ${collapsed && "flex-col"}  justify-between items-center mb-12 sm:mb-24`}>
                 <div className='pt-4 pl-4'>
                   <div className={`${collapsed ? '-scale-[50%] -translate-x-2' : ''}`}>
                     <AppLogo width={50} height={50}/>

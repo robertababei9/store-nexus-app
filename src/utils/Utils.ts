@@ -1,14 +1,14 @@
 import axios from "axios";
 import { OptionsType } from "../types/Options";
 
-export const formatPrice = (value: number, currency?: string) => {
+export const formatPrice = (value: number, currency?: string, maximumFractionDigits?: number) => {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: currency ?? "EUR",
 
         // These options are needed to round to whole numbers if that's what you want.
         //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+        maximumFractionDigits: maximumFractionDigits, // (causes 2500.99 to be printed as $2,501)
     }).format(value)
 }
 
@@ -20,7 +20,7 @@ export  const getLastYearsOptions = (nrOfYears: number): OptionsType[]  => {
     // e.g.     nrOfYears = 4 -->  2023, 2022, 2021, 2020
     for (let i = 0; i < nrOfYears; i++) {
         const value = CURRENT_YEAR - i;
-        optionsForSelect.push({value: value, label: value.toString()})
+        optionsForSelect.push({value: value, label: value == CURRENT_YEAR ? "This year" : value.toString()})
     }
 
     return optionsForSelect;
