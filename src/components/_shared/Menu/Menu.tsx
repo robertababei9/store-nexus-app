@@ -23,6 +23,7 @@ import { ApiResponseModel } from 'src/types/_shared';
 import axios from 'axios';
 import { getDefaultApiUrl } from 'src/config';
 import { CompanyInfoType } from 'src/types/company';
+import { setIsMenuCollapsed } from 'src/features/app/appSlice';
 
 const { Header, Sider } = Layout;
 
@@ -66,7 +67,7 @@ const MenuComponent: React.FC = () => {
   )
 
   // states
-  const [collapsed, setCollapsed] = useState<boolean>(true);
+  const [collapsed, setCollapsed] = useState<boolean>(APP.MENU_INITIALLY_COLLAPSED);
   const [companyData, setCompanyData] = useState<CompanyInfoType | null>(null);
   const [companyDataLoading, setCompanyDataLoading] = useState<boolean>(true);
 
@@ -93,6 +94,11 @@ const MenuComponent: React.FC = () => {
       navigate(String(key));
     }
   };
+
+  const handleCollapseMenu = () => {
+    setCollapsed(prev => !prev);
+    dispatch(setIsMenuCollapsed(!collapsed))
+  }
 
   // helpers
   const fetchCompanyInfo = async (companyId: string) => {
@@ -177,7 +183,7 @@ const MenuComponent: React.FC = () => {
                 <Button
                   type="text"
                   icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                  onClick={() => setCollapsed(!collapsed)}
+                  onClick={handleCollapseMenu}
                   className={`text-xl w-166 h-16 text-white ${collapsed ? '-order-1': ''}`}
                   style={{color: "white"}}
                 />

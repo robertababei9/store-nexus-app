@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Col, Row, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import { AiOutlineRise } from 'react-icons/ai';
 import { FcMoneyTransfer, FcSalesPerformance, FcCollaboration  } from 'react-icons/fc';
 import { IoMdTrendingDown } from "react-icons/io";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaExclamationCircle } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/redux/store';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
@@ -26,6 +28,7 @@ type StatisticCardProps = {
   icon: any;
   incomePercentage: number; // compared to last month
   isPrice?: boolean;
+  needsUpdate?: boolean;
 }
 
 // TODO: To move to separate file when this file gets too complex / big
@@ -34,15 +37,29 @@ const StatisticCard = ({
   value,
   icon,
   incomePercentage,
-  isPrice = true
+  isPrice = true,
+  needsUpdate = false,
 }: StatisticCardProps) => (
 
   <Card className='px-6 py-4 min-w-[250px] w-full flex flex-col shadow-md'>
 
       <div className='flex flex-col justify-start items-start'>
-          <div className='flex justify-start items-center'>
-              {icon}  
-              <p className='text-gray-400 font-semibold ml-3'>{title}</p>
+          <div className='w-full flex flex-wrap justify-between items-center'>
+              <div className='flex justify-start items-center'>
+                  {icon}  
+                  <p className='text-gray-400 font-semibold ml-3'>{title}</p>
+              </div>
+              {
+                needsUpdate && (
+                  <Tooltip title={"Updates required: Click on it to provide some new values"} >
+                    <FaExclamationCircle 
+                        size={32} 
+                        className='text-warning animate-pulse hover:cursor-pointer'
+                        onClick={() => console.log("Modal will open to update the necessary values")}
+                    />
+                  </Tooltip>
+                )
+              }
           </div>
 
           <div className='flex items-center flex-wrap mt-3'>
@@ -75,6 +92,11 @@ export default function StatisticsCards() {
   // custom hooks
   const { width } = useWindowDimensions();
 
+  // redux
+  const { isMenuCollapsed } = useSelector(
+    (state: RootState) => state.app
+  )
+
   // states
   const [swiperWidth, setSwiperWidth] = useState<number>(0);
   const [numberOfSlides, setNumberOfSlides] = useState<number>(4);
@@ -83,26 +105,27 @@ export default function StatisticsCards() {
 
   // effects
   useEffect(() => {
-    const _swiperWidth = width - APP.MENU_MAX_WIDTH - APP.LAYOUT_PADDING_X;
+    const menuWidth = isMenuCollapsed ? APP.MENU_COLLAPSED_MAX_WIDTH : APP.MENU_MAX_WIDTH;
+
+    const _swiperWidth = width - menuWidth - (APP.LAYOUT_PADDING_X * 2) - 20;
 
     setSwiperWidth(_swiperWidth);
 
-    if (width < 1000) {
+    if (width <= 450) {
+      setNumberOfSlides(1);
+    }
+    else if (width > 450 && width < 1000) {
       setNumberOfSlides(2);
     }
     else {
       setNumberOfSlides(4);
     }
-  }, [width]);
 
+  }, [width, isMenuCollapsed]);
 
-  // console.log("StatisticsCards ---> swiperWidth = ", swiperWidth);
 
   // handlers
   const handleSlideChange = (swiper: any) => {
-    // console.log("swiper.isEnd ===== ", swiper.isEnd);
-    // console.log("swiper.isBegining ===== ", swiper.isBeginning);
-
     setIsBeginning(swiper.isBeginning);
     setIsEnd(swiper.isEnd);
   }
@@ -110,11 +133,14 @@ export default function StatisticsCards() {
 
   return (
       <div style={{width: swiperWidth}} className='flex justify-center items-center '>
-          <div className={`prevEl rounded-full ${isBeginning ? 'opacity-50 ' : ' hover:bg-gray-300 hover:cursor-pointer'}`}>
+          {/* <div className={`prevEl rounded-full ${isBeginning ? 'opacity-50 ' : ' hover:bg-gray-300 hover:cursor-pointer'}`}>
             <FaAngleLeft className='text-secondary' size={32}/>
-          </div>
+          </div> */}
 
           <Swiper
+            style={{
+              overflow: "none",
+            }}
             modules={[Navigation, Autoplay]}
             spaceBetween={16} // Set the space between slides
             slidesPerView={numberOfSlides}  // Set the number of slides per view
@@ -156,6 +182,7 @@ export default function StatisticsCards() {
                     value={13458}
                     icon={<DollarUp width={48} height={36} />}
                     incomePercentage={-1.15}
+                    needsUpdate={true}
                   />
                 </Fade>
             </SwiperSlide>
@@ -182,11 +209,13 @@ export default function StatisticsCards() {
                   />
                 </Fade>
             </SwiperSlide>
+
+            
           </Swiper>
           
-          <div className={`nextEl rounded-full ${isEnd ? 'opacity-50 ' : ' hover:bg-gray-300 hover:cursor-pointer'}`}>
+          {/* <div className={`nextEl rounded-full ${isEnd ? 'opacity-50 ' : ' hover:bg-gray-300 hover:cursor-pointer'}`}>
             <FaAngleRight className='text-secondary' size={32}/>
-          </div>
+          </div> */}
       </div>
   );
 

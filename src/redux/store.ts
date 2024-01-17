@@ -1,7 +1,9 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 
+import appReducer from 'src/features/app/appSlice';
 import authenticationReducer from 'src/features/authentication/authenticationSlice';
 import invoicesReducer from 'src/features/invoices/invoicesSlice';
+
 import {
     persistReducer,
 } from "redux-persist"
@@ -18,6 +20,7 @@ const persistConfig = {
 
 
 const rootReducer = combineReducers({
+    app: appReducer,
     authentication:  authenticationReducer,
     invoices: invoicesReducer,
 });

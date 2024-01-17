@@ -1,3 +1,11 @@
+export type MapSettingsRequest = {
+    Lat: string;
+    Lng: string;
+    Zoom: number;
+}
 
-
-export{};
+export type MapSettingsResponse = {
+    Lat: string;
+    Lng: string;
+    Zoom: string;
+}

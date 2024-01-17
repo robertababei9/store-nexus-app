@@ -22,9 +22,9 @@ export default function Dashboard() {
   return (
 
     
-    <Layout className='relative'>
+    <Layout className='relative '>
 
-      <div className='w-full flex justify-between items-start'>
+      <Row className='w-full flex justify-between items-start'>
         <Fade down delay={150}>
           <Title level={3}>Dashboard</Title>
         </Fade>
@@ -35,13 +35,15 @@ export default function Dashboard() {
           </Button>
         </div>
 
-      </div>
+      </Row>
 
-      <Row className='w-full justify-center items-center mb-6'>
+      <Row className='w-full justify-center items-center mb-4 '>
           <StatisticsCards />
       </Row>
 
-      <Row gutter={[16, 16]} className='w-full mb-6'>
+      <TotalSales />
+
+      <Row gutter={[16, 16]} className='w-full mb-4'>
         <Col md={24} xl={14}>
           <SalesAreaChart />
         </Col>
@@ -51,15 +53,14 @@ export default function Dashboard() {
         </Col>
       </Row>
 
-      <TotalSales />
 
-      <Row gutter={16} className='w-full mt-4'>
+      <Row gutter={16} className='w-full mb-4'>
         <Col xs={24} xl={14}>
           <BestSellersCard />
         </Col>
       </Row>
 
-      <Row gutter={[32, 16]} className='w-full mt-4'>
+      <Row gutter={[32, 16]} className='w-full mb-4'>
         <Col xs={24} xl={8}>
           <TeamCard />
         </Col>

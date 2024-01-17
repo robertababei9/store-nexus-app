@@ -27,7 +27,7 @@ const Layout = forwardRef<HTMLDivElement, PropsWithChildren<LayoutProps>>(({
       <div className='w-full flex flex-col'>
         {renderNavBar()}
         
-        <div ref={ref} className={`w-full h-full flex justify-start items-start flex-col sm:px-8 px-4 sm:py-6 py-6 overflow-y-auto ${className}`}>
+        <div ref={ref} className={`w-full h-full flex justify-start items-start flex-col sm:px-[30px] px-3 sm:py-3 py-3 overflow-y-auto ${className}`}>
           {children}
         </div>
       </div>

@@ -58,5 +58,7 @@ export const InvoiceStatusToStringMap = {
 export const APP = {
     MENU_MAX_WIDTH: 200,
     MENU_COLLAPSED_MAX_WIDTH: 70,
-    LAYOUT_PADDING_X: 50
+    MENU_INITIALLY_COLLAPSED: true,
+    LAYOUT_PADDING_X: 30,
+    LAYOUT_PADDING_X_MOBILE: 5
 }

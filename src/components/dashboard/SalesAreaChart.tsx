@@ -83,7 +83,7 @@ export default function SalesAreaChart() {
                         <CartesianGrid strokeDasharray="10 4" vertical={false}/>
                         <XAxis dataKey="name" />
                         <YAxis />
-                        <Tooltip content={(props) => <CustomTooltip tooltipProps={props} year={selectedYear}/>}/>
+                        <Tooltip content={(props) => <CustomTooltip key={props.label} tooltipProps={props} year={selectedYear}/>}/>
                         <Legend content={<CustomLegend />}/>
                         <Area 
                             type="monotone" 

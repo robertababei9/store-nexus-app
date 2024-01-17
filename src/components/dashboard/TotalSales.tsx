@@ -171,11 +171,11 @@ export default function TotalSales() {
     }
 
     return (
-        <Card className='w-full px-8 py-6'>
+        <Card className='w-full px-8 py-6 mb-4'>
             <Row gutter={16} className='w-full'>
                 <Col xs={24} xl={17} className='xl:!pr-12'>
                     <div className='w-full flex flex-wrap justify-between items-center mb-8 sm:mb-12 '>
-                        <p className='font-semibold text-2xl'>Total Sales</p>
+                        <p className='font-semibold text-2xl sm:mb-0 mb-6'>Total Sales</p>
                         <div className='flex justify-center items-center min-w-[250px] '>
                             {/* <p className='font-semibold text-lg mr-4'>Store:</p> */}
                             <Dropdown 
@@ -202,7 +202,7 @@ export default function TotalSales() {
                             cursor={{
                                 fill: "transparent"
                             }}
-                            content={(props) => <CustomTooltip tooltipProps={props} />} 
+                            content={(props) => <CustomTooltip key={props.label} tooltipProps={props} />} 
                         />
                         <Bar dataKey="sales" shape={CustomBar} />
                         </BarChart>

@@ -11,7 +11,8 @@ module.exports = {
         secondary: '#4F46E5',
         secondaryHover: '#3730A3',
         success: "#008000",
-        danger: "#FF0000"
+        danger: "#FF0000",
+        warning: "#f0ad4e"
       }
     },
     screens: {

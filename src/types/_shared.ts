@@ -9,6 +9,7 @@ export type ApiResponseModel = {
     Errors: string[];
 }
 
+
 export type LatLngType = {
     Lat: string;
     Lng: string;
