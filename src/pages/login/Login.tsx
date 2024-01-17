@@ -141,7 +141,7 @@ export default function Login() {
                                 error={error !== undefined}
                                 helperText={error?.message}
                                 required
-                                onKeyPress={handleKeyPress} 
+                                onKeyDown={handleKeyPress} 
                                 InputProps={{
                                     startAdornment: (
                                         <FaUserCircle size={24} color="#808080" className='mr-3' />
@@ -173,7 +173,7 @@ export default function Login() {
                                 error={error !== undefined}
                                 helperText={error?.message}
                                 required
-                                onKeyPress={handleKeyPress}
+                                onKeyDown={handleKeyPress}
                                 InputProps={{
                                     startAdornment: (
                                         <PiLockKeyFill size={28} color="#808080" className='mr-3' />

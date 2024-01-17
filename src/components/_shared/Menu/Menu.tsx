@@ -70,6 +70,9 @@ const MenuComponent: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(APP.MENU_INITIALLY_COLLAPSED);
   const [companyData, setCompanyData] = useState<CompanyInfoType | null>(null);
   const [companyDataLoading, setCompanyDataLoading] = useState<boolean>(true);
+  const [selectedKey, setSelectedKey] = useState<string | null>(
+    localStorage.getItem('selectedKey') || null
+  );
 
   // effects
   useEffect(() => {
@@ -92,6 +95,8 @@ const MenuComponent: React.FC = () => {
 
     if (key) {
       navigate(String(key));
+      setSelectedKey(String(key));
+      localStorage.setItem('selectedKey', String(key));
     }
   };
 
@@ -199,7 +204,7 @@ const MenuComponent: React.FC = () => {
               <Menu
                 theme="dark"
                 mode="inline"
-                defaultSelectedKeys={['/dashboard']}
+                defaultSelectedKeys={[selectedKey || '/dashboard']}
                 defaultOpenKeys={['/dashboard']}
                 items={getMenuItems}
                 onClick={handleMenuClick}
